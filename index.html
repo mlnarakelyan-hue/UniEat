@@ -1135,4 +1135,244 @@
         sPay: 'Payment',
         totalTxt: 'Total Amount',
         taxInc: 'Includes VAT & basic coverage',
-        ctaBtn: 'Confirm & Generate QR Pass
+        ctaBtn: 'Confirm & Generate QR Pass',
+        passConfirmed: '● ACTIVE RESERVATION',
+        pinLbl: 'Personal Access PIN',
+        extBtn: '+ Extend Time (+3 Hours)',
+        printBtn: '🖨️ Save / Print Boarding Pass',
+        closeBtn: 'Close Window',
+        d3: 'Up to 3 Hours',
+        d6: 'Up to 6 Hours',
+        d12: 'Up to 12 Hours',
+        d24: '24 Hours (1 Day)',
+        d48: '48 Hours (2 Days)'
+      },
+      ru: {
+        myPass: 'Мой цифровой пропуск',
+        eyebrow: 'Zvartnots Smart Concierge',
+        heroTitle: 'Путешествуйте налегке. Оставьте багаж в безопасности.',
+        heroSub: 'Премиальные автоматизированные камеры хранения в аэропорту Звартноц. Забронируйте конкретную ячейку онлайн и получите мгновенный QR-пропуск.',
+        t1: '24/7 Видеонаблюдение и охрана',
+        t2: 'Мгновенный доступ по QR / PIN',
+        t3: 'Застрахованное хранение',
+        statFree: 'Свободных ячеек',
+        statSpeed: 'Скорость доступа',
+        statInsured: 'Застраховано',
+        step1: 'Выберите размер и номер ячейки',
+        pickCellLabel: 'Выберите свободную ячейку на схеме терминала:',
+        legFree: 'Свободно',
+        legPicked: 'Выбрано',
+        legBusy: 'Занято',
+        step2: 'Время хранения и VIP-услуги',
+        lblZone: 'Зона терминала',
+        lblDuration: 'Длительность хранения',
+        lblStart: 'Время начала',
+        lblContact: 'Email или телефон (для отправки QR)',
+        lblAddons: 'Дополнительные VIP-услуги',
+        addonWrap: '🛡️ Защитная упаковка багажа',
+        addonIns: '💎 Премиум-страхование',
+        step3: 'Способ оплаты',
+        sCat: 'Категория',
+        sDims: 'Габариты',
+        sZone: 'Зона',
+        sDur: 'Длительность',
+        sPay: 'Оплата',
+        totalTxt: 'Итоговая стоимость',
+        taxInc: 'Включая НДС и базовую страховку',
+        ctaBtn: 'Подтвердить и получить QR',
+        passConfirmed: '● АКТИВНОЕ БРОНИРОВАНИЕ',
+        pinLbl: 'Персональный PIN-код',
+        extBtn: '+ Продлить время (+3 часа)',
+        printBtn: '🖨️ Сохранить / Распечатать пропуск',
+        closeBtn: 'Закрыть окно',
+        d3: 'До 3 часов',
+        d6: 'До 6 часов',
+        d12: 'До 12 часов',
+        d24: '24 часа (1 день)',
+        d48: '48 часов (2 дня)'
+      }
+    };
+
+    let lang = 'hy';
+    let currentCatId = 'M';
+    let currentCell = 'M-04';
+    let payMethod = 'Visa / Mastercard';
+    let addons = { wrap: false, ins: false };
+    let bookingData = null;
+    let timerInterval = null;
+
+    function renderSizes() {
+      const container = document.getElementById('sizeGrid');
+      container.innerHTML = categories.map(cat => `
+        <div class="size-card ${cat.id === currentCatId ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
+          <div class="size-top">
+            <span class="size-code">${cat.id}</span>
+            <span class="size-price">${cat.price.toLocaleString()} AMD / 3h</span>
+          </div>
+          <div class="size-name">${cat.name[lang]}</div>
+          <div class="size-meta">${cat.dims} • ${cat.info[lang]}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderWall() {
+      const cat = categories.find(c => c.id === currentCatId);
+      const wall = document.getElementById('wallGrid');
+      wall.innerHTML = cat.cells.map(cell => {
+        const isBusy = cat.busy.includes(cell);
+        const isSelected = cell === currentCell;
+        return `<div class="cell-unit ${isBusy ? 'occupied' : ''} ${isSelected ? 'selected' : ''}" onclick="pickCell('${cell}', ${isBusy})">${cell}</div>`;
+      }).join('');
+    }
+
+    function selectCategory(id) {
+      currentCatId = id;
+      const cat = categories.find(c => c.id === id);
+      currentCell = cat.cells.find(c => !cat.busy.includes(c)) || cat.cells[0];
+      renderSizes();
+      renderWall();
+      refreshSummary();
+    }
+
+    function pickCell(cell, isBusy) {
+      if (isBusy) return;
+      currentCell = cell;
+      renderWall();
+      refreshSummary();
+    }
+
+    function toggleAddon(type) {
+      addons[type] = !addons[type];
+      document.getElementById(type === 'wrap' ? 'addonWrap' : 'addonIns').classList.toggle('checked', addons[type]);
+      refreshSummary();
+    }
+
+    function choosePay(el) {
+      document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      payMethod = el.getAttribute('data-pay');
+      refreshSummary();
+    }
+
+    function calculateTotal() {
+      const cat = categories.find(c => c.id === currentCatId);
+      const mult = parseFloat(document.getElementById('durationSelect').value);
+      let total = Math.round((cat.price * mult) / 100) * 100;
+      if (addons.wrap) total += 1000;
+      if (addons.ins) total += 1500;
+      return total;
+    }
+
+    function refreshSummary() {
+      const cat = categories.find(c => c.id === currentCatId);
+      const durSelect = document.getElementById('durationSelect');
+      const zone = document.getElementById('zoneSelect').value.split(' • ')[0];
+
+      document.getElementById('sumLockerCode').textContent = currentCell;
+      document.getElementById('sumCat').textContent = cat.name[lang];
+      document.getElementById('sumDims').textContent = cat.dims;
+      document.getElementById('sumZone').textContent = zone;
+      document.getElementById('sumDur').textContent = durSelect.selectedOptions[0].text;
+      document.getElementById('sumPay').textContent = payMethod;
+      document.getElementById('sumTotal').textContent = calculateTotal().toLocaleString() + ' AMD';
+    }
+
+    function completeReservation() {
+      const durSelect = document.getElementById('durationSelect');
+      const hours = parseInt(durSelect.selectedOptions[0].getAttribute('data-hours'), 10);
+      const zone = document.getElementById('zoneSelect').value;
+      const pin = Math.floor(1000 + Math.random() * 9000);
+      const expiresAt = Date.now() + hours * 3600 * 1000;
+
+      bookingData = {
+        locker: currentCell,
+        zone: zone,
+        pin: pin,
+        expiresAt: expiresAt,
+        bookingId: 'EVN-' + Math.floor(100000 + Math.random() * 900000)
+      };
+
+      localStorage.setItem('lyl_vip_booking', JSON.stringify(bookingData));
+      document.getElementById('activePassBtn').classList.add('show');
+      openPassModal();
+    }
+
+    function openPassModal() {
+      if (!bookingData) return;
+      document.getElementById('modalZone').textContent = `ZVARTNOTS • ${bookingData.zone.toUpperCase()}`;
+      document.getElementById('modalLocker').textContent = bookingData.locker;
+      document.getElementById('modalPin').textContent = bookingData.pin;
+
+      const qrEl = document.getElementById('qrcode');
+      qrEl.innerHTML = '';
+      new QRCode(qrEl, {
+        text: `LYL-ZVARTNOTS|ID:${bookingData.bookingId}|LOCKER:${bookingData.locker}|PIN:${bookingData.pin}`,
+        width: 150,
+        height: 150,
+        colorDark: "#070b14",
+        colorLight: "#ffffff"
+      });
+
+      startCountdown();
+      document.getElementById('passModal').classList.add('open');
+    }
+
+    function closePassModal() {
+      document.getElementById('passModal').classList.remove('open');
+    }
+
+    function extendHours() {
+      if (!bookingData) return;
+      bookingData.expiresAt += 3 * 3600 * 1000;
+      localStorage.setItem('lyl_vip_booking', JSON.stringify(bookingData));
+      startCountdown();
+    }
+
+    function startCountdown() {
+      if (timerInterval) clearInterval(timerInterval);
+      const update = () => {
+        if (!bookingData) return;
+        const diff = Math.max(0, bookingData.expiresAt - Date.now());
+        const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+        const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+        const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+        const prefix = lang === 'hy' ? 'Մնացած ժամանակը՝ ' : lang === 'en' ? 'Remaining time: ' : 'Осталось времени: ';
+        document.getElementById('countdownDisplay').textContent = `${prefix}${h}:${m}:${s}`;
+      };
+      update();
+      timerInterval = setInterval(update, 1000);
+    }
+
+    function switchLang(newLang, btn) {
+      lang = newLang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.getAttribute('data-i18n');
+        if (i18n[lang][k]) el.textContent = i18n[lang][k];
+      });
+
+      renderSizes();
+      refreshSummary();
+    }
+
+    // Init
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('startInput').value = now.toISOString().slice(0, 16);
+
+    const saved = localStorage.getItem('lyl_vip_booking');
+    if (saved) {
+      bookingData = JSON.parse(saved);
+      if (bookingData.expiresAt > Date.now()) {
+        document.getElementById('activePassBtn').classList.add('show');
+      }
+    }
+
+    renderSizes();
+    renderWall();
+    refreshSummary();
+  </script>
+</body>
+</html>

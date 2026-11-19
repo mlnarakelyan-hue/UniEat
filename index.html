@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leave Your Luggage — Zvartnots Smart Lockers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f172a;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-soft: #eff6ff;
+      --success: #10b981;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--primary);
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #2563eb, #0f172a);
+      color: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .logo-text strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-text span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 10px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      border-radius: 7px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .lang-btn.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .my-booking-btn {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid #bfdbfe;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .my-booking-btn.visible {
+      display: inline-flex;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: white;
+      padding: 64px 24px 80px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 46px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      max-width: 760px;
+      margin: 0 auto 16px;
+      line-height: 1.15;
+    }
+
+    .hero p {
+      color: #cbd5e1;
+      max-width: 600px;
+      margin: 0 auto 28px;
+      font-size: 16px;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-top: 32px;
+      font-size: 13px;
+      color: #e2e8f0;
+    }
+
+    .hero-stats div {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      padding: 8px 14px;
+      border-radius: 10px;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1140px;
+      margin: -40px auto 64px;
+      padding: 0 24px;
+    }
+
+    .booking-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .booking-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--primary);
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      color: white;
+      border-radius: 8px;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    /* Locker Options */
+    .locker-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 540px) {
+      .locker-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .locker-option {
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      background: white;
+    }
+
+    .locker-option:hover {
+      border-color: #93c5fd;
+    }
+
+    .locker-option.selected {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .locker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .locker-badge {
+      font-weight: 800;
+      font-size: 13px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: #e2e8f0;
+      color: var(--primary);
+    }
+
+    .locker-option.selected .locker-badge {
+      background: var(--accent);
+      color: white;
+    }
+
+    .locker-avail {
+      font-size: 12px;
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .locker-name {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 2px;
+    }
+
+    .locker-dims {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .locker-price {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--primary);
+    }
+
+    /* Duration & Terminal */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 540px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label.field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      background: white;
+      color: var(--text);
+      outline: none;
+      transition: 0.2s;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--accent);
+    }
+
+    /* Payment Methods */
+    .payment-methods {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .pay-method {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .pay-method.selected {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    /* Summary Card */
+    .summary-card {
+      position: sticky;
+      top: 90px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .summary-row span:first-child {
+      color: var(--muted);
+    }
+
+    .summary-row strong {
+      color: var(--primary);
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0 22px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .summary-total .total-price {
+      font-size: 24px;
+      color: var(--accent);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      width: 100%;
+      background: white;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-outline:hover {
+      background: #f8fafc;
+    }
+
+    /* How it works */
+    .steps-section {
+      margin-top: 56px;
+    }
+
+    .section-heading {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 28px;
+      color: var(--primary);
+    }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 850px) {
+      .how-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .how-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .how-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .how-card .num {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent);
+      background: var(--accent-soft);
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .how-card h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .how-card p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Modal / Ticket */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .ticket-modal {
+      background: white;
+      border-radius: 20px;
+      max-width: 440px;
+      width: 100%;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      animation: popIn 0.25s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .status-pill {
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    .locker-code-box {
+      background: #f1f5f9;
+      border-radius: 14px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+
+    .locker-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 0.04em;
+    }
+
+    .qr-box {
+      margin: 14px auto;
+      width: 164px;
+      height: 164px;
+      background: white;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pin-display {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: var(--accent);
+      margin-top: 6px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <div class="logo-icon">LYL</div>
+        <div class="logo-text">
+          <strong>Leave Your Luggage</strong>
+          <span>Zvartnots International Airport</span>
+        </div>
+      </a>
+
+      <div class="nav-actions">
+        <button id="myBookingNavBtn" class="my-booking-btn" onclick="openTicketModal()">
+          <span>🎫</span>
+          <span data-i18n="myBooking">Իմ ամրագրումը</span>
+        </button>
+
+        <div class="lang-switcher">
+          <button class="lang-btn active" onclick="setLang('hy')">ՀԱՅ</button>
+          <button class="lang-btn" onclick="setLang('en')">ENG</button>
+          <button class="lang-btn" onclick="setLang('ru')">РУС</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-badge">✈️ Zvartnots Airport • Smart Luggage Lockers</div>
+    <h1 data-i18n="heroTitle">Թողեք ձեր ճամպրուկները ապահով և վայելեք Երևանը ազատ</h1>
+    <p data-i18n="heroSubtitle">Ավտոմատացված խելացի պահարաններ Զվարթնոց օդանավակայանում։ Ամրագրեք օնլայն, ստացեք QR կոդ կամ PIN և տեղավորեք ուղեբեռը հաշված վայրկյանների ընթացքում։</p>
+    <div class="hero-stats">
+      <div>🔒 <span data-i18n="stat1">24/7 Անվտանգություն և տեսահսկում</span></div>
+      <div>⚡ <span data-i18n="stat2">Բացում QR կոդով կամ PIN-ով</span></div>
+      <div>💳 <span data-i18n="stat3">Քարտ, Idram, Telcell</span></div>
+    </div>
+  </section>
+
+  <main class="container">
+    <div class="booking-grid">
+      <!-- Left: Selection -->
+      <div class="card">
+        <div class="step-title">
+          <span class="step-num">1</span>
+          <span data-i18n="step1">Ընտրեք պահարանի չափսը</span>
+        </div>
+
+        <div class="locker-grid" id="lockerGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="step-title">
+          <span class="step-num">2</span>
+          <span data-i18n="step2">Ժամանակահատված և Գոտի</span>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label class="field-label" data-i18n="durationLabel">Պահպանման տևողությունը</label>
+            <select id="durationSelect" onchange="updateSummary()">
+              <option value="1" data-i18n="dur3h">Մինչև 3 ժամ (1x սակագին)</option>
+              <option value="1.5" selected data-i18n="dur6h">Մինչև 6 ժամ (1.5x սակագին)</option>
+              <option value="2.2" data-i18n="dur12h">Մինչև 12 ժամ (2.2x սակագին)</option>
+              <option value="3" data-i18n="dur24h">24 ժամ / 1 օր (3x սակագին)</option>
+              <option value="5.5" data-i18n="dur48h">48 ժամ / 2 օր (5.5x սակագին)</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" data-i18n="zoneLabel">Օդանավակայանի գոտի</label>
+            <select id="zoneSelect" onchange="updateSummary()">
+              <option value="Arrivals Hall (1st Floor)">Arrivals Hall (Ժամանման սրահ)</option>
+              <option value="Departures Hall (2nd Floor)">Departures Hall (Մեկնման սրահ)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label class="field-label" data-i18n="dateLabel">Ամսաթիվ և ժամ</label>
+            <input type="datetime-local" id="startTimeInput" onchange="updateSummary()" />
+          </div>
+          <div>
+            <label class="field-label" data-i18n="contactLabel">Հեռախոսահամար կամ Email</label>
+            <input type="text" id="contactInput" placeholder="+374 XX XXXXXX" />
+          </div>
+        </div>
+
+        <div class="step-title">
+          <span class="step-num">3</span>
+          <span data-i18n="step3">Վճարման եղանակ</span>
+        </div>
+
+        <div class="payment-methods" id="paymentMethods">
+          <div class="pay-method selected" data-method="Credit / Debit Card" onclick="selectPayment(this)">💳 Card (Visa/MC)</div>
+          <div class="pay-method" data-method="Idram" onclick="selectPayment(this)">🟠 Idram</div>
+          <div class="pay-method" data-method="Telcell Wallet" onclick="selectPayment(this)">🟣 Telcell</div>
+          <div class="pay-method" data-method="Apple Pay / Google Pay" onclick="selectPayment(this)">📱 Apple / Google Pay</div>
+        </div>
+      </div>
+
+      <!-- Right: Booking Summary -->
+      <div class="card summary-card">
+        <div class="step-title">
+          <span data-i18n="summaryTitle">Ամրագրման ամփոփում</span>
+        </div>
+
+        <div class="summary-row">
+          <span data-i18n="sumSize">Պահարանի չափս</span>
+          <strong id="sumSizeVal">Medium (M)</strong>
+        </div>
+        <div class="summary-row">
+          <span data-i18n="sumDims">Չափսեր</span>
+          <strong id="sumDimsVal">45 × 55 × 80 սմ</strong>
+        </div>
+        <div class="summary-row">
+          <span data-i18n="sumZone">Գոտի</span>
+          <strong id="sumZoneVal">Arrivals Hall</strong>
+        </div>
+        <div class="summary-row">
+          <span data-i18n="sumDuration">Տևողություն</span>
+          <strong id="sumDurationVal">6 ժամ</strong>
+        </div>
+        <div class="summary-row">
+          <span data-i18n="sumPay">Վճարման եղանակ</span>
+          <strong id="sumPayVal">Credit / Debit Card</strong>
+        </div>
+
+        <div class="summary-total">
+          <span data-i18n="totalLabel">Ընդհանուր</span>
+          <span class="total-price" id="totalPriceVal">3,000 AMD</span>
+        </div>
+
+        <button class="btn-primary" onclick="confirmBooking()" data-i18n="payBtn">
+          Ամրագրել և Վճարել
+        </button>
+      </div>
+    </div>
+
+    <!-- How it works -->
+    <section class="steps-section">
+      <h2 class="section-heading" data-i18n="howTitle">Ինչպե՞ս է աշխատում համակարգը</h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <span class="num">01</span>
+          <h3 data-i18n="h1Title">Ընտրեք չափսը</h3>
+          <p data-i18n="h1Desc">Ընտրեք ձեր ճամպրուկին համապատասխան պահարան (S, M, L կամ XL) և պահպանման ժամանակը։</p>
+        </div>
+        <div class="how-card">
+          <span class="num">02</span>
+          <h3 data-i18n="h2Title">Վճարեք օնլայն</h3>
+          <p data-i18n="h2Desc">Անվտանգ վճարում բանկային քարտով, Idram-ով կամ Telcell-ով՝ առանց հերթերի։</p>
+        </div>
+        <div class="how-card">
+          <span class="num">03</span>
+          <h3 data-i18n="h3Title">Ստացեք QR / PIN</h3>
+          <p data-i18n="h3Desc">Անմիջապես ստացեք ձեր պահարանի համարը, QR կոդը և 4-անիշ գաղտնաբառը։</p>
+        </div>
+        <div class="how-card">
+          <span class="num">04</span>
+          <h3 data-i18n="h4Title">Թողեք և վերցրեք</h3>
+          <p data-i18n="h4Desc">Սկանավորեք QR կոդը պահարանի էկրանին՝ ճամպրուկը տեղավորելու և հետ վերցնելու համար։</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Booking Confirmation Modal -->
+  <div class="modal-backdrop" id="ticketModal">
+    <div class="ticket-modal">
+      <span class="status-pill" data-i18n="confirmedBadge">✓ Ամրագրումը հաստատված է</span>
+      <h2 data-i18n="yourLockerTitle">Ձեր Smart Պահարանը</h2>
+      <p style="font-size: 13px; color: var(--muted);" id="ticketZoneText">Zvartnots • Arrivals Hall</p>
+
+      <div class="locker-code-box">
+        <div style="font-size: 12px; color: var(--muted); font-weight: 600;" data-i18n="lockerNumLabel">ՊԱՀԱՐԱՆԻ ՀԱՄԱՐ</div>
+        <div class="locker-number" id="ticketLockerNum">M12</div>
+        <div class="qr-box" id="qrContainer"></div>
+        <div style="font-size: 12px; color: var(--muted);" data-i18n="pinHint">Կամ մուտքագրեք PIN կոդը</div>
+        <div class="pin-display" id="ticketPin">4827</div>
+      </div>
+
+      <p style="font-size: 12px; color: var(--muted); margin-bottom: 14px;" id="ticketMetaText">
+        Medium Locker • 3,000 AMD
+      </p>
+
+      <button class="btn-primary" onclick="extendBooking()" data-i18n="extendBtn">+ Երկարաձգել ժամանակը (+3 ժամ)</button>
+      <button class="btn-outline" onclick="closeTicketModal()" data-i18n="closeBtn">Փակել</button>
+    </div>
+  </div>
+
+  <footer>
+    <strong>Leave Your Luggage</strong> — Zvartnots International Airport Digital Locker Service • Project by Pampers X HighFive Team
+  </footer>
+
+  <script>
+    const lockers = [
+      { id: 'S', code: 'S', basePrice: 1500, avail: 8, dims: '35 × 45 × 55', name: { hy: 'Small (Փոքր)', en: 'Small Locker', ru: 'Малый (S)' }, desc: { hy: 'Ուսապարկ / ձեռքի ուղեբեռ', en: 'Backpack / Cabin bag', ru: 'Рюкзак / ручная кладь' } },
+      { id: 'M', code: 'M', basePrice: 2000, avail: 5, dims: '45 × 55 × 80', name: { hy: 'Medium (Միջին)', en: 'Medium Locker', ru: 'Средний (M)' }, desc: { hy: '1 ստանդարտ ճամպրուկ', en: '1 standard suitcase', ru: '1 стандартный чемодан' } },
+      { id: 'L', code: 'L', basePrice: 3000, avail: 4, dims: '55 × 65 × 95', name: { hy: 'Large (Մեծ)', en: 'Large Locker', ru: 'Большой (L)' }, desc: { hy: '2 ճամպրուկ կամ մեծ ուղեբեռ', en: '2 suitcases / large bag', ru: '2 чемодана или крупный багаж' } },
+      { id: 'XL', code: 'XL', basePrice: 4000, avail: 2, dims: '65 × 80 × 110', name: { hy: 'Extra Large (XL)', en: 'Extra Large', ru: 'Очень большой (XL)' }, desc: { hy: 'Ընտանեկան ուղեբեռ / սպորտային', en: 'Family luggage / sports gear', ru: 'Семейный багаж / инвентарь' } }
+    ];
+
+    const translations = {
+      hy: {
+        myBooking: 'Իմ ամրագրումը',
+        heroTitle: 'Թողեք ձեր ճամպրուկները ապահով և վայելեք Երևանը ազատ',
+        heroSubtitle: 'Ավտոմատացված խելացի պահարաններ Զվարթնոց օդանավակայանում։ Ամրագրեք օնլայն, ստացեք QR կոդ կամ PIN և տեղավորեք ուղեբեռը հաշված վայրկյանների ընթացքում։',
+        stat1: '24/7 Անվտանգություն և տեսահսկում',
+        stat2: 'Բացում QR կոդով կամ PIN-ով',
+        stat3: 'Քարտ, Idram, Telcell',
+        step1: 'Ընտրեք պահարանի չափսը',
+        step2: 'Ժամանակահատված և Գոտի',
+        step3: 'Վճարման եղանակ',
+        durationLabel: 'Պահպանման տևողությունը',
+        zoneLabel: 'Օդանավակայանի գոտի',
+        dateLabel: 'Ամսաթիվ և ժամ',
+        contactLabel: 'Հեռախոսահամար կամ Email',
+        summaryTitle: 'Ամրագրման ամփոփում',
+        sumSize: 'Պահարանի չափս',
+        sumDims: 'Չափսեր',
+        sumZone: 'Գոտի',
+        sumDuration: 'Տևողություն',
+        sumPay: 'Վճարման եղանակ',
+        totalLabel: 'Ընդհանուր',
+        payBtn: 'Ամրագրել և Վճարել',
+        howTitle: 'Ինչպե՞ս է աշխատում համակարգը',
+        h1Title: 'Ընտրեք չափսը',
+        h1Desc: 'Ընտրեք ձեր ճամպրուկին համապատասխան պահարան (S, M, L կամ XL) և պահպանման ժամանակը։',
+        h2Title: 'Վճարեք օնլայն',
+        h2Desc: 'Անվտանգ վճարում բանկային քարտով, Idram-ով կամ Telcell-ով՝ առանց հերթերի։',
+        h3Title: 'Ստացեք QR / PIN',
+        h3Desc: 'Անմիջապես ստացեք ձեր պահարանի համարը, QR կոդը և 4-անիշ գաղտնաբառը։',
+        h4Title: 'Թողեք և վերցրեք',
+        h4Desc: 'Սկանավորեք QR կոդը պահարանի էկրանին՝ ճամպրուկը տեղավորելու և հետ վերցնելու համար։',
+        confirmedBadge: '✓ Ամրագրումը հաստատված է',
+        yourLockerTitle: 'Ձեր Smart Պահարանը',
+        lockerNumLabel: 'ՊԱՀԱՐԱՆԻ ՀԱՄԱՐ',
+        pinHint: 'Կամ մուտքագրեք PIN կոդը',
+        extendBtn: '+ Երկարաձգել ժամանակը (+3 ժամ)',
+        closeBtn: 'Փակել',
+        availText: 'ազատ',
+        dur3h: 'Մինչև 3 ժամ',
+        dur6h: 'Մինչև 6 ժամ',
+        dur12h: 'Մինչև 12 ժամ',
+        dur24h: '24 ժամ (1 օր)',
+        dur48h: '48 ժամ (2 օր)'
+      },
+      en: {
+        myBooking: 'My Booking',
+        heroTitle: 'Leave Your Luggage Safely & Explore Yerevan Hands-Free',
+        heroSubtitle: 'Automated smart luggage lockers at Zvartnots International Airport. Book online, receive a QR code or PIN, and store your bags in seconds.',
+        stat1: '24/7 Security & CCTV',
+        stat2: 'QR Code or PIN Access',
+        stat3: 'Card, Idram, Telcell',
+        step1: 'Select Locker Size',
+        step2: 'Duration & Terminal Zone',
+        step3: 'Payment Method',
+        durationLabel: 'Storage Duration',
+        zoneLabel: 'Airport Zone',
+        dateLabel: 'Start Date & Time',
+        contactLabel: 'Phone or Email (for receipt)',
+        summaryTitle: 'Booking Summary',
+        sumSize: 'Locker Size',
+        sumDims: 'Dimensions',
+        sumZone: 'Zone',
+        sumDuration: 'Duration',
+        sumPay: 'Payment Method',
+        totalLabel: 'Total',
+        payBtn: 'Book & Pay Now',
+        howTitle: 'How It Works',
+        h1Title: 'Choose Size',
+        h1Desc: 'Pick a locker that fits your luggage (S, M, L, or XL) and select storage duration.',
+        h2Title: 'Pay Online',
+        h2Desc: 'Pay securely via Credit/Debit Card, Idram, or Telcell with zero queues.',
+        h3Title: 'Get QR / PIN',
+        h3Desc: 'Instantly receive your locker number, QR code, and 4-digit access PIN.',
+        h4Title: 'Drop & Pick Up',
+        h4Desc: 'Scan your QR code at the locker kiosk to drop off and retrieve your bags.',
+        confirmedBadge: '✓ Booking Confirmed',
+        yourLockerTitle: 'Your Smart Locker',
+        lockerNumLabel: 'LOCKER NUMBER',
+        pinHint: 'Or enter your 4-digit PIN',
+        extendBtn: '+ Extend Time (+3 Hours)',
+        closeBtn: 'Close',
+        availText: 'available',
+        dur3h: 'Up to 3 Hours',
+        dur6h: 'Up to 6 Hours',
+        dur12h: 'Up to 12 Hours',
+        dur24h: '24 Hours (1 Day)',
+        dur48h: '48 Hours (2 Days)'
+      },
+      ru: {
+        myBooking: 'Моё бронирование',
+        heroTitle: 'Оставьте багаж в безопасности и гуляйте по Еревану налегке',
+        heroSubtitle: 'Автоматизированные умные камеры хранения в аэропорту Звартноц. Бронируйте онлайн, получите QR-код или PIN и оставьте вещи за секунды.',
+        stat1: '24/7 Охрана и видеонаблюдение',
+        stat2: 'Доступ по QR-коду или PIN',
+        stat3: 'Карта, Idram, Telcell',
+        step1: 'Выберите размер ячейки',
+        step2: 'Длительность и Зона',
+        step3: 'Способ оплаты',
+        durationLabel: 'Время хранения',
+        zoneLabel: 'Зона аэропорта',
+        dateLabel: 'Дата и время начала',
+        contactLabel: 'Телефон или Email',
+        summaryTitle: 'Детали бронирования',
+        sumSize: 'Размер ячейки',
+        sumDims: 'Габариты',
+        sumZone: 'Зона',
+        sumDuration: 'Длительность',
+        sumPay: 'Оплата',
+        totalLabel: 'Итого',
+        payBtn: 'Забронировать и оплатить',
+        howTitle: 'Как это работает',
+        h1Title: 'Выберите размер',
+        h1Desc: 'Подберите подходящую ячейку (S, M, L или XL) и укажите время хранения.',
+        h2Title: 'Оплатите онлайн',
+        h2Desc: 'Безопасная оплата картой, через Idram или Telcell без очередей.',
+        h3Title: 'Получите QR / PIN',
+        h3Desc: 'Мгновенно получите номер ячейки, QR-код и 4-значный PIN-код.',
+        h4Title: 'Оставьте и заберите',
+        h4Desc: 'Отсканируйте QR-код на экране терминала, чтобы открыть ячейку.',
+        confirmedBadge: '✓ Бронирование подтверждено',
+        yourLockerTitle: 'Ваша Smart Ячейка',
+        lockerNumLabel: 'НОМЕР ЯЧЕЙКИ',
+        pinHint: 'Или введите PIN-код',
+        extendBtn: '+ Продлить время (+3 часа)',
+        closeBtn: 'Закрыть',
+        availText: 'свободно',
+        dur3h: 'До 3 часов',
+        dur6h: 'До 6 часов',
+        dur12h: 'До 12 часов',
+        dur24h: '24 часа (1 день)',
+        dur48h: '48 часов (2 дня)'
+      }
+    };
+
+    let currentLang = 'hy';
+    let selectedLockerId = 'M';
+    let selectedPayment = 'Credit / Debit Card';
+    let activeBooking = null;
+
+    function renderLockers() {
+      const grid = document.getElementById('lockerGrid');
+      grid.innerHTML = lockers.map(l => `
+        <div class="locker-option ${l.id === selectedLockerId ? 'selected' : ''}" onclick="selectLocker('${l.id}')">
+          <div class="locker-header">
+            <span class="locker-badge">${l.code}</span>
+            <span class="locker-avail">● ${l.avail} ${translations[currentLang].availText}</span>
+          </div>
+          <div class="locker-name">${l.name[currentLang]}</div>
+          <div class="locker-dims">${l.dims} cm • ${l.desc[currentLang]}</div>
+          <div class="locker-price">${l.basePrice.toLocaleString()} AMD / 3h</div>
+        </div>
+      `).join('');
+    }
+
+    function selectLocker(id) {
+      selectedLockerId = id;
+      renderLockers();
+      updateSummary();
+    }
+
+    function selectPayment(el) {
+      document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedPayment = el.getAttribute('data-method');
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const locker = lockers.find(l => l.id === selectedLockerId);
+      const mult = parseFloat(document.getElementById('durationSelect').value);
+      const durText = document.getElementById('durationSelect').selectedOptions[0].text;
+      const zone = document.getElementById('zoneSelect').value;
+      const total = Math.round((locker.basePrice * mult) / 100) * 100;
+
+      document.getElementById('sumSizeVal').textContent = locker.name[currentLang];
+      document.getElementById('sumDimsVal').textContent = locker.dims + ' cm';
+      document.getElementById('sumZoneVal').textContent = zone.split(' (')[0];
+      document.getElementById('sumDurationVal').textContent = durText;
+      document.getElementById('sumPayVal').textContent = selectedPayment;
+      document.getElementById('totalPriceVal').textContent = total.toLocaleString() + ' AMD';
+    }
+
+    function generateFakeQR(seed) {
+      let cells = '';
+      for (let r = 0; r < 11; r++) {
+        for (let c = 0; c < 11; c++) {
+          const isCorner = (r < 3 && c < 3) || (r < 3 && c > 7) || (r > 7 && c < 3);
+          const hash = ((r * 13 + c * 7 + seed) % 3 === 0);
+          if (isCorner || hash) {
+            cells += `<rect x="${c * 12 + 6}" y="${r * 12 + 6}" width="10" height="10" rx="2" fill="#0f172a"/>`;
+          }
+        }
+      }
+      return `<svg width="144" height="144" viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg">${cells}</svg>`;
+    }
+
+    function confirmBooking() {
+      const locker = lockers.find(l => l.id === selectedLockerId);
+      const totalText = document.getElementById('totalPriceVal').textContent;
+      const zone = document.getElementById('zoneSelect').value.split(' (')[0];
+      const randomNum = Math.floor(10 + Math.random() * 25);
+      const pin = Math.floor(1000 + Math.random() * 9000);
+
+      activeBooking = {
+        lockerNum: `${locker.code}${randomNum}`,
+        pin: pin,
+        zone: zone,
+        lockerName: locker.name[currentLang],
+        price: parseInt(totalText.replace(/[^0-9]/g, ''), 10)
+      };
+
+      document.getElementById('myBookingNavBtn').classList.add('visible');
+      openTicketModal();
+    }
+
+    function openTicketModal() {
+      if (!activeBooking) return;
+      document.getElementById('ticketLockerNum').textContent = activeBooking.lockerNum;
+      document.getElementById('ticketPin').textContent = activeBooking.pin;
+      document.getElementById('ticketZoneText').textContent = `Zvartnots Airport • ${activeBooking.zone}`;
+      document.getElementById('ticketMetaText').textContent = `${activeBooking.lockerName} • ${activeBooking.price.toLocaleString()} AMD`;
+      document.getElementById('qrContainer').innerHTML = generateFakeQR(activeBooking.pin);
+      document.getElementById('ticketModal').classList.add('open');
+    }
+
+    function closeTicketModal() {
+      document.getElementById('ticketModal').classList.remove('open');
+    }
+
+    function extendBooking() {
+      if (!activeBooking) return;
+      activeBooking.price += 1500;
+      openTicketModal();
+    }
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase().includes(lang === 'hy' ? 'հայ' : lang === 'en' ? 'eng' : 'рус'));
+      });
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+
+      renderLockers();
+      updateSummary();
+    }
+
+    // Initialize default date/time
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('startTimeInput').value = now.toISOString().slice(0, 16);
+
+    renderLockers();
+    updateSummary();
+  </script>
+</body>
+</html>

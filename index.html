@@ -1,1637 +1,1516 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>UniEat UFAR — Précommande Cafétéria</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts: Plus Jakarta Sans -->
+  <title>UniEat UFAR — Pre-order App</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          },
-          colors: {
-            cream: {
-              bg: '#F5F3EC',
-              card: '#FAF9F5',
-              soft: '#EFECE3',
-            },
-            olive: {
-              dark: '#2C3923',
-              hover: '#222D1B',
-              sage: '#7D876E',
-              light: '#DCE0D2',
-              tint: '#E7ECE0',
-            },
-            ink: {
-              primary: '#1E241B',
-              secondary: '#687061',
-            }
-          },
-          boxShadow: {
-            'soft': '0 8px 24px -6px rgba(44, 57, 35, 0.08)',
-            'card': '0 4px 16px -2px rgba(30, 36, 27, 0.05)',
-            'phone': '0 30px 70px -15px rgba(30, 36, 27, 0.28), 0 0 0 12px #1B1E19',
-          }
-        }
-      }
-    }
-  </script>
-
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-outer: #E5E3DC;
+      --bg-phone: #F7F5F0;
+      --bg-card: #FFFFFF;
+      --bg-pill: #EFECE4;
+      --brand-dark: #2C3824;
+      --brand-dark-hover: #212A1B;
+      --brand-sage: #8C967E;
+      --brand-sage-light: #DCE1D5;
+      --text-main: #222B1C;
+      --text-muted: #70776A;
+      --border-soft: #E6E3DA;
+      --accent-green: #4C6E3B;
+    }
+
     * {
-      -webkit-tap-highlight-color: transparent;
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: #E7E4DA;
-      background-image: radial-gradient(circle at 20% 20%, rgba(125, 135, 110, 0.14) 0%, transparent 45%),
-                        radial-gradient(circle at 80% 80%, rgba(44, 57, 35, 0.10) 0%, transparent 45%);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      color: #1E241B;
-      margin: 0;
-      padding: 0;
+      font-family: 'DM Sans', sans-serif;
+      background: radial-gradient(circle at top left, #EAE7DF, #DCD9D0);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 16px;
+      color: var(--text-main);
     }
 
-    /* Hide scrollbars inside mobile viewport while keeping scroll functional */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    /* Mobile Frame Responsiveness */
+    /* Phone Shell */
     .phone-frame {
       width: 100%;
-      height: 100dvh;
-      background-color: #F5F3EC;
+      max-width: 393px;
+      height: 820px;
+      max-height: 94vh;
+      background: var(--bg-phone);
+      border-radius: 46px;
+      border: 9px solid #1C1E1A;
+      box-shadow: 0 28px 65px rgba(28, 30, 26, 0.22), 0 0 0 2px #4A4D46;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    @media (min-width: 500px) {
-      body {
-        padding: 20px;
-      }
-      .phone-frame {
-        width: 393px;
-        height: 852px;
-        max-height: 92vh;
-        border-radius: 48px;
-        box-shadow: 0 30px 70px -15px rgba(30, 36, 27, 0.28), 0 0 0 11px #181B16;
-      }
+    /* Status Bar */
+    .status-bar {
+      height: 44px;
+      padding: 12px 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      position: relative;
+      z-index: 20;
+      flex-shrink: 0;
     }
 
-    /* Smooth screen transition */
-    @keyframes fadeSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    .screen-animate {
-      animation: fadeSlideUp 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    .dynamic-island {
+      width: 112px;
+      height: 28px;
+      background: #141513;
+      border-radius: 20px;
+      position: absolute;
+      left: 50%;
+      top: 10px;
+      transform: translateX(-50%);
     }
 
-    @keyframes floatSlow {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-6px); }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
     }
-    .float-bag {
-      animation: floatSlow 3.2s ease-in-out infinite;
+
+    /* Screens Container */
+    .screens-wrapper {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+      padding: 12px 20px 92px;
+      scrollbar-width: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .screen.no-nav {
+      padding-bottom: 28px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2, h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      background: var(--brand-dark);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 999px;
+      padding: 16px 22px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.15s ease, background 0.15s ease;
+      box-shadow: 0 8px 20px rgba(44, 56, 36, 0.2);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+      background: var(--brand-dark-hover);
+    }
+
+    .btn-outline {
+      width: 100%;
+      background: transparent;
+      color: var(--brand-dark);
+      border: 1.5px solid var(--brand-dark);
+      border-radius: 999px;
+      padding: 13px 20px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* SCREEN 1: SPLASH */
+    .splash-screen {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .blob-top {
+      position: absolute;
+      top: -60px;
+      right: -50px;
+      width: 210px;
+      height: 210px;
+      background: var(--brand-sage);
+      border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;
+      opacity: 0.75;
+    }
+
+    .blob-bottom {
+      position: absolute;
+      bottom: -55px;
+      left: -45px;
+      width: 220px;
+      height: 200px;
+      background: var(--brand-sage);
+      border-radius: 60% 40% 45% 55% / 45% 60% 40% 55%;
+      opacity: 0.75;
+    }
+
+    .logo-mark {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand-dark);
+    }
+
+    .splash-title {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--brand-dark);
+      line-height: 1.05;
+    }
+
+    .splash-sub {
+      font-size: 13px;
+      letter-spacing: 0.35em;
+      font-weight: 700;
+      color: var(--brand-dark);
+      margin-top: 6px;
+      margin-bottom: 24px;
+    }
+
+    .splash-tagline {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      max-width: 220px;
+    }
+
+    /* SCREEN 2: ONBOARDING */
+    .skip-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+    }
+
+    .skip-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .welcome-title {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--brand-dark);
+      margin-bottom: 12px;
+    }
+
+    .welcome-desc {
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .hero-illustration {
+      flex: 1;
+      background: linear-gradient(145deg, #EFECE4, #E3DFD3);
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-badge {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand-dark);
+      margin-top: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #CFCBC0;
+    }
+
+    .dot.active {
+      width: 18px;
+      border-radius: 6px;
+      background: var(--brand-dark);
+    }
+
+    /* SCREEN 3: HOME */
+    .greeting-header {
+      margin-bottom: 16px;
+    }
+
+    .greeting-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--brand-dark);
+    }
+
+    .greeting-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .search-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .cat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .cat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--bg-pill);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .cat-item.active .cat-icon {
+      background: var(--brand-dark);
+      color: #FFF;
+      transform: translateY(-2px);
+    }
+
+    .cat-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .cat-item.active .cat-label {
+      color: var(--brand-dark);
+      font-weight: 700;
+    }
+
+    .section-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--brand-dark);
+    }
+
+    .see-all {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .popular-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .food-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 10px;
+      border: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .food-card:active {
+      transform: scale(0.98);
+    }
+
+    .food-thumb {
+      height: 105px;
+      border-radius: 14px;
+      background: var(--bg-pill);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      margin-bottom: 10px;
+    }
+
+    .food-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .food-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+
+    .food-price {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .add-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--brand-dark);
+      color: #FFF;
+      border: none;
+      font-size: 18px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* List style cards (Menu / Coffee screen) */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      color: var(--brand-dark);
+    }
+
+    .top-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--brand-dark);
+    }
+
+    .sub-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+
+    .sub-tab {
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .sub-tab.active {
+      background: var(--brand-dark);
+      color: #FFF;
+      border-color: var(--brand-dark);
+    }
+
+    .list-item {
+      background: var(--bg-card);
+      border-radius: 18px;
+      padding: 10px 14px 10px 10px;
+      border: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .list-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      background: var(--bg-pill);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      flex-shrink: 0;
+    }
+
+    .list-info {
+      flex: 1;
+    }
+
+    .list-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .list-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Product Detail */
+    .detail-hero {
+      height: 220px;
+      background: linear-gradient(145deg, #EFECE4, #E2DDD0);
+      border-radius: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 96px;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .size-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 12px 0 24px;
+    }
+
+    .size-btn {
+      padding: 12px;
+      border-radius: 16px;
+      border: 1.5px solid var(--border-soft);
+      background: var(--bg-card);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .size-btn.active {
+      background: var(--brand-dark);
+      color: #FFF;
+      border-color: var(--brand-dark);
+    }
+
+    /* Cart */
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qty-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-phone);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .total-box {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    /* Checkout */
+    .checkout-card {
+      background: var(--bg-card);
+      border-radius: 18px;
+      padding: 14px;
+      border: 1px solid var(--border-soft);
+      margin-bottom: 14px;
+    }
+
+    .pickup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .pickup-opt {
+      padding: 12px;
+      border-radius: 16px;
+      border: 1.5px solid var(--border-soft);
+      background: var(--bg-card);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .pickup-opt.active {
+      background: var(--brand-dark);
+      color: #FFF;
+      border-color: var(--brand-dark);
+    }
+
+    /* Confirmed & Ready */
+    .center-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .bag-illustration {
+      width: 130px;
+      height: 130px;
+      border-radius: 32px;
+      background: var(--bg-pill);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      border: 2px solid var(--brand-sage-light);
+    }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 280px;
+      margin: 24px 0 32px;
+      position: relative;
+    }
+
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      background: var(--border-soft);
+      z-index: 0;
+    }
+
+    .step-node {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .step-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .step-node.done .step-circle,
+    .step-node.current .step-circle {
+      background: var(--brand-dark);
+      color: #FFF;
+      border-color: var(--brand-dark);
+    }
+
+    .ready-banner {
+      background: var(--brand-sage-light);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .ready-check {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--brand-dark);
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    /* QR Modal */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(28, 30, 26, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-phone);
+      border-radius: 28px;
+      padding: 24px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 76px;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-soft);
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 8px 12px 16px;
+      z-index: 30;
+    }
+
+    .bottom-nav.visible {
+      display: grid;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .nav-btn.active {
+      color: var(--brand-dark);
+      font-weight: 700;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: 2px;
+      right: 22px;
+      background: var(--brand-dark);
+      color: #FFF;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 17px;
+      height: 17px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    .toast {
+      position: absolute;
+      top: 54px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: var(--brand-dark);
+      color: #FFF;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 60;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
   </style>
 </head>
 <body>
 
-  <!-- Mobile Device Container -->
-  <div id="app-shell" class="phone-frame">
-    
-    <!-- iOS Status Bar + Dynamic Island -->
-    <div id="status-bar" class="w-full pt-3 pb-2 px-7 flex items-center justify-between text-xs font-semibold text-ink-primary z-30 select-none shrink-0">
-      <span class="tracking-tight text-[13px] font-bold">9:41</span>
-      <!-- Dynamic Island -->
-      <div class="w-[104px] h-[27px] bg-[#141613] rounded-full flex items-center justify-end px-2.5 shadow-inner">
-        <div class="w-2.5 h-2.5 rounded-full bg-[#242B35] border border-[#323A47]"></div>
+  <div class="phone-frame">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="dynamic-island"></div>
+      <div class="status-icons">
+        <span>•••</span>
+        <span>WiFi</span>
+        <span>🔋</span>
       </div>
-      <!-- Signal, Wifi, Battery -->
-      <div class="flex items-center gap-1.5 text-ink-primary">
-        <svg class="w-3.5 h-3.5" viewBox="0 0 16 12" fill="currentColor">
-          <rect x="0" y="8" width="2.5" height="4" rx="0.7"/>
-          <rect x="4" y="5.5" width="2.5" height="6.5" rx="0.7"/>
-          <rect x="8" y="3" width="2.5" height="9" rx="0.7"/>
-          <rect x="12" y="0" width="2.5" height="12" rx="0.7"/>
-        </svg>
-        <svg class="w-3.5 h-3.5" viewBox="0 0 16 12" fill="currentColor">
-          <path d="M8 9.6a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8zm-3.6-2.2a5.2 5.2 0 017.2 0l1.1-1.2a6.8 6.8 0 00-9.4 0l1.1 1.2zm-2.5-2.6a8.8 8.8 0 0112.2 0l1.1-1.2a10.4 10.4 0 00-14.4 0l1.1 1.2z"/>
-        </svg>
-        <div class="w-5 h-2.5 border border-ink-primary/80 rounded-[3px] p-[1px] flex items-center">
-          <div class="w-full h-full bg-ink-primary rounded-[1.5px]"></div>
+    </div>
+
+    <div id="toast" class="toast">Added to cart</div>
+
+    <div class="screens-wrapper">
+
+      <!-- 1. SPLASH SCREEN -->
+      <section id="screen-splash" class="screen no-nav splash-screen active" onclick="goTo('welcome')">
+        <div class="blob-top"></div>
+        <div class="blob-bottom"></div>
+        <div class="logo-mark">
+          <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+            <path d="M22 12V28C22 31.3 24.7 34 28 34V52" stroke="#2C3824" stroke-width="4" stroke-linecap="round"/>
+            <path d="M17 12V24M27 12V24" stroke="#2C3824" stroke-width="4" stroke-linecap="round"/>
+            <ellipse cx="43" cy="22" rx="7" ry="10" fill="#2C3824"/>
+            <path d="M43 32V52" stroke="#2C3824" stroke-width="4" stroke-linecap="round"/>
+          </svg>
         </div>
+        <h1 class="splash-title">UniEat</h1>
+        <div class="splash-sub">UFAR</div>
+        <p class="splash-tagline">Good food.<br>More time for what matters.</p>
+        <p style="font-size:12px; color:var(--brand-sage); margin-top:28px; font-weight:600;">Tap anywhere to enter →</p>
+      </section>
+
+      <!-- 2. WELCOME / ONBOARDING SCREEN -->
+      <section id="screen-welcome" class="screen no-nav">
+        <div class="skip-row">
+          <button class="skip-btn" onclick="goTo('home')">Skip</button>
+        </div>
+        <h1 class="welcome-title">Welcome to<br>UniEat UFAR</h1>
+        <p class="welcome-desc">Order your favorite food and drink in advance and skip the line.</p>
+        
+        <div class="hero-illustration">
+          <div style="font-size: 84px; line-height: 1;">☕🥐</div>
+          <div class="hero-badge">⚡ Fast Express Pickup • UFAR Cafeteria</div>
+        </div>
+
+        <div class="dots">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <button class="btn-primary" onclick="goTo('home')">Get started</button>
+      </section>
+
+      <!-- 3. HOME SCREEN -->
+      <section id="screen-home" class="screen">
+        <div class="greeting-header">
+          <h2 class="greeting-title">Bonjour, <span id="user-first-name">Shushan</span>! 👋</h2>
+          <p class="greeting-sub">Good food. More time for what matters.</p>
+        </div>
+
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="search-input" placeholder="Search for food, drinks..." oninput="renderHome()" />
+        </div>
+
+        <div class="categories-grid">
+          <button class="cat-item active" onclick="selectCategory('All', this)">
+            <div class="cat-icon">🍽️</div>
+            <span class="cat-label">All</span>
+          </button>
+          <button class="cat-item" onclick="goTo('coffee')">
+            <div class="cat-icon">☕</div>
+            <span class="cat-label">Coffee</span>
+          </button>
+          <button class="cat-item" onclick="selectCategory('Breakfast', this)">
+            <div class="cat-icon">🥐</div>
+            <span class="cat-label">Breakfast</span>
+          </button>
+          <button class="cat-item" onclick="selectCategory('Lunch', this)">
+            <div class="cat-icon">🥗</div>
+            <span class="cat-label">Lunch</span>
+          </button>
+          <button class="cat-item" onclick="selectCategory('Snacks', this)">
+            <div class="cat-icon">🍪</div>
+            <span class="cat-label">Snacks</span>
+          </button>
+        </div>
+
+        <div class="section-row">
+          <h3 class="section-title">Popular</h3>
+          <button class="see-all" onclick="goTo('coffee')">See all</button>
+        </div>
+        <div id="popular-grid" class="popular-grid"></div>
+
+        <div class="section-row">
+          <h3 class="section-title">Lunch</h3>
+          <button class="see-all" onclick="selectCategory('Lunch')">See all</button>
+        </div>
+        <div id="lunch-grid" class="popular-grid"></div>
+      </section>
+
+      <!-- 4. COFFEE & MENU SCREEN -->
+      <section id="screen-coffee" class="screen">
+        <div class="top-bar">
+          <button class="back-btn" onclick="goTo('home')">‹</button>
+          <h2 class="top-title">Coffee</h2>
+          <div style="width:36px;"></div>
+        </div>
+
+        <div class="sub-tabs">
+          <button class="sub-tab" onclick="filterCoffee('Hot Drinks', this)">Hot Drinks</button>
+          <button class="sub-tab active" onclick="filterCoffee('Iced Drinks', this)">Iced Drinks</button>
+          <button class="sub-tab" onclick="filterCoffee('Specials', this)">Specials</button>
+        </div>
+
+        <div id="coffee-list"></div>
+      </section>
+
+      <!-- 5. PRODUCT DETAIL SCREEN -->
+      <section id="screen-detail" class="screen no-nav">
+        <div class="top-bar">
+          <button class="back-btn" onclick="goTo('home')">‹</button>
+          <h2 class="top-title">Details</h2>
+          <button class="back-btn" onclick="showToast('Saved to favorites ♥')">♡</button>
+        </div>
+
+        <div id="detail-emoji" class="detail-hero">🧋</div>
+        <h2 id="detail-name" style="font-size:24px; font-weight:800;">Iced Latte</h2>
+        <p id="detail-base-price" style="font-size:16px; font-weight:700; color:var(--text-muted); margin:4px 0 10px;">1,200 AMD</p>
+        <p id="detail-desc" style="font-size:14px; color:var(--text-muted); line-height:1.5; margin-bottom:18px;">
+          Espresso with cold milk and ice. A refreshing classic prepared right before your break.
+        </p>
+
+        <h3 style="font-size:14px; font-weight:700;">Size</h3>
+        <div class="size-grid">
+          <button id="size-regular" class="size-btn active" onclick="selectSize('Regular', 0)">
+            <span>Regular</span>
+            <span style="font-size:11px; opacity:0.8;">Standard</span>
+          </button>
+          <button id="size-large" class="size-btn" onclick="selectSize('Large', 300)">
+            <span>Large</span>
+            <span style="font-size:11px; opacity:0.8;">+300 AMD</span>
+          </button>
+        </div>
+
+        <button class="btn-primary" style="margin-top:auto;" onclick="addDetailToCart()">
+          <span>Add to cart</span>
+          <span id="detail-btn-price">1,200 AMD</span>
+        </button>
+      </section>
+
+      <!-- 6. YOUR CART SCREEN -->
+      <section id="screen-cart" class="screen">
+        <div class="top-bar">
+          <button class="back-btn" onclick="goTo('home')">‹</button>
+          <h2 class="top-title">Your Cart</h2>
+          <div style="width:36px;"></div>
+        </div>
+
+        <div id="cart-items-container"></div>
+
+        <div class="total-box">
+          <div class="total-row">
+            <span style="font-size:16px; font-weight:700;">Total</span>
+            <span id="cart-total-amount" style="font-size:20px; font-weight:800;">5,900 AMD</span>
+          </div>
+          <button class="btn-primary" onclick="goTo('checkout')">Proceed to Order</button>
+        </div>
+      </section>
+
+      <!-- 7. CHECKOUT SCREEN -->
+      <section id="screen-checkout" class="screen no-nav">
+        <div class="top-bar">
+          <button class="back-btn" onclick="goTo('cart')">‹</button>
+          <h2 class="top-title">Checkout</h2>
+          <div style="width:36px;"></div>
+        </div>
+
+        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Pickup time</h3>
+        <div class="pickup-grid">
+          <button id="time-asap" class="pickup-opt active" onclick="selectPickup('asap')">
+            <div style="font-weight:700; font-size:14px;">ASAP</div>
+            <div style="font-size:11px; opacity:0.8;">~ 5 min</div>
+          </button>
+          <button id="time-sched" class="pickup-opt" onclick="selectPickup('sched')">
+            <div style="font-weight:700; font-size:14px;">Schedule</div>
+            <div style="font-size:11px; opacity:0.8;">Pause 12:15</div>
+          </button>
+        </div>
+
+        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Pickup location</h3>
+        <div class="checkout-card" style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:22px;">📍</span>
+          <div>
+            <div style="font-weight:700; font-size:14px;">UFAR Cafeteria</div>
+            <div style="font-size:12px; color:var(--text-muted);">Guichet « Fast Express »</div>
+          </div>
+        </div>
+
+        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Payment method</h3>
+        <div class="checkout-card" onclick="selectPayment('card')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:20px;">💳</span>
+            <div>
+              <div style="font-weight:700; font-size:14px;">Card</div>
+              <div style="font-size:12px; color:var(--text-muted);">•••• 4242</div>
+            </div>
+          </div>
+          <span id="pay-radio-card" style="font-size:18px; color:var(--brand-dark);">◉</span>
+        </div>
+
+        <div class="checkout-card" onclick="selectPayment('cash')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:20px;">💵</span>
+            <div style="font-weight:700; font-size:14px;">Cash at pickup</div>
+          </div>
+          <span id="pay-radio-cash" style="font-size:18px; color:var(--text-muted);">○</span>
+        </div>
+
+        <div class="total-box">
+          <div class="total-row">
+            <span style="font-size:16px; font-weight:700;">Total</span>
+            <span id="checkout-total" style="font-size:20px; font-weight:800;">5,900 AMD</span>
+          </div>
+          <button class="btn-primary" onclick="confirmOrder()">Confirm Order</button>
+        </div>
+      </section>
+
+      <!-- 8. ORDER CONFIRMED SCREEN -->
+      <section id="screen-confirmed" class="screen no-nav">
+        <div class="top-bar">
+          <button class="back-btn" onclick="goTo('home')">‹</button>
+          <div style="width:36px;"></div>
+        </div>
+
+        <div class="center-box">
+          <div class="bag-illustration">
+            <span style="font-size:48px;">🛍️</span>
+            <span style="font-size:12px; font-weight:800; color:var(--brand-dark); margin-top:4px;">UniEat</span>
+          </div>
+          <h2 style="font-size:26px; font-weight:800; margin-bottom:8px;">Order Confirmed!</h2>
+          <p style="font-size:14px; color:var(--text-muted); max-width:250px; line-height:1.5;">
+            Your order is being prepared. You'll receive a notification when it's ready.
+          </p>
+
+          <div class="stepper">
+            <div class="step-node done">
+              <div class="step-circle">✓</div>
+              <span>Confirmed</span>
+            </div>
+            <div class="step-node current">
+              <div class="step-circle">👨‍🍳</div>
+              <span>Preparing</span>
+            </div>
+            <div class="step-node">
+              <div class="step-circle">🥡</div>
+              <span>Ready</span>
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="goTo('order')">View Order Details</button>
+        </div>
+      </section>
+
+      <!-- 9. MY ORDER / READY + QR SCREEN -->
+      <section id="screen-order" class="screen">
+        <div class="top-bar">
+          <button class="back-btn" onclick="goTo('home')">‹</button>
+          <h2 class="top-title">My Order</h2>
+          <div style="width:36px;"></div>
+        </div>
+
+        <div class="ready-banner">
+          <div class="ready-check">✓</div>
+          <div>
+            <div style="font-weight:800; font-size:15px; color:var(--brand-dark);">Your order is ready!</div>
+            <div style="font-size:12px; color:var(--text-main); margin-top:2px;">You can now pick it up at the UniEat Fast Express counter.</div>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="margin-bottom:16px;" onclick="openQR()">
+          <span>Show Fast Express QR Code</span>
+        </button>
+
+        <div class="section-row">
+          <h3 class="section-title">Order #1043</h3>
+          <span style="font-size:12px; color:var(--text-muted);">Today, 12:15</span>
+        </div>
+
+        <div id="order-summary-list"></div>
+
+        <div class="total-row" style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border-soft);">
+          <span style="font-weight:700;">Total Paid</span>
+          <span id="order-paid-total" style="font-weight:800; font-size:18px;">5,900 AMD</span>
+        </div>
+
+        <!-- Step 6: Feedback from presentation -->
+        <div class="checkout-card" style="margin-top:10px; text-align:center;">
+          <div style="font-size:13px; font-weight:700; margin-bottom:6px;">6. Feedback — Rate your pause experience</div>
+          <div style="font-size:22px; letter-spacing:6px; cursor:pointer;" onclick="showToast('Merci pour votre avis ! ⭐')">⭐⭐⭐⭐⭐</div>
+        </div>
+      </section>
+
+      <!-- 10. PROFILE SCREEN -->
+      <section id="screen-profile" class="screen">
+        <div class="top-bar">
+          <div style="width:36px;"></div>
+          <h2 class="top-title">Profile</h2>
+          <button class="back-btn" onclick="switchTeamMember()">↻</button>
+        </div>
+
+        <div class="checkout-card" style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
+          <div style="width:54px; height:54px; border-radius:50%; background:var(--brand-sage-light); display:flex; align-items:center; justify-content:center; font-size:24px;">👩‍🎓</div>
+          <div>
+            <div id="profile-full-name" style="font-weight:800; font-size:16px;">Shushan Dallaqyan</div>
+            <div style="font-size:13px; color:var(--text-muted);">Student • UFAR (Erevan)</div>
+          </div>
+        </div>
+
+        <div class="list-item" onclick="goTo('order')">
+          <span style="font-size:20px;">🧾</span>
+          <div class="list-info"><div class="list-title">My Orders</div></div>
+          <span>›</span>
+        </div>
+        <div class="list-item" onclick="showToast('Visa •••• 4242 active')">
+          <span style="font-size:20px;">💳</span>
+          <div class="list-info"><div class="list-title">Payment Methods</div></div>
+          <span>›</span>
+        </div>
+        <div class="list-item" onclick="showToast('Pickup alerts enabled 🔔')">
+          <span style="font-size:20px;">🔔</span>
+          <div class="list-info"><div class="list-title">Notifications</div></div>
+          <span>›</span>
+        </div>
+        <div class="list-item" onclick="switchTeamMember()">
+          <span style="font-size:20px;">👥</span>
+          <div class="list-info">
+            <div class="list-title">Switch UFAR Team Member</div>
+            <div class="list-sub">Tap to preview team accounts</div>
+          </div>
+          <span>›</span>
+        </div>
+        <div class="list-item" onclick="goTo('splash')">
+          <span style="font-size:20px;">🚪</span>
+          <div class="list-info"><div class="list-title">Log Out</div></div>
+          <span>›</span>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- QR CODE MODAL (Step 5: Retrait Fast Express) -->
+    <div id="qr-modal" class="modal-overlay" onclick="closeQR()">
+      <div class="modal-card" onclick="event.stopPropagation()">
+        <div style="font-size:12px; font-weight:700; color:var(--brand-sage); letter-spacing:0.1em;">GUICHET « FAST EXPRESS »</div>
+        <h3 style="font-size:22px; font-weight:800; margin:4px 0 14px;">Order #1043</h3>
+        
+        <!-- Crisp SVG QR Code -->
+        <div style="background:#FFF; padding:16px; border-radius:20px; display:inline-block; border:1px solid var(--border-soft); margin-bottom:14px;">
+          <svg width="150" height="150" viewBox="0 0 100 100" fill="#2C3824">
+            <rect x="5" y="5" width="25" height="25" rx="3" fill="none" stroke="#2C3824" stroke-width="5"/>
+            <rect x="12" y="12" width="11" height="11"/>
+            <rect x="70" y="5" width="25" height="25" rx="3" fill="none" stroke="#2C3824" stroke-width="5"/>
+            <rect x="77" y="12" width="11" height="11"/>
+            <rect x="5" y="70" width="25" height="25" rx="3" fill="none" stroke="#2C3824" stroke-width="5"/>
+            <rect x="12" y="77" width="11" height="11"/>
+            <rect x="40" y="8" width="8" height="8"/><rect x="52" y="15" width="8" height="8"/>
+            <rect x="40" y="28" width="14" height="8"/><rect x="10" y="42" width="12" height="8"/>
+            <rect x="30" y="42" width="18" height="16" rx="2"/><rect x="56" y="40" width="10" height="10"/>
+            <rect x="75" y="44" width="16" height="8"/><rect x="42" y="66" width="8" height="12"/>
+            <rect x="58" y="62" width="14" height="8"/><rect x="78" y="68" width="14" height="14"/>
+            <rect x="42" y="84" width="24" height="8"/>
+          </svg>
+        </div>
+
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+          Present this QR code at the UFAR Cafeteria counter to pick up your order without waiting.
+        </p>
+        <button class="btn-primary" onclick="closeQR()">Done</button>
       </div>
     </div>
 
-    <!-- Main Dynamic Screen Viewport -->
-    <main id="screen-container" class="flex-1 overflow-y-auto no-scrollbar relative flex flex-col">
-      <!-- Screens render here dynamically -->
-    </main>
-
-    <!-- Bottom Navigation Bar (Visible on main app tabs) -->
-    <nav id="bottom-nav" class="hidden w-full bg-cream-card/95 backdrop-blur-md border-t border-olive-light/60 px-6 pt-2.5 pb-6 shrink-0 z-30">
-      <div class="flex items-center justify-between">
-        <button onclick="navigate('home')" data-nav="home" class="nav-btn flex flex-col items-center gap-1 text-olive-dark transition-all">
-          <div class="nav-icon-wrap p-1 rounded-xl">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z"/>
-              <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z"/>
-            </svg>
-          </div>
-          <span class="text-[11px] font-semibold">Home</span>
-        </button>
-
-        <button onclick="navigate('my-order')" data-nav="my-order" class="nav-btn flex flex-col items-center gap-1 text-ink-secondary transition-all">
-          <div class="nav-icon-wrap p-1 rounded-xl relative">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
-            </svg>
-            <span id="active-order-dot" class="w-2 h-2 rounded-full bg-emerald-600 absolute top-1 right-0.5 ring-2 ring-cream-card"></span>
-          </div>
-          <span class="text-[11px] font-medium">Order</span>
-        </button>
-
-        <button onclick="navigate('cart')" data-nav="cart" class="nav-btn flex flex-col items-center gap-1 text-ink-secondary transition-all">
-          <div class="nav-icon-wrap p-1 rounded-xl relative">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/>
-            </svg>
-            <span id="cart-badge" class="min-w-[17px] h-[17px] px-1 rounded-full bg-olive-dark text-white text-[10px] font-bold flex items-center justify-center absolute -top-0.5 -right-1.5 shadow-sm">3</span>
-          </div>
-          <span class="text-[11px] font-medium">Cart</span>
-        </button>
-
-        <button onclick="navigate('profile')" data-nav="profile" class="nav-btn flex flex-col items-center gap-1 text-ink-secondary transition-all">
-          <div class="nav-icon-wrap p-1 rounded-xl">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
-            </svg>
-          </div>
-          <span class="text-[11px] font-medium">Profile</span>
-        </button>
-      </div>
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav id="bottom-nav" class="bottom-nav">
+      <button class="nav-btn active" data-target="home" onclick="goTo('home')">
+        <span style="font-size:18px;">🏠</span>
+        <span>Home</span>
+      </button>
+      <button class="nav-btn" data-target="order" onclick="goTo('order')">
+        <span style="font-size:18px;">🧾</span>
+        <span>Order</span>
+      </button>
+      <button class="nav-btn" data-target="cart" onclick="goTo('cart')">
+        <span style="font-size:18px;">🛒</span>
+        <span id="nav-cart-badge" class="cart-badge">3</span>
+        <span>Cart</span>
+      </button>
+      <button class="nav-btn" data-target="profile" onclick="goTo('profile')">
+        <span style="font-size:18px;">👤</span>
+        <span>Profile</span>
+      </button>
     </nav>
-
-    <!-- Custom Toast Notification (replaces alert) -->
-    <div id="toast" class="pointer-events-none opacity-0 translate-y-3 transition-all duration-300 absolute bottom-24 left-5 right-5 z-50 flex justify-center">
-      <div class="bg-olive-dark text-white px-4 py-2.5 rounded-2xl shadow-lg text-xs font-semibold flex items-center gap-2 border border-white/10">
-        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-        <span id="toast-message">Added to cart</span>
-      </div>
-    </div>
-
-    <!-- Modal Overlay for QR Code / Feedback / Profile Switcher -->
-    <div id="modal-overlay" class="hidden absolute inset-0 bg-ink-primary/45 backdrop-blur-[2px] z-40 flex items-end justify-center p-4">
-      <div id="modal-content" class="w-full bg-cream-card rounded-3xl p-5 shadow-2xl border border-olive-light/50 screen-animate">
-        <!-- Dynamic Modal Content -->
-      </div>
-    </div>
-
-    <!-- Home Indicator Bar -->
-    <div class="w-full pb-2 pt-1 flex justify-center shrink-0 bg-transparent pointer-events-none z-30">
-      <div class="w-32 h-1 bg-ink-primary/25 rounded-full"></div>
-    </div>
   </div>
 
   <script>
-    // ==========================================
-    // 1. PRODUCT CATALOG & APPLICATION STATE
-    // ==========================================
-    const MENU_ITEMS = [
-      {
-        id: 'iced-latte',
-        name: 'Iced Latte',
-        category: 'Coffee',
-        subCategory: 'Iced Drinks',
-        price: 1200,
-        prepTime: '3 min',
-        popular: true,
-        description: 'Espresso with cold milk and ice. A refreshing classic.',
-        ingredients: 'Double espresso, chilled whole milk, crystal ice cubes',
-        image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'chicken-sandwich',
-        name: 'Chicken Sandwich',
-        category: 'Lunch',
-        subCategory: 'Sandwiches',
-        price: 2200,
-        prepTime: '6 min',
-        popular: true,
-        description: 'Grilled herb chicken breast, crisp lettuce, ripe tomatoes, and signature pesto aioli on artisan ciabatta.',
-        ingredients: 'Grilled chicken, ciabatta bread, lettuce, tomato, basil aioli',
-        image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'caesar-salad',
-        name: 'Caesar Salad',
-        category: 'Lunch',
-        subCategory: 'Salads',
-        price: 2500,
-        prepTime: '5 min',
-        popular: false,
-        lunchFeature: true,
-        description: 'Crisp romaine hearts, grilled chicken strips, aged parmesan shavings, garlic croutons, and creamy Caesar dressing.',
-        ingredients: 'Romaine lettuce, grilled chicken, parmesan, croutons, Caesar dressing',
-        image: 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'pasta-primavera',
-        name: 'Pasta Arrabbiata',
-        category: 'Lunch',
-        subCategory: 'Hot Meals',
-        price: 2300,
-        prepTime: '7 min',
-        popular: false,
-        lunchFeature: true,
-        description: 'Al dente penne tossed in rich roasted tomato sauce, fresh basil, garlic, and grated parmesan.',
-        ingredients: 'Durum wheat penne, San Marzano tomatoes, basil, olive oil, parmesan',
-        image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'iced-americano',
-        name: 'Iced Americano',
-        category: 'Coffee',
-        subCategory: 'Iced Drinks',
-        price: 900,
-        prepTime: '2 min',
-        popular: false,
-        description: 'Rich double shot of espresso poured over cold filtered water and ice.',
-        ingredients: '100% Arabica espresso, filtered cold water, ice',
-        image: 'https://images.unsplash.com/photo-1517959105821-eaf2591984ca?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'iced-cappuccino',
-        name: 'Iced Cappuccino',
-        category: 'Coffee',
-        subCategory: 'Iced Drinks',
-        price: 1300,
-        prepTime: '4 min',
-        popular: false,
-        description: 'Bold espresso topped with velvety cold milk foam and a light dusting of cocoa.',
-        ingredients: 'Espresso, cold frothed milk, ice, cocoa powder',
-        image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'iced-mocha',
-        name: 'Iced Mocha',
-        category: 'Coffee',
-        subCategory: 'Iced Drinks',
-        price: 1400,
-        prepTime: '4 min',
-        popular: false,
-        description: 'Artisan dark chocolate blended with espresso, cold milk, and ice.',
-        ingredients: 'Espresso, Belgian dark chocolate syrup, cold milk, ice',
-        image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'cold-brew',
-        name: 'Cold Brew',
-        category: 'Coffee',
-        subCategory: 'Iced Drinks',
-        price: 1100,
-        prepTime: '2 min',
-        popular: false,
-        description: 'Steeped for 16 hours for a naturally sweet, smooth, low-acidity coffee experience.',
-        ingredients: 'Single-origin coarse-ground coffee steeped in cold water',
-        image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'flat-white',
-        name: 'Hot Flat White',
-        category: 'Coffee',
-        subCategory: 'Hot Drinks',
-        price: 1150,
-        prepTime: '3 min',
-        popular: false,
-        description: 'Velvety micro-foamed milk poured over a double ristretto shot.',
-        ingredients: 'Double ristretto, steamed whole milk',
-        image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'matcha-tonic',
-        name: 'UFAR Matcha Tonic',
-        category: 'Coffee',
-        subCategory: 'Specials',
-        price: 1500,
-        prepTime: '4 min',
-        popular: false,
-        description: 'Ceremonial grade matcha whisked over sparkling tonic water and citrus zest.',
-        ingredients: 'Uji matcha, botanical tonic water, lemon twist, ice',
-        image: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'butter-croissant',
-        name: 'Croissant au Beurre',
-        category: 'Breakfast',
-        subCategory: 'Pastries',
-        price: 750,
-        prepTime: '2 min',
-        popular: false,
-        description: 'Flaky, golden French butter croissant baked fresh every morning for UFAR students.',
-        ingredients: 'French butter, organic wheat flour, yeast, sea salt',
-        image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'avocado-toast',
-        name: 'Avocado & Egg Toast',
-        category: 'Breakfast',
-        subCategory: 'Bowls & Toast',
-        price: 1800,
-        prepTime: '5 min',
-        popular: false,
-        description: 'Smashed avocado, soft-boiled egg, chili flakes, and sesame seeds on sourdough.',
-        ingredients: 'Sourdough bread, Hass avocado, free-range egg, sesame',
-        image: 'https://images.unsplash.com/photo-1525351484163-7529414342d8?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'berry-granola',
-        name: 'Greek Yogurt & Berries',
-        category: 'Snacks',
-        subCategory: 'Healthy',
-        price: 1350,
-        prepTime: '2 min',
-        popular: false,
-        description: 'Creamy Greek yogurt layered with honey oat granola and fresh seasonal berries.',
-        ingredients: 'Greek yogurt, toasted oats, mountain honey, blueberries, strawberries',
-        image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80'
-      },
-      {
-        id: 'choc-cookie',
-        name: 'Dark Chocolate Cookie',
-        category: 'Snacks',
-        subCategory: 'Sweet',
-        price: 650,
-        prepTime: '1 min',
-        popular: false,
-        description: 'Soft-baked sea salt & dark chocolate chunk cookie—ideal between lectures.',
-        ingredients: '70% dark chocolate, brown butter, flaky sea salt',
-        image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=600&q=80'
-      }
+    const PRODUCTS = [
+      { id: 1, name: 'Iced Latte', price: 1200, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🧋', popular: true },
+      { id: 2, name: 'Chicken Sandwich', price: 2200, cat: 'Lunch', sub: 'Lunch', emoji: '🥪', popular: true },
+      { id: 3, name: 'Caesar Salad', price: 2500, cat: 'Lunch', sub: 'Lunch', emoji: '🥗', popular: false },
+      { id: 4, name: 'Pasta Bowl', price: 2400, cat: 'Lunch', sub: 'Lunch', emoji: '🍝', popular: false },
+      { id: 5, name: 'Iced Americano', price: 900, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🧊', popular: false },
+      { id: 6, name: 'Iced Cappuccino', price: 1300, cat: 'Coffee', sub: 'Iced Drinks', emoji: '☕', popular: false },
+      { id: 7, name: 'Iced Mocha', price: 1400, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🍫', popular: false },
+      { id: 8, name: 'Cold Brew', price: 1100, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🥤', popular: false },
+      { id: 9, name: 'Hot Espresso', price: 800, cat: 'Coffee', sub: 'Hot Drinks', emoji: '☕', popular: false },
+      { id: 10, name: 'Croissant Beurre', price: 750, cat: 'Breakfast', sub: 'Specials', emoji: '🥐', popular: false },
+      { id: 11, name: 'Choco Cookie', price: 650, cat: 'Snacks', sub: 'Specials', emoji: '🍪', popular: false }
     ];
 
-    const TEAM_PROFILES = [
-      { name: 'Shushan Dallaqyan', firstName: 'Shushan', role: 'Student • UFAR', email: 'shushan.dallaqyan@ufar.am' },
-      { name: 'Mane Arakelyan', firstName: 'Mane', role: 'Student • UFAR', email: 'mane.arakelyan@ufar.am' },
-      { name: 'Milena Arakelyan', firstName: 'Milena', role: 'Student • UFAR', email: 'milena.arakelyan@ufar.am' },
-      { name: 'Yana Aleksandryan', firstName: 'Yana', role: 'Student • UFAR', email: 'yana.aleksandryan@ufar.am' },
-      { name: 'Anna Avagimyan', firstName: 'Anna', role: 'Student • UFAR', email: 'anna.avagimyan@ufar.am' },
-      { name: 'Maria Anapisoyan', firstName: 'Maria', role: 'Student • UFAR', email: 'maria.anapisoyan@ufar.am' }
+    const TEAM_MEMBERS = [
+      { first: 'Shushan', full: 'Shushan Dallaqyan' },
+      { first: 'Milena', full: 'Milena Arakelyan' },
+      { first: 'Mane', full: 'Mane Arakelyan' },
+      { first: 'Yana', full: 'Yana Aleksandryan' },
+      { first: 'Anna', full: 'Anna Avagimyan' },
+      { first: 'Maria', full: 'Maria Anapisoyan' }
     ];
 
-    // App State
-    const state = {
-      screen: 'splash', // splash | onboarding | home | category | product | cart | checkout | confirmed | my-order | profile
-      user: TEAM_PROFILES[0],
-      searchQuery: '',
-      selectedCategory: 'Coffee',
-      selectedSubCategory: 'Iced Drinks',
-      selectedProductId: 'iced-latte',
-      selectedSize: 'Regular', // Regular | Large
-      favorites: new Set(['iced-latte']),
-      // Pre-populated cart matching the exact PDF mockup (Total: 5,900 AMD)
-      cart: [
-        { id: 'iced-latte', size: 'Regular', qty: 1 },
-        { id: 'chicken-sandwich', size: 'Regular', qty: 1 },
-        { id: 'caesar-salad', size: 'Regular', qty: 1 }
-      ],
-      pickupMode: 'ASAP', // ASAP | Schedule
-      scheduledTime: '12:30 (Pause déjeuner)',
-      paymentMethod: 'Card', // Card | Cash
-      activeOrder: {
-        id: '#1043',
-        date: '12 Oct 2026, 12:15',
-        status: 'Ready', // Confirmed | Preparing | Ready
-        items: [
-          { id: 'iced-latte', size: 'Regular', qty: 1, unitPrice: 1200 },
-          { id: 'chicken-sandwich', size: 'Regular', qty: 1, unitPrice: 2200 },
-          { id: 'caesar-salad', size: 'Regular', qty: 1, unitPrice: 2500 }
-        ],
-        total: 5900,
-        feedbackSubmitted: false,
-        rating: 5
+    let teamIdx = 0;
+    let currentCategory = 'All';
+    let currentCoffeeTab = 'Iced Drinks';
+    let selectedProduct = PRODUCTS[0];
+    let selectedSizeExtra = 0;
+
+    // Pre-filled cart matching your mockup (1,200 + 2,200 + 2,500 = 5,900 AMD)
+    let cart = [
+      { id: 1, name: 'Iced Latte', price: 1200, emoji: '🧋', qty: 1 },
+      { id: 2, name: 'Chicken Sandwich', price: 2200, emoji: '🥪', qty: 1 },
+      { id: 3, name: 'Caesar Salad', price: 2500, emoji: '🥗', qty: 1 }
+    ];
+
+    function formatAMD(num) {
+      return num.toLocaleString('en-US') + ' AMD';
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1800);
+    }
+
+    function goTo(screenName) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('screen-' + screenName);
+      if (target) target.classList.add('active');
+
+      const navScreens = ['home', 'order', 'cart', 'profile'];
+      const nav = document.getElementById('bottom-nav');
+      if (navScreens.includes(screenName)) {
+        nav.classList.add('visible');
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.target === screenName);
+        });
+      } else {
+        nav.classList.remove('visible');
       }
-    };
 
-    // ==========================================
-    // 2. HELPER UTILITIES
-    // ==========================================
-    function formatAMD(amount) {
-      return amount.toLocaleString('en-US') + ' AMD';
+      if (screenName === 'home') renderHome();
+      if (screenName === 'coffee') renderCoffee();
+      if (screenName === 'cart') renderCart();
+      if (screenName === 'order') renderOrderSummary();
     }
 
-    function getItemById(id) {
-      return MENU_ITEMS.find(item => item.id === id) || MENU_ITEMS[0];
+    function selectCategory(cat, el) {
+      currentCategory = cat;
+      if (el) {
+        document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+      }
+      renderHome();
     }
 
-    function getItemUnitPrice(item, size = 'Regular') {
-      return item.price + (size === 'Large' ? 300 : 0);
+    function renderHome() {
+      const q = (document.getElementById('search-input').value || '').toLowerCase();
+      const popGrid = document.getElementById('popular-grid');
+      const lunchGrid = document.getElementById('lunch-grid');
+
+      const filtered = PRODUCTS.filter(p => {
+        const matchCat = currentCategory === 'All' || p.cat === currentCategory;
+        const matchQ = p.name.toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+
+      const popularItems = filtered.slice(0, 2);
+      const lunchItems = PRODUCTS.filter(p => p.cat === 'Lunch').slice(1, 3);
+
+      popGrid.innerHTML = popularItems.map(p => cardHTML(p)).join('');
+      lunchGrid.innerHTML = lunchItems.map(p => cardHTML(p)).join('');
+    }
+
+    function cardHTML(p) {
+      return `
+        <div class="food-card" onclick="openDetail(${p.id})">
+          <div class="food-thumb">${p.emoji}</div>
+          <div class="food-name">${p.name}</div>
+          <div class="food-footer">
+            <span class="food-price">${formatAMD(p.price)}</span>
+            <button class="add-circle" onclick="event.stopPropagation(); quickAdd(${p.id})">+</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function filterCoffee(tab, el) {
+      currentCoffeeTab = tab;
+      document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      renderCoffee();
+    }
+
+    function renderCoffee() {
+      const list = document.getElementById('coffee-list');
+      const items = PRODUCTS.filter(p => p.sub === currentCoffeeTab);
+      list.innerHTML = items.map(p => `
+        <div class="list-item" onclick="openDetail(${p.id})">
+          <div class="list-thumb">${p.emoji}</div>
+          <div class="list-info">
+            <div class="list-title">${p.name}</div>
+            <div class="list-sub">${formatAMD(p.price)}</div>
+          </div>
+          <button class="add-circle" onclick="event.stopPropagation(); quickAdd(${p.id})">+</button>
+        </div>
+      `).join('');
+    }
+
+    function openDetail(id) {
+      selectedProduct = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
+      selectedSizeExtra = 0;
+      document.getElementById('detail-emoji').textContent = selectedProduct.emoji;
+      document.getElementById('detail-name').textContent = selectedProduct.name;
+      document.getElementById('detail-base-price').textContent = formatAMD(selectedProduct.price);
+      document.getElementById('detail-btn-price').textContent = formatAMD(selectedProduct.price);
+      document.getElementById('size-regular').classList.add('active');
+      document.getElementById('size-large').classList.remove('active');
+      goTo('detail');
+    }
+
+    function selectSize(size, extra) {
+      selectedSizeExtra = extra;
+      document.getElementById('size-regular').classList.toggle('active', size === 'Regular');
+      document.getElementById('size-large').classList.toggle('active', size === 'Large');
+      document.getElementById('detail-btn-price').textContent = formatAMD(selectedProduct.price + extra);
+    }
+
+    function addDetailToCart() {
+      const finalPrice = selectedProduct.price + selectedSizeExtra;
+      const label = selectedSizeExtra > 0 ? `${selectedProduct.name} (L)` : selectedProduct.name; addToCartObj({ id: Date.now(), name: label, price: finalPrice, emoji: selectedProduct.emoji, qty: 1 }); goTo('cart'); }  function quickAdd(id) { const p = PRODUCTS.find(x => x.id === id); if (!p) return; addToCartObj({ id: p.id, name: p.name, price: p.price, emoji: p.emoji, qty: 1 }); }  function addToCartObj(item) { const existing = cart.find(c => c.name === item.name); if (existing) { existing.qty += 1; } else { cart.push(item); } updateBadge(); showToast(`${item.name} added!`);
+    }
+
+    function updateBadge() {
+      const count = cart.reduce((sum, i) => sum + i.qty, 0);
+      document.getElementById('nav-cart-badge').textContent = count;
     }
 
     function getCartTotal() {
-      return state.cart.reduce((sum, entry) => {
-        const item = getItemById(entry.id);
-        return sum + getItemUnitPrice(item, entry.size) * entry.qty;
-      }, 0);
+      return cart.reduce((sum, i) => sum + i.price * i.qty, 0);
     }
 
-    function getCartCount() {
-      return state.cart.reduce((sum, entry) => sum + entry.qty, 0);
-    }
-
-    let toastTimer = null;
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      const toastMsg = document.getElementById('toast-message');
-      toastMsg.textContent = msg;
-      toast.classList.remove('opacity-0', 'translate-y-3');
-      toast.classList.add('opacity-100', 'translate-y-0');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toast.classList.add('opacity-0', 'translate-y-3');
-        toast.classList.remove('opacity-100', 'translate-y-0');
-      }, 2200);
-    }
-
-    // Fallback SVG image handler
-    function imgFallback(imgEl) {
-      imgEl.onerror = null;
-      imgEl.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
-        <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-          <rect width="300" height="300" fill="#E7ECE0"/>
-          <circle cx="150" cy="135" r="46" fill="#2C3923" opacity="0.15"/>
-          <text x="150" y="143" text-anchor="middle" font-family="sans-serif" font-size="32" fill="#2C3923">☕</text>
-          <text x="150" y="205" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#2C3923">UniEat UFAR</text>
-        </svg>
-      `);
-    }
-
-    // ==========================================
-    // 3. CART & ORDER ACTIONS
-    // ==========================================
-    function addToCart(productId, size = 'Regular', event = null) {
-      if (event) event.stopPropagation();
-      const existing = state.cart.find(c => c.id === productId && c.size === size);
-      if (existing) {
-        existing.qty += 1;
+    function renderCart() {
+      const container = document.getElementById('cart-items-container');
+      if (cart.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); margin-top:40px;">Your cart is empty.</p>`;
       } else {
-        state.cart.push({ id: productId, size, qty: 1 });
+        container.innerHTML = cart.map((item, idx) => `
+          <div class="list-item" style="cursor:default;">
+            <div class="list-thumb">${item.emoji}</div>
+            <div class="list-info">
+              <div class="list-title">${item.name}</div>
+              <div class="list-sub">${formatAMD(item.price)}</div>
+            </div>
+            <div class="qty-controls">
+              <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
+              <span style="font-weight:700; font-size:14px;">${item.qty}</span>
+              <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+            </div>
+          </div>
+        `).join('');
       }
-      const item = getItemById(productId);
-      updateNavBadges();
-      showToast(`${item.name} (${size}) added to cart`);
-      if (state.screen === 'cart') render();
+      const totalStr = formatAMD(getCartTotal());
+      document.getElementById('cart-total-amount').textContent = totalStr;
+      document.getElementById('checkout-total').textContent = totalStr;
     }
 
-    function updateCartQty(index, delta) {
-      if (!state.cart[index]) return;
-      state.cart[index].qty += delta;
-      if (state.cart[index].qty <= 0) {
-        state.cart.splice(index, 1);
-      }
-      updateNavBadges();
-      render();
+    function changeQty(idx, delta) {
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      updateBadge();
+      renderCart();
     }
 
-    function removeCartItem(index) {
-      state.cart.splice(index, 1);
-      updateNavBadges();
-      showToast('Item removed from cart');
-      render();
+    function selectPickup(mode) {
+      document.getElementById('time-asap').classList.toggle('active', mode === 'asap');
+      document.getElementById('time-sched').classList.toggle('active', mode === 'sched');
     }
 
-    function openProduct(productId) {
-      state.selectedProductId = productId;
-      state.selectedSize = 'Regular';
-      navigate('product');
-    }
-
-    function openCategory(categoryName) {
-      state.selectedCategory = categoryName;
-      if (categoryName === 'Coffee') state.selectedSubCategory = 'Iced Drinks';
-      else if (categoryName === 'Lunch') state.selectedSubCategory = 'All';
-      else if (categoryName === 'Breakfast') state.selectedSubCategory = 'All';
-      else if (categoryName === 'Snacks') state.selectedSubCategory = 'All';
-      else state.selectedSubCategory = 'All';
-      navigate('category');
-    }
-
-    function toggleFavorite(productId, event) {
-      if (event) event.stopPropagation();
-      if (state.favorites.has(productId)) {
-        state.favorites.delete(productId);
-        showToast('Removed from favorites');
-      } else {
-        state.favorites.add(productId);
-        showToast('Saved to favorites');
-      }
-      render();
+    function selectPayment(method) {
+      document.getElementById('pay-radio-card').textContent = method === 'card' ? '◉' : '○';
+      document.getElementById('pay-radio-card').style.color = method === 'card' ? 'var(--brand-dark)' : 'var(--text-muted)';
+      document.getElementById('pay-radio-cash').textContent = method === 'cash' ? '◉' : '○';
+      document.getElementById('pay-radio-cash').style.color = method === 'cash' ? 'var(--brand-dark)' : 'var(--text-muted)';
     }
 
     function confirmOrder() {
-      if (state.cart.length === 0) {
-        showToast('Your cart is empty');
-        return;
-      }
-      const orderItems = state.cart.map(entry => {
-        const item = getItemById(entry.id);
-        return {
-          id: entry.id,
-          size: entry.size,
-          qty: entry.qty,
-          unitPrice: getItemUnitPrice(item, entry.size)
-        };
-      });
-      const total = getCartTotal();
-      const randomNum = Math.floor(1044 + Math.random() * 50);
-
-      state.activeOrder = {
-        id: `#${randomNum}`,
-        date: '26 Nov 2026, 13:45',
-        status: 'Preparing',
-        items: orderItems,
-        total,
-        feedbackSubmitted: false,
-        rating: 5
-      };
-
-      state.cart = [];
-      updateNavBadges();
-      navigate('confirmed');
+      goTo('confirmed');
     }
 
-    // ==========================================
-    // 4. NAVIGATION & UI SHELL UPDATES
-    // ==========================================
-    let splashAutoTimer = null;
-
-    function navigate(screenName) {
-      clearTimeout(splashAutoTimer);
-      state.screen = screenName;
-      render();
-    }
-
-    function updateNavBadges() {
-      const badge = document.getElementById('cart-badge');
-      const count = getCartCount();
-      if (badge) {
-        badge.textContent = count;
-        badge.style.display = count > 0 ? 'flex' : 'none';
-      }
-    }
-
-    function updateBottomNavVisibility() {
-      const nav = document.getElementById('bottom-nav');
-      const visibleScreens = ['home', 'category', 'cart', 'my-order', 'profile'];
-      if (visibleScreens.includes(state.screen)) {
-        nav.classList.remove('hidden');
-      } else {
-        nav.classList.add('hidden');
-      }
-
-      // Highlight active tab
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        const target = btn.getAttribute('data-nav');
-        const isActive = (target === state.screen) || (target === 'home' && state.screen === 'category');
-        if (isActive) {
-          btn.classList.remove('text-ink-secondary');
-          btn.classList.add('text-olive-dark');
-          btn.querySelector('span:last-child').classList.add('font-bold');
-        } else {
-          btn.classList.add('text-ink-secondary');
-          btn.classList.remove('text-olive-dark');
-          btn.querySelector('span:last-child').classList.remove('font-bold');
-        }
-      });
-
-      updateNavBadges();
-    }
-
-    // ==========================================
-    // 5. SCREEN RENDERERS (ALL 10 MOCKUP SCREENS)
-    // ==========================================
-
-    // SCREEN 1: SPLASH SCREEN
-    function renderSplashScreen() {
-      splashAutoTimer = setTimeout(() => {
-        if (state.screen === 'splash') navigate('onboarding');
-      }, 2400);
-
-      return `
-        <div onclick="navigate('onboarding')" class="flex-1 flex flex-col items-center justify-center relative overflow-hidden cursor-pointer select-none px-8 screen-animate">
-          <!-- Organic Sage Corner Shapes matching Mockup 1 -->
-          <div class="w-44 h-44 rounded-full bg-olive-sage/85 absolute -top-12 -right-14"></div>
-          <div class="w-36 h-48 rounded-full bg-olive-sage/85 absolute top-1/3 -left-20"></div>
-          <div class="w-60 h-44 rounded-full bg-olive-sage/85 absolute -bottom-16 right-2"></div>
-
-          <!-- Center Logo Lockup -->
-          <div class="relative z-10 flex flex-col items-center text-center">
-            <!-- Crossed Fork & Spoon Icon -->
-            <div class="w-16 h-16 flex items-center justify-center mb-2 text-olive-dark">
-              <svg class="w-14 h-14" viewBox="0 0 64 64" fill="none">
-                <!-- Fork -->
-                <path d="M18 12V24C18 27.3 20.7 30 24 30V52" stroke="#2C3923" stroke-width="3.6" stroke-linecap="round"/>
-                <path d="M14 12V22C14 25.5 16.5 28 20 28" stroke="#2C3923" stroke-width="3.2" stroke-linecap="round"/>
-                <path d="M22 12V22" stroke="#2C3923" stroke-width="3.2" stroke-linecap="round"/>
-                <!-- Spoon -->
-                <ellipse cx="43" cy="19" rx="6.5" ry="9" transform="rotate(28 43 19)" fill="#2C3923"/>
-                <path d="M39 26L22 51" stroke="#2C3923" stroke-width="3.8" stroke-linecap="round"/>
-                <path d="M25 27L44 51" stroke="#2C3923" stroke-width="3.8" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <h1 class="text-[40px] font-extrabold tracking-tight text-ink-primary leading-none">UniEat</h1>
-            <p class="text-sm font-bold tracking-[0.28em] text-olive-dark mt-1.5">UFAR</p>
-
-            <p class="mt-7 text-[15px] leading-relaxed text-ink-secondary font-medium max-w-[210px]">
-              Good food.<br/>More time for what matters.
-            </p>
-          </div>
-
-          <span class="absolute bottom-8 text-[11px] font-semibold text-ink-secondary/70 tracking-wide">Tap anywhere to continue</span>
-        </div>
-      `;
-    }
-
-    // SCREEN 2: ONBOARDING SCREEN
-    function renderOnboardingScreen() {
-      return `
-        <div class="flex-1 flex flex-col justify-between px-6 pt-2 pb-6 screen-animate">
-          <!-- Top Skip Button -->
-          <div class="flex justify-end">
-            <button onclick="navigate('home')" class="text-xs font-semibold text-ink-secondary hover:text-olive-dark px-3 py-1.5 rounded-full transition">
-              Skip
-            </button>
-          </div>
-
-          <!-- Heading & Hero Photo -->
-          <div class="mt-1">
-            <h1 class="text-[30px] font-extrabold text-ink-primary leading-[1.15] tracking-tight">
-              Welcome to<br/>UniEat UFAR
-            </h1>
-            <p class="mt-3 text-sm text-ink-secondary leading-relaxed">
-              Order your favorite food and drink in advance and skip the line.
-            </p>
-
-            <!-- Coffee & Croissant Hero Visual matching Mockup 2 -->
-            <div class="mt-7 relative rounded-3xl overflow-hidden bg-cream-card shadow-card border border-olive-light/50 aspect-[4/3.3]">
-              <img 
-                src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=85" 
-                onerror="imgFallback(this)"
-                alt="Coffee and croissant" 
-                class="w-full h-full object-cover"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-              <div class="absolute bottom-3 left-3 bg-cream-card/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-[11px] font-bold text-olive-dark shadow-sm">
-                ⚡ Guichet Fast Express • UFAR
-              </div>
-            </div>
-          </div>
-
-          <!-- Dots & CTA -->
-          <div class="flex flex-col items-center gap-5 mt-4">
-            <div class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-olive-dark"></span>
-              <span class="w-1.5 h-1.5 rounded-full bg-olive-sage/40"></span>
-              <span class="w-1.5 h-1.5 rounded-full bg-olive-sage/40"></span>
-            </div>
-
-            <button onclick="navigate('home')" class="w-full py-4 rounded-2xl bg-olive-dark hover:bg-olive-hover active:scale-[0.99] text-white font-bold text-[15px] shadow-soft transition-all">
-              Get started
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    // SCREEN 3: HOME SCREEN
-    function renderHomeScreen() {
-      const categories = [
-        { name: 'All', icon: '🍽️' },
-        { name: 'Coffee', icon: '☕' },
-        { name: 'Breakfast', icon: '🥐' },
-        { name: 'Lunch', icon: '🥗' },
-        { name: 'Snacks', icon: '🍪' }
-      ];
-
-      const query = state.searchQuery.trim().toLowerCase();
-      const filteredItems = query
-        ? MENU_ITEMS.filter(i => i.name.toLowerCase().includes(query) || i.category.toLowerCase().includes(query))
-        : null;
-
-      const popularItems = MENU_ITEMS.filter(i => i.popular);
-      const lunchItems = MENU_ITEMS.filter(i => i.lunchFeature);
-
-      return `
-        <div class="flex-1 px-5 pt-2 pb-6 screen-animate">
-          <!-- Greeting Header -->
-          <div class="flex items-start justify-between">
-            <div>
-              <h1 class="text-[22px] font-extrabold text-ink-primary tracking-tight flex items-center gap-1.5">
-                Bonjour, ${state.user.firstName}! <span>👋</span>
-              </h1>
-              <p class="text-xs text-ink-secondary mt-0.5 font-medium">
-                Good food. More time for what matters.
-              </p>
-            </div>
-            <button onclick="navigate('profile')" class="w-9 h-9 rounded-full bg-olive-tint border border-olive-light flex items-center justify-center text-xs font-bold text-olive-dark shrink-0">
-              ${state.user.firstName[0]}
-            </button>
-          </div>
-
-          <!-- Search Input -->
-          <div class="mt-4 relative">
-            <svg class="w-4 h-4 text-ink-secondary absolute left-3.5 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
-            </svg>
-            <input 
-              type="text" 
-              value="${state.searchQuery}"
-              oninput="state.searchQuery = this.value; render();"
-              placeholder="Search for food, drinks..." 
-              class="w-full pl-10 pr-9 py-3 rounded-2xl bg-cream-card border border-olive-light/70 text-xs font-medium text-ink-primary placeholder:text-ink-secondary/70 focus:outline-none focus:border-olive-dark transition"
-            />
-            ${state.searchQuery ? `
-              <button onclick="state.searchQuery=''; render();" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-secondary font-bold px-1">✕</button>
-            ` : ''}
-          </div>
-
-          <!-- Category Icons Row -->
-          <div class="mt-5 flex items-center justify-between gap-2">
-            ${categories.map(cat => {
-              const isAll = cat.name === 'All';
-              return `
-                <button 
-                  onclick="${isAll ? "state.searchQuery=''; render();" : `openCategory('${cat.name}')`}"
-                  class="flex flex-col items-center gap-1.5 group flex-1"
-                >
-                  <div class="w-12 h-12 rounded-full ${isAll ? 'bg-olive-dark text-white shadow-sm' : 'bg-cream-card border border-olive-light/80 text-ink-primary group-hover:border-olive-dark'} flex items-center justify-center text-lg transition-all">
-                    ${cat.icon}
-                  </div>
-                  <span class="text-[11px] ${isAll ? 'font-bold text-ink-primary' : 'font-medium text-ink-secondary'}">${cat.name}</span>
-                </button>
-              `;
-            }).join('')}
-          </div>
-
-          ${filteredItems ? `
-            <!-- Live Search Results -->
-            <div class="mt-6">
-              <div class="flex items-center justify-between mb-3">
-                <h2 class="text-base font-bold text-ink-primary">Search Results (${filteredItems.length})</h2>
-              </div>
-              ${filteredItems.length === 0 ? `
-                <div class="bg-cream-card rounded-2xl p-6 text-center border border-olive-light/60">
-                  <p class="text-sm font-semibold text-ink-primary">No items found</p>
-                  <p class="text-xs text-ink-secondary mt-1">Try searching for "Latte", "Chicken", or "Salad".</p>
-                </div>
-              ` : `
-                <div class="space-y-3">
-                  ${filteredItems.map(item => `
-                    <div onclick="openProduct('${item.id}')" class="bg-cream-card p-3 rounded-2xl border border-olive-light/60 shadow-card flex items-center gap-3 cursor-pointer active:scale-[0.99] transition">
-                      <img src="${item.image}" onerror="imgFallback(this)" alt="${item.name}" class="w-14 h-14 rounded-xl object-cover shrink-0"/>
-                      <div class="flex-1 min-w-0">
-                        <h3 class="text-sm font-bold text-ink-primary truncate">${item.name}</h3>
-                        <p class="text-[11px] text-ink-secondary">${item.category} • ${item.prepTime}</p>
-                        <p class="text-xs font-bold text-olive-dark mt-0.5">${formatAMD(item.price)}</p>
-                      </div>
-                      <button onclick="addToCart('${item.id}', 'Regular', event)" class="w-8 h-8 rounded-full bg-olive-dark text-white flex items-center justify-center text-base font-bold shadow-sm hover:bg-olive-hover shrink-0">+</button>
-                    </div>
-                  `).join('')}
-                </div>
-              `}
-            </div>
-          ` : `
-            <!-- Popular Section -->
-            <div class="mt-6">
-              <div class="flex items-center justify-between mb-3">
-                <h2 class="text-base font-extrabold text-ink-primary">Popular</h2>
-                <button onclick="openCategory('Coffee')" class="text-xs font-semibold text-ink-secondary hover:text-olive-dark">See all</button>
-              </div>
-              <div class="grid grid-cols-2 gap-3.5">
-                ${popularItems.map(item => `
-                  <div onclick="openProduct('${item.id}')" class="bg-cream-card rounded-2xl p-2.5 border border-olive-light/60 shadow-card cursor-pointer hover:border-olive-sage/60 transition flex flex-col">
-                    <div class="w-full h-28 rounded-xl overflow-hidden bg-cream-soft">
-                      <img src="${item.image}" onerror="imgFallback(this)" alt="${item.name}" class="w-full h-full object-cover"/>
-                    </div>
-                    <h3 class="text-[13px] font-bold text-ink-primary mt-2.5 truncate">${item.name}</h3>
-                    <div class="flex items-center justify-between mt-1.5">
-                      <span class="text-xs font-semibold text-ink-secondary">${formatAMD(item.price)}</span>
-                      <button onclick="addToCart('${item.id}', 'Regular', event)" class="w-7 h-7 rounded-full bg-olive-dark text-white flex items-center justify-center text-sm font-bold hover:bg-olive-hover active:scale-90 transition">+</button>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-
-            <!-- Lunch Section -->
-            <div class="mt-6">
-              <div class="flex items-center justify-between mb-3">
-                <h2 class="text-base font-extrabold text-ink-primary">Lunch</h2>
-                <button onclick="openCategory('Lunch')" class="text-xs font-semibold text-ink-secondary hover:text-olive-dark">See all</button>
-              </div>
-              <div class="grid grid-cols-2 gap-3.5">
-                ${lunchItems.map(item => `
-                  <div onclick="openProduct('${item.id}')" class="bg-cream-card rounded-2xl p-2.5 border border-olive-light/60 shadow-card cursor-pointer hover:border-olive-sage/60 transition flex flex-col">
-                    <div class="w-full h-28 rounded-xl overflow-hidden bg-cream-soft">
-                      <img src="${item.image}" onerror="imgFallback(this)" alt="${item.name}" class="w-full h-full object-cover"/>
-                    </div>
-                    <h3 class="text-[13px] font-bold text-ink-primary mt-2.5 truncate">${item.name}</h3>
-                    <div class="flex items-center justify-between mt-1.5">
-                      <span class="text-xs font-semibold text-ink-secondary">${formatAMD(item.price)}</span>
-                      <button onclick="addToCart('${item.id}', 'Regular', event)" class="w-7 h-7 rounded-full bg-olive-dark text-white flex items-center justify-center text-sm font-bold hover:bg-olive-hover active:scale-90 transition">+</button>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          `}
-        </div>
-      `;
-    }
-
-    // SCREEN 4: CATEGORY VIEW (e.g. Coffee Screen from Mockup)
-    function renderCategoryScreen() {
-      const cat = state.selectedCategory;
-      const subTabsMap = {
-        'Coffee': ['Hot Drinks', 'Iced Drinks', 'Specials'],
-        'Lunch': ['All', 'Sandwiches', 'Salads', 'Hot Meals'],
-        'Breakfast': ['All', 'Pastries', 'Bowls & Toast'],
-        'Snacks': ['All', 'Healthy', 'Sweet']
-      };
-      const tabs = subTabsMap[cat] || ['All'];
-
-      const items = MENU_ITEMS.filter(item => {
-        if (item.category !== cat) return false;
-        if (state.selectedSubCategory === 'All') return true;
-        return item.subCategory === state.selectedSubCategory;
-      });
-
-      return `
-        <div class="flex-1 px-5 pt-2 pb-6 screen-animate">
-          <!-- Top Bar -->
-          <div class="flex items-center justify-between py-2">
-            <button onclick="navigate('home')" class="w-9 h-9 rounded-full bg-cream-card border border-olive-light/70 flex items-center justify-center text-ink-primary hover:bg-olive-tint transition">
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-              </svg>
-            </button>
-            <h1 class="text-lg font-extrabold text-ink-primary">${cat}</h1>
-            <div class="w-9"></div>
-          </div>
-
-          <!-- Sub-filter Pills (Hot Drinks / Iced Drinks / Specials) -->
-          <div class="mt-3 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-            ${tabs.map(tab => {
-              const active = state.selectedSubCategory === tab;
-              return `
-                <button 
-                  onclick="state.selectedSubCategory='${tab}'; render();"
-                  class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${active ? 'bg-olive-dark text-white shadow-sm' : 'bg-cream-card text-ink-secondary border border-olive-light/80 hover:text-ink-primary'}"
-                >
-                  ${tab}
-                </button>
-              `;
-            }).join('')}
-          </div>
-
-          <!-- Vertical Item List matching Mockup 4 -->
-          <div class="mt-4 space-y-3">
-            ${items.map(item => `
-              <div onclick="openProduct('${item.id}')" class="bg-cream-card p-3 rounded-2xl border border-olive-light/60 shadow-card flex items-center gap-3.5 cursor-pointer hover:border-olive-sage/70 transition">
-                <img src="${item.image}" onerror="imgFallback(this)" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover shrink-0 bg-cream-soft"/>
-                <div class="flex-1 min-w-0">
-                  <h3 class="text-[15px] font-bold text-ink-primary truncate">${item.name}</h3>
-                  <p class="text-xs font-semibold text-ink-secondary mt-1">${formatAMD(item.price)}</p>
-                </div>
-                <button 
-                  onclick="addToCart('${item.id}', 'Regular', event)" 
-                  class="w-8 h-8 rounded-full bg-olive-dark text-white flex items-center justify-center text-base font-bold hover:bg-olive-hover active:scale-90 transition shrink-0"
-                >
-                  +
-                </button>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    // SCREEN 5: PRODUCT DETAIL SCREEN (e.g. Iced Latte)
-    function renderProductScreen() {
-      const item = getItemById(state.selectedProductId);
-      const isFav = state.favorites.has(item.id);
-      const finalPrice = getItemUnitPrice(item, state.selectedSize);
-
-      return `
-        <div class="flex-1 flex flex-col justify-between pb-6 screen-animate">
-          <div>
-            <!-- Top Hero Image with Floating Controls -->
-            <div class="relative w-full h-[310px] bg-cream-soft">
-              <img src="${item.image}" onerror="imgFallback(this)" alt="${item.name}" class="w-full h-full object-cover"/>
-              <div class="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-transparent"></div>
-              
-              <!-- Back & Heart Buttons -->
-              <div class="absolute top-3 left-5 right-5 flex items-center justify-between">
-                <button onclick="navigate('home')" class="w-10 h-10 rounded-full bg-cream-card/90 backdrop-blur-md flex items-center justify-center text-ink-primary shadow-md">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-                  </svg>
-                </button>
-                <button onclick="toggleFavorite('${item.id}', event)" class="w-10 h-10 rounded-full bg-cream-card/90 backdrop-blur-md flex items-center justify-center shadow-md">
-                  <svg class="w-5 h-5 ${isFav ? 'text-rose-500 fill-rose-500' : 'text-ink-primary'}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- Details Body -->
-            <div class="px-6 pt-5">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h1 class="text-2xl font-extrabold text-ink-primary tracking-tight">${item.name}</h1>
-                  <p class="text-base font-bold text-olive-dark mt-1">${formatAMD(item.price)}</p>
-                </div>
-                <span class="px-3 py-1 rounded-full bg-olive-tint text-olive-dark text-[11px] font-bold">
-                  ⏱ ${item.prepTime}
-                </span>
-              </div>
-
-              <p class="mt-3 text-[13px] text-ink-secondary leading-relaxed">
-                ${item.description}
-              </p>
-
-              <!-- Ingredients tag (Slide 04: Qualité & Clarté) -->
-              <div class="mt-3 p-3 rounded-2xl bg-cream-card border border-olive-light/60">
-                <p class="text-[11px] font-bold uppercase tracking-wider text-olive-sage">Ingrédients</p>
-                <p class="text-xs text-ink-primary mt-0.5">${item.ingredients}</p>
-              </div>
-
-              <!-- Size Selector -->
-              <div class="mt-5">
-                <p class="text-xs font-extrabold text-ink-primary uppercase tracking-wider mb-2.5">Size</p>
-                <div class="grid grid-cols-2 gap-3">
-                  <button 
-                    onclick="state.selectedSize='Regular'; render();"
-                    class="py-3 px-4 rounded-2xl text-xs font-bold border transition-all ${state.selectedSize === 'Regular' ? 'bg-olive-dark text-white border-olive-dark shadow-sm' : 'bg-cream-card text-ink-primary border-olive-light'}"
-                  >
-                    Regular
-                  </button>
-                  <button 
-                    onclick="state.selectedSize='Large'; render();"
-                    class="py-3 px-4 rounded-2xl text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${state.selectedSize === 'Large' ? 'bg-olive-dark text-white border-olive-dark shadow-sm' : 'bg-cream-card text-ink-primary border-olive-light'}"
-                  >
-                    <span>Large</span>
-                    <span class="text-[10px] opacity-80">+300 AMD</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Add to Cart CTA -->
-          <div class="px-6 pt-4">
-            <button 
-              onclick="addToCart('${item.id}', state.selectedSize); navigate('cart');"
-              class="w-full py-4 px-6 rounded-2xl bg-olive-dark hover:bg-olive-hover active:scale-[0.99] text-white font-bold text-sm shadow-soft flex items-center justify-between transition-all"
-            >
-              <span>Add to cart</span>
-              <span>${formatAMD(finalPrice)}</span>
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    // SCREEN 6: YOUR CART SCREEN
-    function renderCartScreen() {
-      const total = getCartTotal();
-
-      return `
-        <div class="flex-1 flex flex-col justify-between px-5 pt-2 pb-6 screen-animate">
-          <div>
-            <!-- Header -->
-            <div class="flex items-center justify-between py-2">
-              <h1 class="text-xl font-extrabold text-ink-primary">Your Cart</h1>
-              ${state.cart.length > 0 ? `
-                <button onclick="state.cart=[]; updateNavBadges(); render();" class="text-xs font-semibold text-ink-secondary hover:text-rose-600">
-                  Clear all
-                </button>
-              ` : ''}
-            </div>
-
-            ${state.cart.length === 0 ? `
-              <div class="mt-16 bg-cream-card rounded-3xl p-8 text-center border border-olive-light/60 shadow-card">
-                <div class="w-14 h-14 rounded-full bg-olive-tint mx-auto flex items-center justify-center text-2xl mb-3">🛍️</div>
-                <h2 class="text-base font-extrabold text-ink-primary">Your cart is empty</h2>
-                <p class="text-xs text-ink-secondary mt-1">Browse the UFAR cafeteria menu to pre-order your meal.</p>
-                <button onclick="navigate('home')" class="mt-5 px-6 py-3 rounded-2xl bg-olive-dark text-white text-xs font-bold">
-                  Explore Menu
-                </button>
-              </div>
-            ` : `
-              <!-- Cart Items List -->
-              <div class="mt-3 space-y-3">
-                ${state.cart.map((entry, idx) => {
-                  const item = getItemById(entry.id);
-                  const unitPrice = getItemUnitPrice(item, entry.size);
-                  return `
-                    <div class="bg-cream-card p-3 rounded-2xl border border-olive-light/60 shadow-card flex items-center gap-3">
-                      <img src="${item.image}" onerror="imgFallback(this)" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover shrink-0"/>
-                      <div class="flex-1 min-w-0">
-                        <div class="flex items-start justify-between gap-2">
-                          <h3 class="text-sm font-bold text-ink-primary truncate">${item.name}</h3>
-                          <button onclick="removeCartItem(${idx})" class="text-ink-secondary/60 hover:text-rose-600 p-0.5">
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
-                            </svg>
-                          </button>
-                        </div>
-                        <p class="text-[11px] text-ink-secondary">${entry.size === 'Large' ? 'Large • ' : ''}${formatAMD(unitPrice)}</p>
-                        
-                        <div class="mt-2 flex items-center justify-between">
-                          <div class="inline-flex items-center gap-3 bg-cream-bg px-2.5 py-1 rounded-xl border border-olive-light/60">
-                            <button onclick="updateCartQty(${idx}, -1)" class="text-sm font-bold text-ink-primary px-1">−</button>
-                            <span class="text-xs font-extrabold text-ink-primary">${entry.qty}</span>
-                            <button onclick="updateCartQty(${idx}, 1)" class="text-sm font-bold text-ink-primary px-1">+</button>
-                          </div>
-                          <span class="text-xs font-extrabold text-olive-dark">${formatAMD(unitPrice * entry.qty)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            `}
-          </div>
-
-          ${state.cart.length > 0 ? `
-            <!-- Total & Proceed to Order -->
-            <div class="pt-4 border-t border-olive-light/70 mt-4">
-              <div class="flex items-center justify-between mb-3.5">
-                <span class="text-sm font-bold text-ink-secondary">Total</span>
-                <span class="text-lg font-extrabold text-ink-primary">${formatAMD(total)}</span>
-              </div>
-              <button 
-                onclick="navigate('checkout')" 
-                class="w-full py-4 rounded-2xl bg-olive-dark hover:bg-olive-hover active:scale-[0.99] text-white font-bold text-sm shadow-soft transition-all"
-              >
-                Proceed to Order
-              </button>
-            </div>
-          ` : ''}
-        </div>
-      `;
-    }
-
-    // SCREEN 7: CHECKOUT SCREEN
-    function renderCheckoutScreen() {
-      const total = getCartTotal();
-
-      return `
-        <div class="flex-1 flex flex-col justify-between px-5 pt-2 pb-6 screen-animate">
-          <div>
-            <!-- Top Bar -->
-            <div class="flex items-center justify-between py-2">
-              <button onclick="navigate('cart')" class="w-9 h-9 rounded-full bg-cream-card border border-olive-light/70 flex items-center justify-center text-ink-primary">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-                </svg>
-              </button>
-              <h1 class="text-lg font-extrabold text-ink-primary">Checkout</h1>
-              <div class="w-9"></div>
-            </div>
-
-            <!-- Pickup Time Selector -->
-            <div class="mt-4">
-              <h2 class="text-xs font-extrabold text-ink-primary uppercase tracking-wider mb-2.5">Pickup time</h2>
-              <div class="grid grid-cols-2 gap-3">
-                <button 
-                  onclick="state.pickupMode='ASAP'; render();"
-                  class="p-3.5 rounded-2xl border text-left transition-all ${state.pickupMode === 'ASAP' ? 'bg-olive-dark text-white border-olive-dark shadow-soft' : 'bg-cream-card text-ink-primary border-olive-light'}"
-                >
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm">⏱</span>
-                    <span class="text-xs font-extrabold">ASAP</span>
-                  </div>
-                  <p class="text-[11px] mt-1 ${state.pickupMode === 'ASAP' ? 'text-white/80' : 'text-ink-secondary'}">~ 5 min</p>
-                </button>
-
-                <button 
-                  onclick="state.pickupMode='Schedule'; render();"
-                  class="p-3.5 rounded-2xl border text-left transition-all ${state.pickupMode === 'Schedule' ? 'bg-olive-dark text-white border-olive-dark shadow-soft' : 'bg-cream-card text-ink-primary border-olive-light'}"
-                >
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm">🗓️</span>
-                    <span class="text-xs font-extrabold">Schedule</span>
-                  </div>
-                  <p class="text-[11px] mt-1 ${state.pickupMode === 'Schedule' ? 'text-white/80' : 'text-ink-secondary'}">Choose time</p>
-                </button>
-              </div>
-
-              ${state.pickupMode === 'Schedule' ? `
-                <div class="mt-2.5 flex gap-2 overflow-x-auto no-scrollbar">
-                  {['10:45 (Pause)', '12:30 (Déjeuner)', '14:15 (Pause)'].map(slot => `
-                    <button 
-                      onclick="state.scheduledTime='${slot}'; render();"
-                      class="px-3 py-1.5 rounded-xl text-[11px] font-bold border whitespace-nowrap ${state.scheduledTime === slot ? 'bg-olive-tint border-olive-dark text-olive-dark' : 'bg-cream-card border-olive-light text-ink-secondary'}"
-                    >
-                      ${slot}
-                    </button>
-                  `).join('')}
-                </div>
-              ` : ''}
-            </div>
-
-            <!-- Pickup Location -->
-            <div class="mt-5">
-              <h2 class="text-xs font-extrabold text-ink-primary uppercase tracking-wider mb-2.5">Pickup location</h2>
-              <div class="bg-cream-card p-3.5 rounded-2xl border border-olive-light/70 shadow-card flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-olive-tint flex items-center justify-center text-olive-dark shrink-0">
-                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-                  </svg>
-                </div>
-                <div class="flex-1">
-                  <p class="text-xs font-extrabold text-ink-primary">UFAR Cafeteria</p>
-                  <p class="text-[11px] text-ink-secondary mt-0.5">Dedicated UniEat « Fast Express » counter</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Payment Method -->
-            <div class="mt-5">
-              <h2 class="text-xs font-extrabold text-ink-primary uppercase tracking-wider mb-2.5">Payment method</h2>
-              <div class="space-y-2.5">
-                <button 
-                  onclick="state.paymentMethod='Card'; render();"
-                  class="w-full bg-cream-card p-3.5 rounded-2xl border ${state.paymentMethod === 'Card' ? 'border-olive-dark ring-1 ring-olive-dark' : 'border-olive-light/70'} flex items-center justify-between transition"
-                >
-                  <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-lg bg-indigo-950 text-white text-[10px] font-extrabold flex items-center justify-center">VISA</span>
-                    <div class="text-left">
-                      <p class="text-xs font-bold text-ink-primary">Card</p>
-                      <p class="text-[11px] text-ink-secondary">•••• 4242</p>
-                    </div>
-                  </div>
-                  <div class="w-5 h-5 rounded-full border-2 ${state.paymentMethod === 'Card' ? 'border-olive-dark' : 'border-olive-sage/50'} flex items-center justify-center">
-                    ${state.paymentMethod === 'Card' ? '<div class="w-2.5 h-2.5 rounded-full bg-olive-dark"></div>' : ''}
-                  </div>
-                </button>
-
-                <button 
-                  onclick="state.paymentMethod='Cash'; render();"
-                  class="w-full bg-cream-card p-3.5 rounded-2xl border ${state.paymentMethod === 'Cash' ? 'border-olive-dark ring-1 ring-olive-dark' : 'border-olive-light/70'} flex items-center justify-between transition"
-                >
-                  <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-lg bg-olive-tint text-olive-dark text-sm flex items-center justify-center">💵</span>
-                    <p class="text-xs font-bold text-ink-primary">Cash at pickup</p>
-                  </div>
-                  <div class="w-5 h-5 rounded-full border-2 ${state.paymentMethod === 'Cash' ? 'border-olive-dark' : 'border-olive-sage/50'} flex items-center justify-center">
-                    ${state.paymentMethod === 'Cash' ? '<div class="w-2.5 h-2.5 rounded-full bg-olive-dark"></div>' : ''}
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Total & Confirm -->
-          <div class="pt-4 border-t border-olive-light/70 mt-4">
-            <div class="flex items-center justify-between mb-3.5">
-              <span class="text-sm font-bold text-ink-secondary">Total</span>
-              <span class="text-lg font-extrabold text-ink-primary">${formatAMD(total)}</span>
-            </div>
-            <button 
-              onclick="confirmOrder()" 
-              class="w-full py-4 rounded-2xl bg-olive-dark hover:bg-olive-hover active:scale-[0.99] text-white font-bold text-sm shadow-soft transition-all"
-            >
-              Confirm Order
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    // SCREEN 8: ORDER CONFIRMED SCREEN
-    function renderConfirmedScreen() {
-      return `
-        <div class="flex-1 flex flex-col justify-between px-6 pt-3 pb-7 screen-animate">
-          <div>
-            <button onclick="navigate('home')" class="w-9 h-9 rounded-full bg-cream-card border border-olive-light/70 flex items-center justify-center text-ink-primary">
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-              </svg>
-            </button>
-          </div>
-
-          <!-- Kraft Takeaway Bag Illustration + Confirmed Text -->
-          <div class="flex flex-col items-center text-center my-auto">
-            <div class="float-bag mb-5">
-              <svg class="w-36 h-36" viewBox="0 0 160 160" fill="none">
-                <!-- Decorative leaves behind bag -->
-                <ellipse cx="44" cy="64" rx="14" ry="7" transform="rotate(-35 44 64)" fill="#7D876E"/>
-                <ellipse cx="116" cy="56" rx="14" ry="7" transform="rotate(30 116 56)" fill="#566348"/>
-                <!-- Bag Handles -->
-                <path d="M64 46C64 32 96 32 96 46" stroke="#8C6D46" stroke-width="4" stroke-linecap="round"/>
-                <!-- Kraft Bag Body -->
-                <path d="M46 46H114L122 126C122 130.4 118.4 134 114 134H46C41.6 134 38 130.4 38 126L46 46Z" fill="#DFC39D"/>
-                <path d="M114 46L122 126C122 130.4 118.4 134 114 134H102L98 46H114Z" fill="#CFAF84"/>
-                <!-- UniEat Logo on Bag -->
-                <circle cx="80" cy="82" r="5" fill="#2C3923"/>
-                <text x="80" y="102" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="14" font-weight="800" fill="#2C3923">UniEat</text>
-                <text x="80" y="113" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="7" font-weight="700" letter-spacing="2" fill="#2C3923">UFAR</text>
-              </svg>
-            </div>
-
-            <h1 class="text-2xl font-extrabold text-ink-primary">Order Confirmed!</h1>
-            <p class="text-xs text-ink-secondary leading-relaxed mt-2 max-w-[240px]">
-              Your order is being prepared. You'll receive a notification when it's ready.
-            </p>
-
-            <!-- 3-Step Horizontal Stepper (Confirmed -> Preparing -> Ready) -->
-            <div class="w-full mt-8 px-2">
-              <div class="flex items-center justify-between relative">
-                <div class="absolute left-8 right-8 top-4 h-0.5 bg-olive-light z-0"></div>
-                <div class="absolute left-8 w-1/2 top-4 h-0.5 bg-olive-dark z-0"></div>
-
-                <!-- Step 1 -->
-                <div class="relative z-10 flex flex-col items-center gap-1.5">
-                  <div class="w-8 h-8 rounded-full bg-olive-dark text-white flex items-center justify-center text-xs font-bold shadow-sm">✓</div>
-                  <span class="text-[11px] font-bold text-ink-primary">Confirmed</span>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="relative z-10 flex flex-col items-center gap-1.5">
-                  <div class="w-8 h-8 rounded-full bg-olive-dark text-white flex items-center justify-center text-sm shadow-sm ring-4 ring-olive-tint">👨‍🍳</div>
-                  <span class="text-[11px] font-bold text-ink-primary">Preparing</span>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="relative z-10 flex flex-col items-center gap-1.5">
-                  <div class="w-8 h-8 rounded-full bg-cream-card border border-olive-light text-ink-secondary flex items-center justify-center text-xs">🛍️</div>
-                  <span class="text-[11px] font-medium text-ink-secondary">Ready</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <button 
-            onclick="state.activeOrder.status='Ready'; navigate('my-order');"
-            class="w-full py-4 rounded-2xl bg-olive-dark hover:bg-olive-hover text-white font-bold text-sm shadow-soft transition-all"
-          >
-            View Order Details
-          </button>
-        </div>
-      `;
-    }
-
-    // SCREEN 9: MY ORDER & FAST EXPRESS QR CODE SCREEN
-    function renderMyOrderScreen() {
-      const order = state.activeOrder;
-      const isReady = order.status === 'Ready';
-
-      return `
-        <div class="flex-1 px-5 pt-2 pb-6 screen-animate">
-          <div class="flex items-center justify-between py-2">
-            <h1 class="text-xl font-extrabold text-ink-primary">My Order</h1>
-            <button 
-              onclick="state.activeOrder.status = isReady ? 'Preparing' : 'Ready'; render();"
-              class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-olive-tint text-olive-dark border border-olive-light"
-            >
-              Demo: ${isReady ? 'Set Preparing' : 'Set Ready'}
-            </button>
-          </div>
-
-          <!-- Status Banner matching Mockup 9 -->
-          <div class="mt-2 p-4 rounded-2xl ${isReady ? 'bg-olive-tint border border-olive-sage/40' : 'bg-amber-50 border border-amber-200'} flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-full ${isReady ? 'bg-olive-dark text-white' : 'bg-amber-500 text-white'} flex items-center justify-center text-base font-bold shrink-0">
-              ${isReady ? '✓' : '⏳'}
-            </div>
-            <div class="flex-1">
-              <h2 class="text-sm font-extrabold text-ink-primary">
-                ${isReady ? 'Your order is ready!' : 'Preparing your order...'}
-              </h2>
-              <p class="text-[11px] text-ink-secondary mt-0.5 leading-snug">
-                ${isReady ? 'You can now pick it up at the UniEat Fast Express counter.' : 'The UFAR cafeteria team is preparing your items fresh.'}
-              </p>
-            </div>
-          </div>
-
-          <!-- Fast Express QR Code Pickup Button (From Slide 03 Step 5) -->
-          <button 
-            onclick="openQRModal()"
-            class="mt-3 w-full py-3 px-4 rounded-2xl bg-olive-dark text-white flex items-center justify-between shadow-soft hover:bg-olive-hover transition"
-          >
-            <div class="flex items-center gap-2.5">
-              <span class="p-1.5 rounded-lg bg-white/15">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 0h2v3h-2v-3zm3 3h3v5h-5v-2h2v-3zm-3 3h2v2h-2v-2z"/>
-                </svg>
-              </span>
-              <div class="text-left">
-                <p class="text-xs font-extrabold">Show Fast Express QR Code</p>
-                <p class="text-[10px] text-white/75">Guichet « Fast Express » • Order ${order.id}</p>
-              </div>
-            </div>
-            <span class="text-xs font-bold bg-white/15 px-2.5 py-1 rounded-lg">Open</span>
-          </button>
-
-          <!-- Order Meta -->
-          <div class="mt-5 flex items-center justify-between">
-            <span class="text-sm font-extrabold text-ink-primary">Order ${order.id}</span>
-            <span class="text-[11px] font-medium text-ink-secondary">${order.date}</span>
-          </div>
-
-          <!-- Order Items -->
-          <div class="mt-3 space-y-2.5">
-            ${order.items.map(entry => {
-              const item = getItemById(entry.id);
-              return `
-                <div class="bg-cream-card p-3 rounded-2xl border border-olive-light/60 flex items-center gap-3">
-                  <img src="${item.image}" onerror="imgFallback(this)" alt="${item.name}" class="w-12 h-12 rounded-xl object-cover shrink-0"/>
-                  <div class="flex-1 min-w-0">
-                    <h3 class="text-xs font-bold text-ink-primary truncate">${item.name}</h3>
-                    <p class="text-[11px] text-ink-secondary mt-0.5">${formatAMD(entry.unitPrice)} <span class="font-bold">×${entry.qty}</span></p>
-                  </div>
-                  <span class="text-xs font-bold text-ink-primary">${formatAMD(entry.unitPrice * entry.qty)}</span>
-                </div>
-              `;
-            }).join('')}
-          </div>
-
-          <!-- Total & Feedback Button (Slide 03 Step 6) -->
-          <div class="mt-4 pt-3.5 border-t border-olive-light/70 flex items-center justify-between">
-            <span class="text-sm font-bold text-ink-secondary">Total</span>
-            <span class="text-base font-extrabold text-ink-primary">${formatAMD(order.total)}</span>
-          </div>
-
-          <button 
-            onclick="openFeedbackModal()"
-            class="mt-4 w-full py-3 rounded-2xl bg-cream-card border border-olive-dark/30 text-olive-dark font-bold text-xs hover:bg-olive-tint transition flex items-center justify-center gap-2"
-          >
-            <span>⭐</span>
-            <span>${order.feedbackSubmitted ? 'Feedback Sent — Thank you!' : 'Rate Service & Products (Feedback)'}</span>
-          </button>
-        </div>
-      `;
-    }
-
-    // SCREEN 10: PROFILE SCREEN
-    function renderProfileScreen() {
-      const menuRows = [
-        { label: 'My Orders', icon: '📋', action: "navigate('my-order')" },
-        { label: 'Payment Methods', icon: '💳', action: "showToast('Visa •••• 4242 active')" },
-        { label: 'Notifications', icon: '🔔', action: "showToast('Order ready alerts enabled')" },
-        { label: 'Help & Support', icon: '❓', action: "openAboutModal()" },
-        { label: 'Log Out', icon: '🚪', action: "navigate('splash')", danger: true }
-      ];
-
-      return `
-        <div class="flex-1 px-5 pt-2 pb-6 screen-animate">
-          <div class="flex items-center justify-between py-2">
-            <h1 class="text-xl font-extrabold text-ink-primary">Profile</h1>
-            <button onclick="openSwitchStudentModal()" class="text-xs font-bold text-olive-dark bg-olive-tint px-3 py-1.5 rounded-full">
-              Switch Student
-            </button>
-          </div>
-
-          <!-- User Card matching Mockup 10 -->
-          <div class="mt-3 bg-cream-card p-4 rounded-3xl border border-olive-light/60 shadow-card flex items-center gap-3.5">
-            <div class="w-14 h-14 rounded-full bg-olive-tint border-2 border-olive-sage/40 flex items-center justify-center text-olive-dark text-xl font-extrabold shrink-0">
-              ${state.user.firstName[0]}
-            </div>
-            <div class="min-w-0">
-              <h2 class="text-base font-extrabold text-ink-primary truncate">${state.user.name}</h2>
-              <p class="text-xs font-medium text-ink-secondary mt-0.5">${state.user.role}</p>
-              <p class="text-[11px] text-olive-sage truncate mt-0.5">${state.user.email}</p>
-            </div>
-          </div>
-
-          <!-- Menu Rows -->
-          <div class="mt-5 bg-cream-card rounded-3xl border border-olive-light/60 shadow-card divide-y divide-olive-light/50 overflow-hidden">
-            ${menuRows.map(row => `
-              <button 
-                onclick="${row.action}"
-                class="w-full px-4 py-3.5 flex items-center justify-between hover:bg-cream-bg transition text-left"
-              >
-                <div class="flex items-center gap-3">
-                  <span class="text-base">${row.icon}</span>
-                  <span class="text-[13px] font-bold ${row.danger ? 'text-rose-600' : 'text-ink-primary'}">${row.label}</span>
-                </div>
-                <svg class="w-4 h-4 text-ink-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-                </svg>
-              </button>
-            `).join('')}
-          </div>
-
-          <!-- Project Credits Footer -->
-          <div class="mt-6 text-center">
-            <p class="text-[11px] font-bold tracking-widest text-olive-dark uppercase">UniEat • UFAR</p>
-            <p class="text-[10px] text-ink-secondary mt-0.5">Projet de Précommande 2026–2027 • Erevan</p>
-          </div>
-        </div>
-      `;
-    }
-
-    // ==========================================
-    // 6. INTERACTIVE MODALS (QR CODE, FEEDBACK, TEAM)
-    // ==========================================
-    function closeModal() {
-      document.getElementById('modal-overlay').classList.add('hidden');
-    }
-
-    function openQRModal() {
-      const overlay = document.getElementById('modal-overlay');
-      const content = document.getElementById('modal-content');
-      content.innerHTML = `
-        <div class="text-center">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[11px] font-extrabold uppercase tracking-wider text-olive-sage">Guichet Fast Express</span>
-            <button onclick="closeModal()" class="w-7 h-7 rounded-full bg-cream-bg text-ink-primary text-xs font-bold">✕</button>
-          </div>
-          <h3 class="text-lg font-extrabold text-ink-primary">Order ${state.activeOrder.id}</h3>
-          <p class="text-xs text-ink-secondary mt-0.5">Présentez ce QR code au comptoir UniEat</p>
-
-          <!-- Crisp Vector QR Code -->
-          <div class="my-4 mx-auto w-48 h-48 p-3.5 bg-white rounded-2xl border-2 border-olive-dark shadow-inner flex items-center justify-center">
-            <svg viewBox="0 0 100 100" class="w-full h-full fill-olive-dark">
-              <rect x="6" y="6" width="26" height="26" rx="3" fill="none" stroke="#2C3923" stroke-width="5"/>
-              <rect x="13" y="13" width="12" height="12" rx="1.5"/>
-              <rect x="68" y="6" width="26" height="26" rx="3" fill="none" stroke="#2C3923" stroke-width="5"/>
-              <rect x="75" y="13" width="12" height="12" rx="1.5"/>
-              <rect x="6" y="68" width="26" height="26" rx="3" fill="none" stroke="#2C3923" stroke-width="5"/>
-              <rect x="13" y="75" width="12" height="12" rx="1.5"/>
-              <rect x="42" y="8" width="6" height="6"/><rect x="54" y="8" width="6" height="12"/>
-              <rect x="42" y="22" width="12" height="6"/><rect x="8" y="42" width="12" height="6"/>
-              <rect x="26" y="42" width="6" height="18"/><rect x="38" y="38" width="24" height="24" rx="4" fill="#E7ECE0"/>
-              <text x="50" y="53" text-anchor="middle" font-size="8" font-weight="800" font-family="sans-serif">UFAR</text>
-              <rect x="68" y="42" width="12" height="6"/><rect x="86" y="42" width="8" height="14"/>
-              <rect x="42" y="68" width="6" height="12"/><rect x="54" y="74" width="14" height="6"/>
-              <rect x="74" y="68" width="18" height="6"/><rect x="68" y="82" width="10" height="12"/>
-              <rect x="84" y="80" width="10" height="14"/>
-            </svg>
-          </div>
-
-          <p class="text-xs font-bold text-olive-dark">${state.user.name} • ${formatAMD(state.activeOrder.total)}</p>
-          <button onclick="closeModal()" class="mt-4 w-full py-3 rounded-2xl bg-olive-dark text-white text-xs font-bold">Done</button>
-        </div>
-      `;
-      overlay.classList.remove('hidden');
-    }
-
-    function openFeedbackModal() {
-      const overlay = document.getElementById('modal-overlay');
-      const content = document.getElementById('modal-content');
-      content.innerHTML = `
-        <div>
-          <div class="flex items-center justify-between">
-            <h3 class="text-base font-extrabold text-ink-primary">Votre avis (Feedback)</h3>
-            <button onclick="closeModal()" class="w-7 h-7 rounded-full bg-cream-bg text-ink-primary text-xs font-bold">✕</button>
-          </div>
-          <p class="text-xs text-ink-secondary mt-1">Comment était votre commande à la cafétéria UFAR ?</p>
-          <div class="flex justify-center gap-2 my-4 text-2xl">
-            ${[1,2,3,4,5].map(star => `
-              <button onclick="state.activeOrder.rating=${star}; openFeedbackModal();" class="transition transform hover:scale-110">
-                ${star <= state.activeOrder.rating ? '⭐' : '☆'}
-              </button>
-            `).join('')}
-          </div>
-          <textarea rows="2" placeholder="Rapide, chaud et délicieux..." class="w-full p-3 rounded-2xl bg-cream-bg border border-olive-light text-xs focus:outline-none"></textarea>
-          <button onclick="state.activeOrder.feedbackSubmitted=true; closeModal(); showToast('Merci pour votre avis !'); render();" class="mt-3 w-full py-3 rounded-2xl bg-olive-dark text-white text-xs font-bold">
-            Envoyer mon avis
-          </button>
-        </div>
-      `;
-      overlay.classList.remove('hidden');
-    }
-
-    function openSwitchStudentModal() {
-      const overlay = document.getElementById('modal-overlay');
-      const content = document.getElementById('modal-content');
-      content.innerHTML = `
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="text-base font-extrabold text-ink-primary">Équipe UniEat UFAR</h3>
-            <button onclick="closeModal()" class="w-7 h-7 rounded-full bg-cream-bg text-ink-primary text-xs font-bold">✕</button>
-          </div>
-          <div class="space-y-2 max-h-64 overflow-y-auto">
-            ${TEAM_PROFILES.map((member, idx) => `
-              <button onclick="state.user = TEAM_PROFILES[${idx}]; closeModal(); showToast('Switched to ${member.firstName}'); render();" class="w-full p-2.5 rounded-2xl border ${state.user.name === member.name ? 'bg-olive-tint border-olive-dark' : 'bg-cream-bg border-olive-light/60'} flex items-center justify-between text-left">
-                <div>
-                  <p class="text-xs font-bold text-ink-primary">${member.name}</p>
-                  <p class="text-[10px] text-ink-secondary">${member.email}</p>
-                </div>
-                ${state.user.name === member.name ? '<span class="text-xs font-bold text-olive-dark">✓</span>' : ''}
-              </button>
-            `).join('')}
-          </div>
-        </div>
-      `;
-      overlay.classList.remove('hidden');
-    }
-
-    function openAboutModal() {
-      const overlay = document.getElementById('modal-overlay');
-      const content = document.getElementById('modal-content');
-      content.innerHTML = `
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <h3 class="text-base font-extrabold text-ink-primary">À propos d'UniEat UFAR</h3>
-            <button onclick="closeModal()" class="w-7 h-7 rounded-full bg-cream-bg text-ink-primary text-xs font-bold">✕</button>
-          </div>
-          <p class="text-xs text-ink-secondary leading-relaxed">
-            Application mobile de précommande conçue pour la cafétéria de l'Université française en Arménie (UFAR). Commandez à l'avance, payez en ligne et récupérez votre repas sans attendre au guichet « Fast Express ».
-          </p>
-          <button onclick="closeModal()" class="mt-4 w-full py-3 rounded-2xl bg-olive-dark text-white text-xs font-bold">Fermer</button>
-        </div>
-      `;
-      overlay.classList.remove('hidden');
-    }
-
-    // ==========================================
-    // 7. MAIN RENDER LOOP
-    // ==========================================
-    function render() {
-      const container = document.getElementById('screen-container');
-      let html = '';
-
-      switch (state.screen) {
-        case 'splash':
-          html = renderSplashScreen();
-          break;
-        case 'onboarding':
-          html = renderOnboardingScreen();
-          break;
-        case 'home':
-          html = renderHomeScreen();
-          break;
-        case 'category':
-          html = renderCategoryScreen();
-          break;
-        case 'product':
-          html = renderProductScreen();
-          break;
-        case 'cart':
-          html = renderCartScreen();
-          break;
-        case 'checkout':
-          html = renderCheckoutScreen();
-          break;
-        case 'confirmed':
-          html = renderConfirmedScreen();
-          break;
-        case 'my-order':
-          html = renderMyOrderScreen();
-          break;
-        case 'profile':
-          html = renderProfileScreen();
-          break;
-        default:
-          html = renderHomeScreen();
-      }
-
-      container.innerHTML = html;
-      container.scrollTop = 0;
-      updateBottomNavVisibility();
-    }
-
-    // Initialize App
-    window.addEventListener('DOMContentLoaded', () => {
-      render();
-    });
-  </script>
-</body>
-</html>
+    function renderOrderSummary() {
+      const list = document.getElementById('order-summary-list');
+      list.innerHTML = cart.map(item => `
+        <div class="list-item" style="cursor:default;">
+          <div class="list-thumb" style="width:46px; height:46px; font-

@@ -3,24 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>UniEat UFAR — Application de Précommande</title>
+  <title>UniEat UFAR — Campus Dining & Pre-Order</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-outer: #E5E3DC;
-      --bg-phone: #F7F5F0;
-      --bg-card: #FFFFFF;
-      --bg-pill: #EFECE4;
-      --brand-dark: #2C3824;
-      --brand-dark-hover: #1F2819;
-      --brand-sage: #8C967E;
-      --brand-sage-light: #DCE1D5;
-      --text-main: #222B1C;
-      --text-muted: #6E7668;
-      --border-soft: #E5E2D9;
-      --danger: #B84A39;
+      --bg-canvas: #E6E4DD;
+      --bg-app: #F7F5F0;
+      --bg-surface: #FFFFFF;
+      --bg-subtle: #EFECE4;
+      --brand-primary: #2B3723;
+      --brand-primary-hover: #1E2718;
+      --brand-sage: #7D8870;
+      --brand-sage-soft: #E3E7DD;
+      --text-primary: #1D2418;
+      --text-secondary: #687062;
+      --text-tertiary: #969D90;
+      --border-hairline: rgba(43, 55, 35, 0.09);
+      --shadow-card: 0 4px 16px rgba(29, 36, 24, 0.04);
+      --shadow-float: 0 12px 28px rgba(29, 36, 24, 0.14);
     }
 
     * {
@@ -31,51 +33,53 @@
     }
 
     body {
-      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at 20% 20%, #ECEAE2, #D8D5CB);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #EAE8E1 0%, #D9D6CC 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 14px;
-      color: var(--text-main);
+      padding: 16px;
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Mobile Frame */
-    .phone-frame {
+    /* Device Frame */
+    .device-shell {
       width: 100%;
-      max-width: 396px;
-      height: 830px;
+      max-width: 393px;
+      height: 836px;
       max-height: 95vh;
-      background: var(--bg-phone);
-      border-radius: 46px;
-      border: 9px solid #1C1E1A;
-      box-shadow: 0 28px 65px rgba(28, 30, 26, 0.25), 0 0 0 2px #4A4D46;
+      background: var(--bg-app);
+      border-radius: 48px;
+      border: 9px solid #181A17;
+      box-shadow: 0 32px 70px rgba(24, 26, 23, 0.28), 0 0 0 1.5px #454842;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    /* Top Status Bar */
+    /* Status Bar */
     .status-bar {
-      height: 44px;
-      padding: 12px 24px 0;
+      height: 46px;
+      padding: 14px 26px 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 13px;
       font-weight: 700;
+      letter-spacing: -0.02em;
       position: relative;
-      z-index: 20;
+      z-index: 25;
+      background: transparent;
       flex-shrink: 0;
-      background: var(--bg-phone);
     }
 
     .dynamic-island {
-      width: 112px;
-      height: 27px;
-      background: #141513;
+      width: 114px;
+      height: 28px;
+      background: #0F100E;
       border-radius: 20px;
       position: absolute;
       left: 50%;
@@ -83,8 +87,14 @@
       transform: translateX(-50%);
     }
 
-    /* Screen Container */
-    .screens-wrapper {
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Viewport */
+    .viewport {
       flex: 1;
       position: relative;
       overflow: hidden;
@@ -92,465 +102,510 @@
       flex-direction: column;
     }
 
-    .screen {
+    .view {
       display: none;
       flex-direction: column;
       height: 100%;
       overflow-y: auto;
-      padding: 14px 20px 94px;
+      padding: 10px 22px 96px;
       position: relative;
       z-index: 5;
       scrollbar-width: none;
     }
 
-    .screen::-webkit-scrollbar { display: none; }
-    .screen.active { display: flex; }
-    .screen.no-nav { padding-bottom: 28px; }
+    .view::-webkit-scrollbar { display: none; }
+    .view.active { display: flex; }
+    .view.full-height { padding-bottom: 30px; }
 
-    h1, h2, h3 {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Typography */
+    .serif-heading {
+      font-family: 'Playfair Display', Georgia, serif;
+      letter-spacing: -0.02em;
     }
 
-    /* Primary & Secondary Buttons */
+    /* Controls & Buttons */
     .btn-primary {
       width: 100%;
-      background: var(--brand-dark);
+      background: var(--brand-primary);
       color: #FFFFFF;
       border: none;
-      border-radius: 999px;
+      border-radius: 16px;
       padding: 16px 22px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 15px;
+      font-family: inherit;
+      font-size: 14.5px;
       font-weight: 700;
+      letter-spacing: -0.01em;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      box-shadow: 0 8px 20px rgba(44, 56, 36, 0.2);
-      transition: transform 0.12s ease, background 0.15s ease;
+      box-shadow: 0 8px 20px rgba(43, 55, 35, 0.22);
+      transition: all 0.16s ease;
     }
 
-    .btn-primary:hover { background: var(--brand-dark-hover); }
-    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:hover { background: var(--brand-primary-hover); }
+    .btn-primary:active { transform: scale(0.985); }
 
     .btn-secondary {
       width: 100%;
-      background: var(--bg-pill);
-      color: var(--brand-dark);
-      border: 1.5px solid var(--border-soft);
-      border-radius: 999px;
+      background: var(--bg-surface);
+      color: var(--brand-primary);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
       padding: 14px 20px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: inherit;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      transition: background 0.15s ease;
     }
 
-    /* 1. SPLASH SCREEN */
-    .splash-screen {
+    .btn-secondary:hover { background: var(--bg-subtle); }
+
+    /* 1. SPLASH VIEW */
+    .splash-view {
       justify-content: space-between;
       align-items: center;
       text-align: center;
-      padding-top: 48px;
-      padding-bottom: 34px;
+      padding-top: 56px;
+      padding-bottom: 36px;
     }
 
-    .deco-circle-1 {
+    .organic-shape-top {
       position: absolute;
-      top: -45px;
-      right: -45px;
-      width: 185px;
-      height: 185px;
+      top: -60px;
+      right: -50px;
+      width: 210px;
+      height: 210px;
       background: var(--brand-sage);
-      border-radius: 50%;
-      opacity: 0.6;
+      border-radius: 46% 54% 62% 38% / 52% 44% 56% 48%;
+      opacity: 0.45;
       pointer-events: none;
     }
 
-    .deco-circle-2 {
+    .organic-shape-bottom {
       position: absolute;
       bottom: 85px;
-      left: -55px;
-      width: 175px;
-      height: 175px;
+      left: -65px;
+      width: 200px;
+      height: 190px;
       background: var(--brand-sage);
-      border-radius: 50%;
-      opacity: 0.55;
+      border-radius: 58% 42% 44% 56% / 44% 58% 42% 56%;
+      opacity: 0.42;
       pointer-events: none;
     }
 
-    .splash-logo-box {
-      width: 74px;
-      height: 74px;
-      border-radius: 24px;
-      background: var(--brand-dark);
-      color: #FFF;
+    .brand-emblem {
+      width: 68px;
+      height: 68px;
+      border-radius: 22px;
+      background: var(--brand-primary);
+      color: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 16px;
-      box-shadow: 0 12px 26px rgba(44, 56, 36, 0.22);
+      margin: 0 auto 20px;
+      box-shadow: 0 14px 30px rgba(43, 55, 35, 0.24);
     }
 
-    .splash-title {
-      font-size: 42px;
+    .brand-wordmark {
+      font-size: 40px;
       font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--brand-dark);
-      line-height: 1.05;
+      letter-spacing: -0.035em;
+      color: var(--brand-primary);
+      line-height: 1;
     }
 
-    .splash-sub {
-      font-size: 13px;
-      letter-spacing: 0.36em;
-      font-weight: 800;
-      color: var(--brand-dark);
-      margin-top: 6px;
-      margin-bottom: 22px;
+    .brand-campus {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.38em;
+      color: var(--brand-primary);
+      margin-top: 8px;
+      margin-bottom: 24px;
     }
 
-    .splash-tagline {
-      font-size: 16px;
-      color: var(--text-muted);
+    .brand-motto {
+      font-size: 15px;
+      color: var(--text-secondary);
       line-height: 1.55;
+      font-weight: 500;
     }
 
-    /* 2. WELCOME / ONBOARDING */
-    .top-actions-row {
+    /* 2. WELCOME VIEW */
+    .nav-header-minimal {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .lang-pill {
-      background: var(--bg-pill);
-      border: 1px solid var(--border-soft);
-      border-radius: 999px;
-      padding: 5px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--brand-dark);
-      cursor: pointer;
-    }
-
-    .skip-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      padding: 6px 10px;
-    }
-
-    .welcome-title {
-      font-size: 31px;
-      font-weight: 800;
-      line-height: 1.15;
-      color: var(--brand-dark);
-      margin-bottom: 12px;
-    }
-
-    .welcome-desc {
-      font-size: 15px;
-      line-height: 1.5;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-    }
-
-    .hero-card {
-      flex: 1;
-      background: linear-gradient(155deg, #EFECE4, #E1DDD0);
-      border-radius: 28px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      margin-bottom: 20px;
-      border: 1px solid var(--border-soft);
-    }
-
-    .hero-pill {
-      background: #FFFFFF;
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--brand-dark);
-      margin-top: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-
-    /* 3. INSCRIPTION (UFAR Account) */
-    .input-group {
       margin-bottom: 14px;
     }
 
-    .input-label {
-      display: block;
-      font-size: 13px;
+    .lang-switch {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: 999px;
+      padding: 6px 13px;
+      font-size: 11.5px;
       font-weight: 700;
-      color: var(--brand-dark);
+      color: var(--brand-primary);
+      cursor: pointer;
+    }
+
+    .text-link-btn {
+      background: none;
+      border: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 6px 8px;
+    }
+
+    .onboarding-title {
+      font-size: 31px;
+      font-weight: 800;
+      line-height: 1.14;
+      letter-spacing: -0.03em;
+      color: var(--brand-primary);
+      margin-bottom: 12px;
+    }
+
+    .onboarding-copy {
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .editorial-photo-card {
+      flex: 1;
+      border-radius: 26px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+      background: #DDD8CC;
+    }
+
+    .editorial-photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-overlay-tag {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      right: 14px;
+      background: rgba(247, 245, 240, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 11px 14px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand-primary);
+    }
+
+    /* 3. INSCRIPTION VIEW */
+    .form-field {
+      margin-bottom: 15px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-primary);
       margin-bottom: 6px;
     }
 
-    .text-input {
+    .field-input {
       width: 100%;
-      background: var(--bg-card);
-      border: 1.5px solid var(--border-soft);
-      border-radius: 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: 14px;
       padding: 13px 15px;
       font-family: inherit;
       font-size: 14px;
-      color: var(--text-main);
+      color: var(--text-primary);
       outline: none;
+      transition: border-color 0.15s ease;
     }
 
-    .text-input:focus {
-      border-color: var(--brand-dark);
+    .field-input:focus {
+      border-color: var(--brand-primary);
     }
 
-    /* 4. HOME SCREEN */
-    .header-flex {
+    .campus-verified-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--brand-sage-soft);
+      color: var(--brand-primary);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+
+    /* 4. HOME VIEW */
+    .home-top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 14px;
     }
 
-    .greeting-title {
+    .home-greeting {
       font-size: 23px;
       font-weight: 800;
-      color: var(--brand-dark);
+      letter-spacing: -0.025em;
+      color: var(--brand-primary);
     }
 
-    .greeting-sub {
+    .home-subtitle {
       font-size: 13px;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       margin-top: 2px;
     }
 
-    .search-box {
-      background: var(--bg-card);
-      border: 1.5px solid var(--border-soft);
-      border-radius: 16px;
+    .search-bar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: 15px;
       padding: 11px 14px;
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-card);
     }
 
-    .search-box input {
+    .search-bar input {
       border: none;
       outline: none;
       background: transparent;
       width: 100%;
       font-family: inherit;
-      font-size: 14px;
-      color: var(--text-main);
+      font-size: 13.5px;
+      color: var(--text-primary);
     }
 
-    .categories-grid {
+    .category-rail {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-      margin-bottom: 18px;
+      gap: 8px;
+      margin-bottom: 20px;
     }
 
-    .cat-item {
+    .cat-pill {
+      background: none;
+      border: none;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       cursor: pointer;
-      background: none;
-      border: none;
     }
 
-    .cat-icon {
+    .cat-circle {
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: var(--bg-pill);
+      background: var(--bg-subtle);
+      color: var(--brand-primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      transition: all 0.15s ease;
+      transition: all 0.16s ease;
     }
 
-    .cat-item.active .cat-icon {
-      background: var(--brand-dark);
-      color: #FFF;
-      transform: translateY(-2px);
+    .cat-pill.active .cat-circle {
+      background: var(--brand-primary);
+      color: #FFFFFF;
+      box-shadow: 0 6px 14px rgba(43, 55, 35, 0.22);
     }
 
-    .cat-label {
+    .cat-name {
       font-size: 11px;
       font-weight: 600;
-      color: var(--text-muted);
+      color: var(--text-secondary);
     }
 
-    .cat-item.active .cat-label {
-      color: var(--brand-dark);
+    .cat-pill.active .cat-name {
+      color: var(--brand-primary);
       font-weight: 700;
     }
 
-    .section-row {
+    .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 11px;
     }
 
-    .section-title {
-      font-size: 17px;
+    .section-heading {
+      font-size: 16.5px;
       font-weight: 800;
-      color: var(--brand-dark);
+      letter-spacing: -0.02em;
+      color: var(--brand-primary);
     }
 
-    .see-all {
+    .section-action {
       font-size: 12px;
       font-weight: 700;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       background: none;
       border: none;
       cursor: pointer;
     }
 
-    .popular-grid {
+    .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
-    .food-card {
-      background: var(--bg-card);
+    .product-card {
+      background: var(--bg-surface);
       border-radius: 20px;
-      padding: 10px;
-      border: 1px solid var(--border-soft);
+      padding: 9px;
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-card);
       display: flex;
       flex-direction: column;
       cursor: pointer;
-      transition: transform 0.12s ease;
+      transition: transform 0.14s ease;
     }
 
-    .food-card:active { transform: scale(0.98); }
+    .product-card:active { transform: scale(0.98); }
 
-    .food-thumb {
-      height: 98px;
+    .product-img-wrap {
+      height: 108px;
       border-radius: 14px;
-      background: var(--bg-pill);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 44px;
+      overflow: hidden;
+      background: var(--bg-subtle);
+      margin-bottom: 9px;
+    }
+
+    .product-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .product-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .product-prep {
+      font-size: 11px;
+      color: var(--text-tertiary);
       margin-bottom: 8px;
     }
 
-    .food-name {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: var(--text-main);
-    }
-
-    .food-footer {
+    .product-bottom {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-top: auto;
     }
 
-    .food-price {
+    .product-price {
       font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
+      font-weight: 700;
+      color: var(--text-secondary);
     }
 
-    .add-circle {
+    .icon-add-btn {
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      background: var(--brand-dark);
-      color: #FFF;
+      background: var(--brand-primary);
+      color: #FFFFFF;
       border: none;
-      font-size: 18px;
-      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
     }
 
-    /* Navigation Headers & Lists */
-    .top-bar {
+    /* Sub-headers & List Rows */
+    .app-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 16px;
     }
 
-    .back-btn {
-      width: 36px;
-      height: 36px;
+    .circle-icon-btn {
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      background: var(--bg-card);
-      border: 1px solid var(--border-soft);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      font-weight: 700;
       cursor: pointer;
-      color: var(--brand-dark);
+      color: var(--brand-primary);
+      box-shadow: var(--shadow-card);
     }
 
-    .top-title {
-      font-size: 18px;
+    .app-bar-title {
+      font-size: 17px;
       font-weight: 800;
-      color: var(--brand-dark);
+      letter-spacing: -0.02em;
+      color: var(--brand-primary);
     }
 
-    .sub-tabs {
+    .filter-pills {
       display: flex;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       overflow-x: auto;
     }
 
-    .sub-tab {
-      padding: 8px 14px;
+    .filter-chip {
+      padding: 8px 15px;
       border-radius: 999px;
       font-size: 12px;
       font-weight: 700;
-      border: 1px solid var(--border-soft);
-      background: var(--bg-card);
-      color: var(--text-muted);
+      border: 1px solid var(--border-hairline);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
       cursor: pointer;
       white-space: nowrap;
     }
 
-    .sub-tab.active {
-      background: var(--brand-dark);
-      color: #FFF;
-      border-color: var(--brand-dark);
+    .filter-chip.active {
+      background: var(--brand-primary);
+      color: #FFFFFF;
+      border-color: var(--brand-primary);
     }
 
-    .list-item {
-      background: var(--bg-card);
+    .row-card {
+      background: var(--bg-surface);
       border-radius: 18px;
-      padding: 10px 14px 10px 10px;
-      border: 1px solid var(--border-soft);
+      padding: 9px 14px 9px 9px;
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-card);
       display: flex;
       align-items: center;
       gap: 12px;
@@ -558,116 +613,157 @@
       cursor: pointer;
     }
 
-    .list-thumb {
-      width: 56px;
-      height: 56px;
+    .row-thumb {
+      width: 62px;
+      height: 62px;
       border-radius: 14px;
-      background: var(--bg-pill);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
+      overflow: hidden;
+      background: var(--bg-subtle);
       flex-shrink: 0;
     }
 
-    .list-info { flex: 1; }
-    .list-title { font-size: 15px; font-weight: 700; }
-    .list-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
-
-    /* Product Detail */
-    .detail-hero {
-      height: 195px;
-      background: linear-gradient(145deg, #EFECE4, #E2DDD0);
-      border-radius: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 88px;
-      margin-bottom: 16px;
+    .row-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .size-grid {
+    .row-meta { flex: 1; }
+    .row-title { font-size: 14.5px; font-weight: 700; color: var(--text-primary); }
+    .row-sub { font-size: 12.5px; font-weight: 600; color: var(--text-secondary); margin-top: 2px; }
+
+    /* Product Detail View */
+    .detail-banner {
+      height: 215px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--bg-subtle);
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .detail-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .size-selector {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin: 10px 0 20px;
+      margin: 10px 0 18px;
     }
 
-    .size-btn {
+    .size-option {
       padding: 12px;
-      border-radius: 16px;
-      border: 1.5px solid var(--border-soft);
-      background: var(--bg-card);
+      border-radius: 14px;
+      border: 1.5px solid var(--border-hairline);
+      background: var(--bg-surface);
+      font-family: inherit;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13.5px;
+      color: var(--text-primary);
       cursor: pointer;
-      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
     }
 
-    .size-btn.active {
-      background: var(--brand-dark);
-      color: #FFF;
-      border-color: var(--brand-dark);
+    .size-option.active {
+      background: var(--brand-primary);
+      color: #FFFFFF;
+      border-color: var(--brand-primary);
     }
 
     /* Cart & Checkout */
-    .qty-controls { display: flex; align-items: center; gap: 8px; }
-    .qty-btn {
+    .stepper-qty {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .qty-circle {
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      border: 1px solid var(--border-soft);
-      background: var(--bg-phone);
+      border: 1px solid var(--border-hairline);
+      background: var(--bg-app);
       font-weight: 700;
+      font-size: 15px;
+      color: var(--brand-primary);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .total-box {
+    .summary-footer {
       margin-top: auto;
       padding-top: 14px;
-      border-top: 1px solid var(--border-soft);
+      border-top: 1px solid var(--border-hairline);
     }
 
-    .total-row {
+    .summary-line {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
     }
 
-    .checkout-card {
-      background: var(--bg-card);
+    .surface-box {
+      background: var(--bg-surface);
       border-radius: 18px;
       padding: 14px;
-      border: 1px solid var(--border-soft);
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-card);
       margin-bottom: 12px;
     }
 
-    .pickup-grid {
+    .slot-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-bottom: 14px;
     }
 
-    .pickup-opt {
-      padding: 12px;
-      border-radius: 16px;
-      border: 1.5px solid var(--border-soft);
-      background: var(--bg-card);
+    .slot-card {
+      padding: 12px 14px;
+      border-radius: 15px;
+      border: 1.5px solid var(--border-hairline);
+      background: var(--bg-surface);
       text-align: left;
       cursor: pointer;
-      color: var(--text-main);
+      color: var(--text-primary);
     }
 
-    .pickup-opt.active {
-      background: var(--brand-dark);
-      color: #FFF;
-      border-color: var(--brand-dark);
+    .slot-card.active {
+      background: var(--brand-primary);
+      color: #FFFFFF;
+      border-color: var(--brand-primary);
     }
 
-    /* Order Confirmed & Ready */
-    .center-box {
+    .radio-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--brand-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radio-dot.checked::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--brand-primary);
+    }
+
+    /* Order Confirmed & Tracking */
+    .centered-status {
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -676,57 +772,75 @@
       text-align: center;
     }
 
-    .bag-illustration {
-      width: 120px;
-      height: 120px;
+    .kraft-bag-card {
+      width: 124px;
+      height: 124px;
       border-radius: 30px;
-      background: var(--bg-pill);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-bottom: 18px;
-      border: 2px solid var(--brand-sage-light);
+      gap: 6px;
+      margin-bottom: 20px;
+      color: var(--brand-primary);
     }
 
-    .stepper {
+    .progress-track {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      max-width: 260px;
-      margin: 22px 0 28px;
+      max-width: 270px;
+      margin: 24px 0 30px;
+      position: relative;
     }
 
-    .step-node {
+    .progress-track::before {
+      content: '';
+      position: absolute;
+      top: 17px;
+      left: 26px;
+      right: 26px;
+      height: 2px;
+      background: var(--border-hairline);
+      z-index: 0;
+    }
+
+    .track-step {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
       font-size: 11px;
       font-weight: 700;
-      color: var(--text-muted);
+      color: var(--text-tertiary);
     }
 
-    .step-circle {
+    .track-step.active { color: var(--brand-primary); }
+
+    .track-node {
       width: 34px;
       height: 34px;
       border-radius: 50%;
-      background: var(--bg-card);
-      border: 2px solid var(--border-soft);
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-hairline);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .step-node.done .step-circle {
-      background: var(--brand-dark);
-      color: #FFF;
-      border-color: var(--brand-dark);
+    .track-step.active .track-node {
+      background: var(--brand-primary);
+      color: #FFFFFF;
+      border-color: var(--brand-primary);
     }
 
-    .ready-banner {
-      background: var(--brand-sage-light);
-      border-radius: 20px;
+    .ready-callout {
+      background: var(--brand-sage-soft);
+      border-radius: 18px;
       padding: 14px;
       display: flex;
       align-items: center;
@@ -734,86 +848,110 @@
       margin-bottom: 14px;
     }
 
-    .ready-check {
-      width: 38px;
-      height: 38px;
+    .ready-icon-wrap {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      background: var(--brand-dark);
-      color: #FFF;
+      background: var(--brand-primary);
+      color: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      font-weight: 800;
     }
 
-    /* QR Modal */
-    .modal-overlay {
+    /* Rating Stars */
+    .star-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 8px 0 4px;
+    }
+
+    .star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #C7C3B8;
+      transition: color 0.15s ease, transform 0.12s ease;
+    }
+
+    .star-btn.lit { color: #2B3723; }
+    .star-btn:active { transform: scale(1.15); }
+
+    /* Modal QR */
+    .modal-backdrop {
       position: absolute;
       inset: 0;
-      background: rgba(28, 30, 26, 0.65);
+      background: rgba(24, 26, 23, 0.65);
+      backdrop-filter: blur(4px);
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 22px;
       z-index: 50;
     }
 
-    .modal-overlay.open { display: flex; }
+    .modal-backdrop.open { display: flex; }
 
-    .modal-card {
-      background: var(--bg-phone);
+    .qr-sheet {
+      background: var(--bg-app);
       border-radius: 28px;
-      padding: 24px;
+      padding: 26px 22px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 20px 45px rgba(0,0,0,0.28);
+      box-shadow: var(--shadow-float);
     }
 
     /* Bottom Navigation */
-    .bottom-nav {
+    .tab-bar {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 76px;
-      background: var(--bg-card);
-      border-top: 1px solid var(--border-soft);
+      height: 78px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border-hairline);
       display: none;
       grid-template-columns: repeat(4, 1fr);
-      padding: 8px 12px 14px;
+      padding: 8px 12px 16px;
       z-index: 30;
     }
 
-    .bottom-nav.visible { display: grid; }
+    .tab-bar.visible { display: grid; }
 
-    .nav-btn {
+    .tab-item {
       background: none;
       border: none;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      color: var(--text-muted);
+      gap: 4px;
+      color: var(--text-tertiary);
+      font-family: inherit;
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       position: relative;
     }
 
-    .nav-btn.active { color: var(--brand-dark); font-weight: 800; }
+    .tab-item.active {
+      color: var(--brand-primary);
+      font-weight: 700;
+    }
 
-    .cart-badge {
+    .badge-pill {
       position: absolute;
-      top: 2px;
+      top: 1px;
       right: 22px;
-      background: var(--brand-dark);
-      color: #FFF;
+      background: var(--brand-primary);
+      color: #FFFFFF;
       font-size: 10px;
       font-weight: 700;
-      min-width: 18px;
-      height: 18px;
+      min-width: 17px;
+      height: 17px;
       border-radius: 999px;
       display: flex;
       align-items: center;
@@ -821,732 +959,945 @@
       padding: 0 4px;
     }
 
-    .toast {
+    .snackbar {
       position: absolute;
       top: 52px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--brand-dark);
-      color: #FFF;
-      padding: 8px 16px;
+      background: var(--brand-primary);
+      color: #FFFFFF;
+      padding: 9px 16px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       display: none;
       z-index: 60;
       white-space: nowrap;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+      box-shadow: var(--shadow-float);
     }
   </style>
 </head>
 <body>
 
-  <div class="phone-frame">
+  <div class="device-shell">
     <!-- Status Bar -->
     <div class="status-bar">
       <span>9:41</span>
       <div class="dynamic-island"></div>
-      <span>5G 🔋</span>
+      <div class="status-right">
+        <svg width="15" height="11" viewBox="0 0 16 12" fill="currentColor"><rect x="1" y="7" width="2.5" height="5" rx="0.8"/><rect x="5" y="5" width="2.5" height="7" rx="0.8"/><rect x="9" y="2.5" width="2.5" height="9.5" rx="0.8"/><rect x="13" y="0" width="2.5" height="12" rx="0.8"/></svg>
+        <svg width="20" height="11" viewBox="0 0 22 12" fill="none"><rect x="0.75" y="0.75" width="18" height="10.5" rx="2.5" stroke="currentColor" stroke-width="1.3"/><rect x="2.5" y="2.5" width="14.5" height="7" rx="1.2" fill="currentColor"/><path d="M20.5 4V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
     </div>
 
-    <div id="toast" class="toast">Ajouté au panier</div>
+    <div id="snackbar" class="snackbar">Ajouté au panier</div>
 
-    <div class="screens-wrapper">
+    <div class="viewport">
 
       <!-- 1. SPLASH SCREEN -->
-      <section id="screen-splash" class="screen no-nav splash-screen active">
-        <div class="deco-circle-1"></div>
-        <div class="deco-circle-2"></div>
-        
+      <section id="view-splash" class="view full-height splash-view active">
+        <div class="organic-shape-top"></div>
+        <div class="organic-shape-bottom"></div>
+
         <div style="margin: auto 0; position: relative; z-index: 3;">
-          <div class="splash-logo-box">
-            <svg width="38" height="38" viewBox="0 0 64 64" fill="none">
-              <path d="M22 12V28C22 31.3 24.7 34 28 34V52" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
-              <path d="M16 12V24M28 12V24" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
-              <ellipse cx="44" cy="22" rx="7" ry="10" fill="#FFFFFF"/>
-              <path d="M44 32V52" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+          <div class="brand-emblem">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
             </svg>
           </div>
-          <h1 class="splash-title">UniEat</h1>
-          <div class="splash-sub">UFAR</div>
-          <p class="splash-tagline" data-fr="Bien manger.<br>Plus de temps pour l'essentiel." data-en="Good food.<br>More time for what matters.">
+          <h1 class="brand-wordmark">UniEat</h1>
+          <div class="brand-campus">UFAR</div>
+          <p class="brand-motto" data-fr="Bien manger.<br>Plus de temps pour l'essentiel." data-en="Good food.<br>More time for what matters.">
             Bien manger.<br>Plus de temps pour l'essentiel.
           </p>
         </div>
 
-        <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 4;">
-          <button class="btn-primary" onclick="goTo('welcome')" data-fr="Commencer →" data-en="Enter UniEat UFAR →">Commencer →</button>
+        <div style="width: 100%; position: relative; z-index: 4;">
+          <button class="btn-primary" onclick="navigate('welcome')">
+            <span data-fr="Accéder à l'application" data-en="Continue to UniEat">Accéder à l'application</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
         </div>
       </section>
 
       <!-- 2. ONBOARDING / WELCOME -->
-      <section id="screen-welcome" class="screen no-nav">
-        <div class="top-actions-row">
-          <button class="lang-pill" onclick="toggleLang()" id="lang-btn">FR / EN</button>
-          <button class="skip-btn" onclick="goTo('home')" data-fr="Passer" data-en="Skip">Passer</button>
+      <section id="view-welcome" class="view full-height">
+        <div class="nav-header-minimal">
+          <button class="lang-switch" onclick="toggleLang()">FR / EN</button>
+          <button class="text-link-btn" onclick="navigate('home')" data-fr="Passer" data-en="Skip">Passer</button>
         </div>
 
-        <h1 class="welcome-title" data-fr="Bienvenue sur<br>UniEat UFAR" data-en="Welcome to<br>UniEat UFAR">Bienvenue sur<br>UniEat UFAR</h1>
-        <p class="welcome-desc" data-fr="Commandez votre repas à l'avance et récupérez-le sans faire la queue à la cafétéria." data-en="Order your favorite food and drink in advance and skip the line.">
-          Commandez votre repas à l'avance et récupérez-le sans faire la queue à la cafétéria.
+        <h1 class="onboarding-title" data-fr="Bienvenue sur<br>UniEat UFAR" data-en="Welcome to<br>UniEat UFAR">Bienvenue sur<br>UniEat UFAR</h1>
+        <p class="onboarding-copy" data-fr="Précommandez vos repas et boissons à l'avance et évitez les files d'attente à la cafétéria." data-en="Order your favorite food and drink in advance and skip the line at the cafeteria.">
+          Précommandez vos repas et boissons à l'avance et évitez les files d'attente à la cafétéria.
         </p>
-        
-        <div class="hero-card">
-          <div style="font-size: 82px; line-height: 1;">☕🥐</div>
-          <div class="hero-pill">⚡ Guichet « Fast Express » • UFAR</div>
+
+        <div class="editorial-photo-card">
+          <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=85" alt="Café et viennoiserie UFAR" />
+          <div class="photo-overlay-tag">
+            <span>Cafétéria UFAR • Erevan</span>
+            <span style="color: var(--brand-sage);">Guichet Fast Express</span>
+          </div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button class="btn-primary" onclick="goTo('inscription')" data-fr="1. Créer un compte UFAR" data-en="1. Create UFAR Account">1. Créer un compte UFAR</button>
-          <button class="btn-secondary" onclick="goTo('home')" data-fr="Accès direct au menu" data-en="Browse Menu Directly">Accès direct au menu</button>
+          <button class="btn-primary" onclick="navigate('inscription')" data-fr="Créer un compte universitaire" data-en="Sign up with UFAR email">Créer un compte universitaire</button>
+          <button class="btn-secondary" onclick="navigate('home')" data-fr="Explorer le menu" data-en="Browse Menu">Explorer le menu</button>
         </div>
       </section>
 
-      <!-- 3. INSCRIPTION (Step 1 from Slide 03) -->
-      <section id="screen-inscription" class="screen no-nav">
-        <div class="top-bar">
-          <button class="back-btn" onclick="goTo('welcome')">‹</button>
-          <h2 class="top-title" data-fr="1. Inscription" data-en="1. Sign Up">1. Inscription</h2>
-          <div style="width:36px;"></div>
+      <!-- 3. INSCRIPTION (UFAR Account) -->
+      <section id="view-inscription" class="view full-height">
+        <div class="app-bar">
+          <button class="circle-icon-btn" onclick="navigate('welcome')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <h2 class="app-bar-title" data-fr="Inscription UFAR" data-en="UFAR Registration">Inscription UFAR</h2>
+          <div style="width: 38px;"></div>
         </div>
 
-        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5;" data-fr="Connectez-vous avec votre adresse universitaire de l'UFAR." data-en="Create your account with your UFAR university email address.">
-          Connectez-vous avec votre adresse universitaire de l'UFAR.
-        </p>
-
-        <div class="input-group">
-          <label class="input-label" data-fr="Nom complet" data-en="Full Name">Nom complet</label>
-          <input type="text" id="reg-name" class="text-input" value="Shushan Dallaqyan" />
+        <div>
+          <span class="campus-verified-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            Université française en Arménie
+          </span>
         </div>
 
-        <div class="input-group">
-          <label class="input-label" data-fr="Adresse universitaire" data-en="University Email">Adresse universitaire</label>
-          <input type="email" id="reg-email" class="text-input" value="shushan.dallaqyan@ufar.am" />
+        <div class="form-field">
+          <label class="field-label" data-fr="Nom et prénom" data-en="Full Name">Nom et prénom</label>
+          <input type="text" id="input-fullname" class="field-input" value="Shushan Dallaqyan" />
         </div>
 
-        <div class="input-group">
-          <label class="input-label" data-fr="Faculté / Rôle" data-en="Faculty / Role">Faculté / Rôle</label>
-          <input type="text" class="text-input" value="Étudiante • Marketing & Gestion (UFAR)" readonly />
+        <div class="form-field">
+          <label class="field-label" data-fr="Adresse email universitaire" data-en="University Email">Adresse email universitaire</label>
+          <input type="email" id="input-email" class="field-input" value="shushan.dallaqyan@ufar.am" />
         </div>
 
-        <button class="btn-primary" style="margin-top: auto;" onclick="completeSignup()" data-fr="Valider mon compte UFAR" data-en="Confirm UFAR Account">Valider mon compte UFAR</button>
+        <div class="form-field">
+          <label class="field-label" data-fr="Statut" data-en="Campus Role">Statut</label>
+          <input type="text" class="field-input" value="Étudiante • Faculté Marketing & Gestion" readonly />
+        </div>
+
+        <button class="btn-primary" style="margin-top: auto;" onclick="submitRegistration()" data-fr="Continuer vers le menu" data-en="Continue to Menu">Continuer vers le menu</button>
       </section>
 
-      <!-- 4. HOME / MENU NUMÉRIQUE (Step 2) -->
-      <section id="screen-home" class="screen">
-        <div class="header-flex">
+      <!-- 4. HOME / DIGITAL MENU -->
+      <section id="view-home" class="view">
+        <div class="home-top">
           <div>
-            <h2 class="greeting-title">Bonjour, <span id="user-first-name">Shushan</span> ! 👋</h2>
-            <p class="greeting-sub" data-fr="2. Choisissez votre repas dans le menu." data-en="Good food. More time for what matters.">2. Choisissez votre repas dans le menu.</p>
+            <h2 class="home-greeting">Bonjour, <span id="display-firstname">Shushan</span></h2>
+            <p class="home-subtitle" data-fr="Good food. More time for what matters." data-en="Good food. More time for what matters.">Good food. More time for what matters.</p>
           </div>
-          <button class="lang-pill" onclick="toggleLang()">FR/EN</button>
+          <button class="lang-switch" onclick="toggleLang()">FR/EN</button>
         </div>
 
-        <div class="search-box">
-          <span>🔍</span>
-          <input type="text" id="search-input" placeholder="Rechercher un repas, un café..." oninput="renderHome()" />
+        <div class="search-bar">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#687062" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="menu-search" placeholder="Rechercher un plat, une boisson..." oninput="renderHome()" />
         </div>
 
-        <div class="categories-grid">
-          <button class="cat-item active" onclick="selectCategory('All', this)">
-            <div class="cat-icon">🍽️</div>
-            <span class="cat-label">Tout</span>
+        <!-- Category Icons -->
+        <div class="category-rail">
+          <button class="cat-pill active" onclick="filterHomeCat('All', this)">
+            <div class="cat-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+            </div>
+            <span class="cat-name">All</span>
           </button>
-          <button class="cat-item" onclick="goTo('coffee')">
-            <div class="cat-icon">☕</div>
-            <span class="cat-label">Café</span>
+          <button class="cat-pill" onclick="navigate('coffee')">
+            <div class="cat-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+            </div>
+            <span class="cat-name">Coffee</span>
           </button>
-          <button class="cat-item" onclick="selectCategory('Breakfast', this)">
-            <div class="cat-icon">🥐</div>
-            <span class="cat-label">Matin</span>
+          <button class="cat-pill" onclick="filterHomeCat('Breakfast', this)">
+            <div class="cat-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.6 13.11 5.79 12c1.89-1.8 4.9-2.2 7.21-1l1 .52c2.31 1.2 5.32.8 7.21-1l1.19-1.11"/><path d="M2 16c2 2 5 2 7 0s5-2 7 0 5 2 6 0"/></svg>
+            </div>
+            <span class="cat-name">Breakfast</span>
           </button>
-          <button class="cat-item" onclick="selectCategory('Lunch', this)">
-            <div class="cat-icon">🥗</div>
-            <span class="cat-label">Déjeuner</span>
+          <button class="cat-pill" onclick="filterHomeCat('Lunch', this)">
+            <div class="cat-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11h18"/><path d="M5 11a7 7 0 0 1 14 0"/><path d="M4 15h16a1 1 0 0 1 1 1v1a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-1a1 1 0 0 1 1-1Z"/></svg>
+            </div>
+            <span class="cat-name">Lunch</span>
           </button>
-          <button class="cat-item" onclick="selectCategory('Snacks', this)">
-            <div class="cat-icon">🍪</div>
-            <span class="cat-label">Snacks</span>
+          <button class="cat-pill" onclick="filterHomeCat('Snacks', this)">
+            <div class="cat-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg>
+            </div>
+            <span class="cat-name">Snacks</span>
           </button>
         </div>
 
-        <div class="section-row">
-          <h3 class="section-title" data-fr="Populaires à l'UFAR" data-en="Popular">Populaires à l'UFAR</h3>
-          <button class="see-all" onclick="goTo('coffee')" data-fr="Voir tout" data-en="See all">Voir tout</button>
+        <div class="section-header">
+          <h3 class="section-heading">Popular</h3>
+          <button class="section-action" onclick="navigate('coffee')">See all</button>
         </div>
-        <div id="popular-grid" class="popular-grid"></div>
+        <div id="grid-popular" class="grid-2"></div>
 
-        <div class="section-row">
-          <h3 class="section-title" data-fr="Formules Déjeuner" data-en="Lunch">Formules Déjeuner</h3>
-          <button class="see-all" onclick="selectCategory('Lunch')" data-fr="Voir tout" data-en="See all">Voir tout</button>
+        <div class="section-header">
+          <h3 class="section-heading">Lunch</h3>
+          <button class="section-action" onclick="filterHomeCat('Lunch')">See all</button>
         </div>
-        <div id="lunch-grid" class="popular-grid"></div>
+        <div id="grid-lunch" class="grid-2"></div>
       </section>
 
-      <!-- 5. COFFEE & DRINKS SCREEN -->
-      <section id="screen-coffee" class="screen">
-        <div class="top-bar">
-          <button class="back-btn" onclick="goTo('home')">‹</button>
-          <h2 class="top-title">Coffee & Drinks</h2>
-          <div style="width:36px;"></div>
+      <!-- 5. COFFEE CATEGORY -->
+      <section id="view-coffee" class="view">
+        <div class="app-bar">
+          <button class="circle-icon-btn" onclick="navigate('home')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <h2 class="app-bar-title">Coffee</h2>
+          <div style="width: 38px;"></div>
         </div>
 
-        <div class="sub-tabs">
-          <button class="sub-tab" onclick="filterCoffee('Hot Drinks', this)">Hot Drinks</button>
-          <button class="sub-tab active" onclick="filterCoffee('Iced Drinks', this)">Iced Drinks</button>
-          <button class="sub-tab" onclick="filterCoffee('Specials', this)">Breakfast & Snacks</button>
+        <div class="filter-pills">
+          <button class="filter-chip" onclick="switchCoffeeTab('Hot Drinks', this)">Hot Drinks</button>
+          <button class="filter-chip active" onclick="switchCoffeeTab('Iced Drinks', this)">Iced Drinks</button>
+          <button class="filter-chip" onclick="switchCoffeeTab('Specials', this)">Specials</button>
         </div>
 
-        <div id="coffee-list"></div>
+        <div id="list-coffee"></div>
       </section>
 
-      <!-- 6. PRODUCT DETAIL SCREEN -->
-      <section id="screen-detail" class="screen no-nav">
-        <div class="top-bar">
-          <button class="back-btn" onclick="goTo('home')">‹</button>
-          <h2 class="top-title">Détails</h2>
-          <button class="back-btn" onclick="showToast('Ajouté aux favoris ♥')">♡</button>
+      <!-- 6. PRODUCT DETAIL -->
+      <section id="view-detail" class="view full-height">
+        <div class="app-bar">
+          <button class="circle-icon-btn" onclick="navigate('home')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <h2 class="app-bar-title">Product Details</h2>
+          <button class="circle-icon-btn" onclick="notify('Enregistré dans vos favoris')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </button>
         </div>
 
-        <div id="detail-emoji" class="detail-hero">🧋</div>
-        <h2 id="detail-name" style="font-size:24px; font-weight:800;">Iced Latte</h2>
-        <p id="detail-base-price" style="font-size:16px; font-weight:700; color:var(--text-muted); margin:4px 0 10px;">1,200 AMD</p>
-        <p id="detail-desc" style="font-size:14px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">
-          Espresso avec lait froid et glaçons. Préparé à la minute pour votre pause à l'UFAR.
+        <div class="detail-banner">
+          <img id="detail-img" src="" alt="" />
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
+          <h2 id="detail-title" style="font-size:23px; font-weight:800; letter-spacing:-0.02em;">Iced Latte</h2>
+          <span id="detail-price-tag" style="font-size:16px; font-weight:700; color:var(--text-secondary);">1,200 AMD</span>
+        </div>
+
+        <p id="detail-description" style="font-size:13.5px; color:var(--text-secondary); line-height:1.55; margin-bottom:16px;">
+          Espresso with cold milk and ice. A refreshing classic prepared on demand for your break.
         </p>
 
-        <h3 style="font-size:14px; font-weight:700;">Taille / Size</h3>
-        <div class="size-grid">
-          <button id="size-regular" class="size-btn active" onclick="selectSize('Regular', 0)">Regular</button>
-          <button id="size-large" class="size-btn" onclick="selectSize('Large', 300)">Large (+300 AMD)</button>
+        <div style="font-size:13px; font-weight:700; color:var(--text-primary);">Size</div>
+        <div class="size-selector">
+          <button id="opt-regular" class="size-option active" onclick="pickSize('Regular', 0)">
+            <span>Regular</span>
+            <span style="font-size:11px; opacity:0.75; font-weight:500;">Standard</span>
+          </button>
+          <button id="opt-large" class="size-option" onclick="pickSize('Large', 300)">
+            <span>Large</span>
+            <span style="font-size:11px; opacity:0.75; font-weight:500;">+300 AMD</span>
+          </button>
         </div>
 
-        <button class="btn-primary" style="margin-top:auto;" onclick="addDetailToCart()">
-          <span>Ajouter au panier</span>
-          <span id="detail-btn-price">1,200 AMD</span>
+        <button class="btn-primary" style="margin-top: auto;" onclick="commitDetailToCart()">
+          <span>Add to cart</span>
+          <span>•</span>
+          <span id="detail-cta-price">1,200 AMD</span>
         </button>
       </section>
 
-      <!-- 7. CART SCREEN -->
-      <section id="screen-cart" class="screen">
-        <div class="top-bar">
-          <button class="back-btn" onclick="goTo('home')">‹</button>
-          <h2 class="top-title">Votre Panier</h2>
-          <div style="width:36px;"></div>
+      <!-- 7. CART VIEW -->
+      <section id="view-cart" class="view">
+        <div class="app-bar">
+          <button class="circle-icon-btn" onclick="navigate('home')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <h2 class="app-bar-title">Your Cart</h2>
+          <div style="width: 38px;"></div>
         </div>
 
-        <div id="cart-items-container"></div>
+        <div id="cart-list"></div>
 
-        <div class="total-box">
-          <div class="total-row">
-            <span style="font-size:16px; font-weight:700;">Total</span>
-            <span id="cart-total-amount" style="font-size:20px; font-weight:800;">5,900 AMD</span>
+        <div class="summary-footer">
+          <div class="summary-line">
+            <span style="font-size:15px; font-weight:700; color:var(--text-secondary);">Total</span>
+            <span id="cart-sum" style="font-size:21px; font-weight:800; color:var(--brand-primary);">5,900 AMD</span>
           </div>
-          <button class="btn-primary" onclick="goTo('checkout')">Commander →</button>
+          <button class="btn-primary" onclick="navigate('checkout')">Proceed to Order</button>
         </div>
       </section>
 
-      <!-- 8. CHECKOUT / PAIEMENT (Step 3) -->
-      <section id="screen-checkout" class="screen no-nav">
-        <div class="top-bar">
-          <button class="back-btn" onclick="goTo('cart')">‹</button>
-          <h2 class="top-title">3. Paiement</h2>
-          <div style="width:36px;"></div>
+      <!-- 8. CHECKOUT VIEW -->
+      <section id="view-checkout" class="view full-height">
+        <div class="app-bar">
+          <button class="circle-icon-btn" onclick="navigate('cart')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <h2 class="app-bar-title">Checkout</h2>
+          <div style="width: 38px;"></div>
         </div>
 
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Heure de retrait</h3>
-        <div class="pickup-grid">
-          <button id="time-asap" class="pickup-opt active" onclick="selectPickup('asap')">
+        <div style="font-size:13px; font-weight:700; margin-bottom:8px;">Pickup time</div>
+        <div class="slot-grid">
+          <button id="slot-asap" class="slot-card active" onclick="chooseSlot('asap')">
             <div style="font-weight:800; font-size:14px;">ASAP</div>
-            <div style="font-size:11px; opacity:0.85;">Prêt en ~ 5 min</div>
+            <div style="font-size:11.5px; opacity:0.8; margin-top:2px;">~ 5 min</div>
           </button>
-          <button id="time-sched" class="pickup-opt" onclick="selectPickup('sched')">
-            <div style="font-weight:800; font-size:14px;">Pause 12:15</div>
-            <div style="font-size:11px; opacity:0.85;">Planifier</div>
+          <button id="slot-sched" class="slot-card" onclick="chooseSlot('sched')">
+            <div style="font-weight:800; font-size:14px;">Schedule</div>
+            <div style="font-size:11.5px; opacity:0.8; margin-top:2px;">Pause 12:15</div>
           </button>
         </div>
 
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Point de retrait</h3>
-        <div class="checkout-card" style="display:flex; align-items:center; gap:12px;">
-          <span style="font-size:22px;">📍</span>
+        <div style="font-size:13px; font-weight:700; margin-bottom:8px;">Pickup location</div>
+        <div class="surface-box" style="display:flex; align-items:center; gap:12px;">
+          <div style="width:38px; height:38px; border-radius:12px; background:var(--bg-subtle); display:flex; align-items:center; justify-content:center; color:var(--brand-primary);">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
           <div>
-            <div style="font-weight:800; font-size:14px;">Cafétéria UFAR (Erevan)</div>
-            <div style="font-size:12px; color:var(--text-muted);">Guichet « Fast Express »</div>
+            <div style="font-weight:700; font-size:14px;">UFAR Cafeteria</div>
+            <div style="font-size:12px; color:var(--text-secondary);">Dedicated UniEat « Fast Express » counter</div>
           </div>
         </div>
 
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Mode de paiement</h3>
-        <div class="checkout-card" onclick="selectPayment('card')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span style="font-size:20px;">💳</span>
+        <div style="font-size:13px; font-weight:700; margin-bottom:8px;">Payment method</div>
+        <div class="surface-box" onclick="choosePayment('card')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:38px; height:38px; border-radius:12px; background:var(--bg-subtle); display:flex; align-items:center; justify-content:center; color:var(--brand-primary);">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            </div>
             <div>
-              <div style="font-weight:700; font-size:14px;">Carte en ligne •••• 4242</div>
+              <div style="font-weight:700; font-size:14px;">Card</div>
+              <div style="font-size:12px; color:var(--text-secondary);">•••• 4242</div>
             </div>
           </div>
-          <span id="pay-radio-card" style="font-size:18px; color:var(--brand-dark);">◉</span>
+          <div id="radio-card" class="radio-dot checked"></div>
         </div>
 
-        <div class="checkout-card" onclick="selectPayment('cash')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span style="font-size:20px;">💵</span>
-            <div style="font-weight:700; font-size:14px;">Au moment du retrait</div>
+        <div class="surface-box" onclick="choosePayment('cash')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:38px; height:38px; border-radius:12px; background:var(--bg-subtle); display:flex; align-items:center; justify-content:center; color:var(--brand-primary);">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
+            <div style="font-weight:700; font-size:14px;">Cash at pickup</div>
           </div>
-          <span id="pay-radio-cash" style="font-size:18px; color:var(--text-muted);">○</span>
+          <div id="radio-cash" class="radio-dot"></div>
         </div>
 
-        <div class="total-box">
-          <div class="total-row">
-            <span style="font-size:16px; font-weight:700;">Total</span>
-            <span id="checkout-total" style="font-size:20px; font-weight:800;">5,900 AMD</span>
+        <div class="summary-footer">
+          <div class="summary-line">
+            <span style="font-size:15px; font-weight:700; color:var(--text-secondary);">Total</span>
+            <span id="checkout-sum" style="font-size:21px; font-weight:800; color:var(--brand-primary);">5,900 AMD</span>
           </div>
-          <button class="btn-primary" onclick="goTo('confirmed')">Confirmer la commande</button>
+          <button class="btn-primary" onclick="navigate('confirmed')">Confirm Order</button>
         </div>
       </section>
 
-      <!-- 9. PRÉPARATION (Step 4) -->
-      <section id="screen-confirmed" class="screen no-nav">
-        <div class="top-bar">
-          <button class="back-btn" onclick="goTo('home')">‹</button>
-          <h2 class="top-title">4. Préparation</h2>
-          <div style="width:36px;"></div>
+      <!-- 9. ORDER CONFIRMED VIEW -->
+      <section id="view-confirmed" class="view full-height">
+        <div class="app-bar">
+          <button class="circle-icon-btn" onclick="navigate('home')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <div style="width: 38px;"></div>
         </div>
 
-        <div class="center-box">
-          <div class="bag-illustration">
-            <span style="font-size:48px;">🛍️</span>
-            <span style="font-size:12px; font-weight:800; color:var(--brand-dark);">UniEat UFAR</span>
+        <div class="centered-status">
+          <div class="kraft-bag-card">
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span style="font-size:12px; font-weight:800; letter-spacing:0.06em;">UNIEAT</span>
           </div>
-          <h2 style="font-size:25px; font-weight:800; margin-bottom:8px;">Commande confirmée !</h2>
-          <p style="font-size:14px; color:var(--text-muted); max-width:260px; line-height:1.5;">
-            La cafétéria prépare vos produits à l'avance. Vous recevrez une notification dès qu'elle est prête.
+
+          <h2 style="font-size:25px; font-weight:800; letter-spacing:-0.02em; margin-bottom:8px;">Order Confirmed!</h2>
+          <p style="font-size:13.5px; color:var(--text-secondary); max-width:255px; line-height:1.55;">
+            Your order is being prepared. You'll receive a notification when it's ready.
           </p>
 
-          <div class="stepper">
-            <div class="step-node done">
-              <div class="step-circle">✓</div>
-              <span>Confirmée</span>
+          <div class="progress-track">
+            <div class="track-step active">
+              <div class="track-node">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <span>Confirmed</span>
             </div>
-            <div class="step-node done">
-              <div class="step-circle">👨‍🍳</div>
-              <span>Préparation</span>
+            <div class="track-step active">
+              <div class="track-node">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>
+              </div>
+              <span>Preparing</span>
             </div>
-            <div class="step-node">
-              <div class="step-circle">🥡</div>
-              <span>Prête</span>
+            <div class="track-step">
+              <div class="track-node">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
+              </div>
+              <span>Ready</span>
             </div>
           </div>
 
-          <button class="btn-primary" onclick="goTo('order')">Passer au retrait QR →</button>
+          <button class="btn-primary" onclick="navigate('order')">View Order Details</button>
         </div>
       </section>
 
-      <!-- 10. RETRAIT QR & FEEDBACK (Steps 5 & 6) -->
-      <section id="screen-order" class="screen">
-        <div class="top-bar">
-          <button class="back-btn" onclick="goTo('home')">‹</button>
-          <h2 class="top-title">5. Retrait & 6. Avis</h2>
-          <div style="width:36px;"></div>
+      <!-- 10. MY ORDER / QR RETRAIT / FEEDBACK -->
+      <section id="view-order" class="view">
+        <div class="app-bar">
+          <button class="circle-icon-btn" onclick="navigate('home')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <h2 class="app-bar-title">My Order</h2>
+          <div style="width: 38px;"></div>
         </div>
 
-        <div class="ready-banner">
-          <div class="ready-check">✓</div>
+        <div class="ready-callout">
+          <div class="ready-icon-wrap">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
           <div>
-            <div style="font-weight:800; font-size:15px;">Votre commande est prête !</div>
-            <div style="font-size:12px;">Présentez le QR code au guichet « Fast Express ».</div>
+            <div style="font-weight:800; font-size:14.5px; color:var(--brand-primary);">Your order is ready!</div>
+            <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;">You can now pick it up at the UniEat counter.</div>
           </div>
         </div>
 
-        <button class="btn-primary" style="margin-bottom:14px;" onclick="openQR()">Afficher le QR Code Fast Express</button>
+        <button class="btn-primary" style="margin-bottom:16px;" onclick="openQrSheet()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+          <span>Présenter le QR Code Fast Express</span>
+        </button>
 
-        <div class="section-row">
-          <h3 class="section-title">Commande #1043</h3>
-          <span style="font-size:12px; color:var(--text-muted);">UFAR • 12:15</span>
+        <div class="section-header">
+          <h3 class="section-heading">Order #1043</h3>
+          <span style="font-size:12px; color:var(--text-tertiary); font-weight:600;">12 Oct 2026, 12:15</span>
         </div>
 
-        <div id="order-summary-list"></div>
+        <div id="order-items-list"></div>
 
-        <div class="total-row" style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border-soft);">
-          <span style="font-weight:700;">Total réglé</span>
-          <span id="order-paid-total" style="font-weight:800; font-size:18px;">5,900 AMD</span>
+        <div class="summary-line" style="margin-top:10px; padding-top:12px; border-top:1px solid var(--border-hairline);">
+          <span style="font-weight:700; font-size:14.5px; color:var(--text-secondary);">Total</span>
+          <span id="order-final-sum" style="font-weight:800; font-size:18px; color:var(--brand-primary);">5,900 AMD</span>
         </div>
 
         <!-- Step 6: Feedback -->
-        <div class="checkout-card" style="margin-top:8px; text-align:center;">
-          <div style="font-size:13px; font-weight:800; margin-bottom:6px;">6. Feedback — Votre avis sur le service</div>
-          <div id="stars-row" style="font-size:24px; letter-spacing:6px; cursor:pointer;" onclick="rateOrder()">⭐⭐⭐⭐⭐</div>
-          <div id="feedback-thanks" style="font-size:12px; color:var(--brand-sage); font-weight:700; margin-top:4px;">Touchez les étoiles pour noter</div>
+        <div class="surface-box" style="margin-top:8px; text-align:center;">
+          <div style="font-size:12.5px; font-weight:700; color:var(--brand-primary);">Évaluez votre expérience à la cafétéria</div>
+          <div class="star-bar">
+            <button class="star-btn lit" onclick="setRating(1)">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+            <button class="star-btn lit" onclick="setRating(2)">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+            <button class="star-btn lit" onclick="setRating(3)">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+            <button class="star-btn lit" onclick="setRating(4)">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+            <button class="star-btn lit" onclick="setRating(5)">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+          </div>
+          <div id="rating-caption" style="font-size:11.5px; color:var(--text-secondary);">Merci pour votre retour sur le service UniEat</div>
         </div>
       </section>
 
-      <!-- 11. PROFILE SCREEN -->
-      <section id="screen-profile" class="screen">
-        <div class="top-bar">
-          <div style="width:36px;"></div>
-          <h2 class="top-title">Profil UFAR</h2>
-          <button class="back-btn" onclick="switchTeamMember()" title="Changer d'étudiante">↻</button>
+      <!-- 11. PROFILE VIEW -->
+      <section id="view-profile" class="view">
+        <div class="app-bar">
+          <div style="width: 38px;"></div>
+          <h2 class="app-bar-title">Profile</h2>
+          <button class="circle-icon-btn" onclick="cycleTeamMember()" title="Changer de profil étudiant">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+          </button>
         </div>
 
-        <div class="checkout-card" style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
-          <div style="width:54px; height:54px; border-radius:50%; background:var(--brand-sage-light); display:flex; align-items:center; justify-content:center; font-size:26px;">👩‍🎓</div>
+        <div class="surface-box" style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
+          <div id="avatar-initials" style="width:52px; height:52px; border-radius:50%; background:var(--brand-primary); color:#FFFFFF; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px;">SD</div>
           <div>
-            <div id="profile-full-name" style="font-weight:800; font-size:16px;">Shushan Dallaqyan</div>
-            <div id="profile-role" style="font-size:12px; color:var(--text-muted);">Identité visuelle • Étudiante UFAR</div>
+            <div id="profile-name" style="font-weight:800; font-size:16px;">Shushan Dallaqyan</div>
+            <div id="profile-subtitle" style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">Student • UFAR</div>
           </div>
         </div>
 
-        <div class="list-item" onclick="goTo('order')">
-          <span>🧾</span>
-          <div class="list-info"><div class="list-title">Mes commandes (#1043)</div></div>
-          <span>›</span>
-        </div>
-        <div class="list-item" onclick="switchTeamMember()">
-          <span>👥</span>
-          <div class="list-info">
-            <div class="list-title">Équipe du projet (6 étudiantes)</div>
-            <div class="list-sub">Shushan, Milena, Mane, Yana, Anna, Maria</div>
+        <div class="row-card" onclick="navigate('order')">
+          <div style="width:38px; height:38px; border-radius:12px; background:var(--bg-subtle); display:flex; align-items:center; justify-content:center; color:var(--brand-primary);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           </div>
-          <span>›</span>
+          <div class="row-meta"><div class="row-title">My Orders</div></div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#969D90" stroke-width="2.2"><path d="m9 18 6-6-6-6"/></svg>
         </div>
-        <div class="list-item" onclick="goTo('inscription')">
-          <span>🎓</span>
-          <div class="list-info"><div class="list-title">Compte universitaire (@ufar.am)</div></div>
-          <span>›</span>
+
+        <div class="row-card" onclick="notify('Carte Visa •••• 4242 active')">
+          <div style="width:38px; height:38px; border-radius:12px; background:var(--bg-subtle); display:flex; align-items:center; justify-content:center; color:var(--brand-primary);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          </div>
+          <div class="row-meta"><div class="row-title">Payment Methods</div></div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#969D90" stroke-width="2.2"><path d="m9 18 6-6-6-6"/></svg>
         </div>
-        <div class="list-item" onclick="goTo('splash')">
-          <span>🚪</span>
-          <div class="list-info"><div class="list-title">Déconnexion</div></div>
-          <span>›</span>
+
+        <div class="row-card" onclick="cycleTeamMember()">
+          <div style="width:38px; height:38px; border-radius:12px; background:var(--bg-subtle); display:flex; align-items:center; justify-content:center; color:var(--brand-primary);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="row-meta">
+            <div class="row-title">Équipe du projet UFAR</div>
+            <div class="row-sub">Basculer entre les 6 fondatrices</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#969D90" stroke-width="2.2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+
+        <div class="row-card" onclick="navigate('splash')">
+          <div style="width:38px; height:38px; border-radius:12px; background:var(--bg-subtle); display:flex; align-items:center; justify-content:center; color:var(--brand-primary);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          </div>
+          <div class="row-meta"><div class="row-title">Log Out</div></div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#969D90" stroke-width="2.2"><path d="m9 18 6-6-6-6"/></svg>
         </div>
       </section>
 
     </div>
 
-    <!-- QR MODAL (Step 5: Retrait Fast Express) -->
-    <div id="qr-modal" class="modal-overlay" onclick="closeQR()">
-      <div class="modal-card" onclick="event.stopPropagation()">
-        <div style="font-size:11px; font-weight:800; color:var(--brand-sage); letter-spacing:0.12em;">GUICHET « FAST EXPRESS »</div>
-        <h3 style="font-size:22px; font-weight:800; margin:4px 0 14px;">Commande #1043</h3>
-        <div style="background:#FFF; padding:16px; border-radius:20px; display:inline-block; border:1px solid var(--border-soft); margin-bottom:14px;">
-          <svg width="146" height="146" viewBox="0 0 100 100" fill="#2C3824">
-            <rect x="5" y="5" width="25" height="25" rx="3" fill="none" stroke="#2C3824" stroke-width="5"/>
-            <rect x="12" y="12" width="11" height="11"/>
-            <rect x="70" y="5" width="25" height="25" rx="3" fill="none" stroke="#2C3824" stroke-width="5"/>
-            <rect x="77" y="12" width="11" height="11"/>
-            <rect x="5" y="70" width="25" height="25" rx="3" fill="none" stroke="#2C3824" stroke-width="5"/>
-            <rect x="12" y="77" width="11" height="11"/>
-            <rect x="40" y="8" width="8" height="8"/><rect x="52" y="15" width="8" height="8"/>
-            <rect x="40" y="28" width="14" height="8"/><rect x="10" y="42" width="12" height="8"/>
-            <rect x="30" y="42" width="18" height="16" rx="2"/><rect x="56" y="40" width="10" height="10"/>
-            <rect x="75" y="44" width="16" height="8"/><rect x="42" y="66" width="8" height="12"/>
-            <rect x="58" y="62" width="14" height="8"/><rect x="78" y="68" width="14" height="14"/>
-            <rect x="42" y="84" width="24" height="8"/>
+    <!-- QR CODE MODAL -->
+    <div id="qr-backdrop" class="modal-backdrop" onclick="closeQrSheet()">
+      <div class="qr-sheet" onclick="event.stopPropagation()">
+        <div style="font-size:11px; font-weight:800; color:var(--brand-sage); letter-spacing:0.14em;">GUICHET « FAST EXPRESS »</div>
+        <h3 style="font-size:22px; font-weight:800; margin:4px 0 16px; color:var(--brand-primary);">Order #1043</h3>
+        <div style="background:#FFFFFF; padding:18px; border-radius:22px; display:inline-block; border:1px solid var(--border-hairline); margin-bottom:16px; box-shadow:var(--shadow-card);">
+          <svg width="150" height="150" viewBox="0 0 100 100" fill="#2B3723">
+            <rect x="4" y="4" width="26" height="26" rx="3" fill="none" stroke="#2B3723" stroke-width="5"/>
+            <rect x="11" y="11" width="12" height="12"/>
+            <rect x="70" y="4" width="26" height="26" rx="3" fill="none" stroke="#2B3723" stroke-width="5"/>
+            <rect x="77" y="11" width="12" height="12"/>
+            <rect x="4" y="70" width="26" height="26" rx="3" fill="none" stroke="#2B3723" stroke-width="5"/>
+            <rect x="11" y="77" width="12" height="12"/>
+            <rect x="38" y="6" width="8" height="8"/><rect x="52" y="12" width="10" height="8"/>
+            <rect x="38" y="24" width="16" height="8"/><rect x="8" y="40" width="14" height="8"/>
+            <rect x="28" y="40" width="18" height="18" rx="2"/><rect x="54" y="38" width="10" height="12"/>
+            <rect x="72" y="42" width="20" height="8"/><rect x="40" y="66" width="8" height="14"/>
+            <rect x="56" y="60" width="16" height="8"/><rect x="78" y="66" width="16" height="16"/>
+            <rect x="40" y="86" width="26" height="8"/>
           </svg>
         </div>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
-          Présentez ce QR code au comptoir UniEat de l'UFAR pour récupérer votre repas sans attendre.
+        <p style="font-size:13px; color:var(--text-secondary); line-height:1.5; margin-bottom:18px;">
+          Présentez ce QR code au comptoir UniEat de l'UFAR pour récupérer votre commande sans attendre.
         </p>
-        <button class="btn-primary" onclick="closeQR()">Fermer</button>
+        <button class="btn-primary" onclick="closeQrSheet()">Fermer</button>
       </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION BAR -->
-    <nav id="bottom-nav" class="bottom-nav">
-      <button class="nav-btn active" data-target="home" onclick="goTo('home')">
-        <span style="font-size:18px;">🏠</span>
-        <span>Menu</span>
+    <!-- BOTTOM TAB BAR -->
+    <nav id="tab-bar" class="tab-bar">
+      <button class="tab-item active" data-view="home" onclick="navigate('home')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
       </button>
-      <button class="nav-btn" data-target="order" onclick="goTo('order')">
-        <span style="font-size:18px;">🧾</span>
-        <span>Suivi</span>
+      <button class="tab-item" data-view="order" onclick="navigate('order')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Order</span>
       </button>
-      <button class="nav-btn" data-target="cart" onclick="goTo('cart')">
-        <span style="font-size:18px;">🛒</span>
-        <span id="nav-cart-badge" class="cart-badge">3</span>
-        <span>Panier</span>
+      <button class="tab-item" data-view="cart" onclick="navigate('cart')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        <span id="cart-counter" class="badge-pill">3</span>
+        <span>Cart</span>
       </button>
-      <button class="nav-btn" data-target="profile" onclick="goTo('profile')">
-        <span style="font-size:18px;">👤</span>
-        <span>Profil</span>
+      <button class="tab-item" data-view="profile" onclick="navigate('profile')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Profile</span>
       </button>
     </nav>
   </div>
 
   <script>
-    const PRODUCTS = [
-      { id: 1, name: 'Iced Latte', price: 1200, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🧋', desc: 'Espresso avec lait froid et glaçons. Un classique rafraîchissant.' },
-      { id: 2, name: 'Chicken Sandwich', price: 2200, cat: 'Lunch', sub: 'Lunch', emoji: '🥪', desc: 'Pain croustillant, filet de poulet grillé, salade fraîche et sauce maison.' },
-      { id: 3, name: 'Caesar Salad', price: 2500, cat: 'Lunch', sub: 'Lunch', emoji: '🥗', desc: 'Laitue romaine, poulet grillé, croûtons dorés, parmesan et sauce César.' },
-      { id: 4, name: 'Pasta Bowl', price: 2400, cat: 'Lunch', sub: 'Lunch', emoji: '🍝', desc: 'Pâtes chaudes préparées à la minute pour votre pause déjeuner.' },
-      { id: 5, name: 'Iced Americano', price: 900, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🧊', desc: 'Double espresso allongé sur glace.' },
-      { id: 6, name: 'Iced Cappuccino', price: 1300, cat: 'Coffee', sub: 'Iced Drinks', emoji: '☕', desc: 'Espresso glacé coiffé d’une mousse de lait onctueuse.' },
-      { id: 7, name: 'Iced Mocha', price: 1400, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🍫', desc: 'Alliance gourmande de chocolat, espresso et lait glacé.' },
-      { id: 8, name: 'Cold Brew', price: 1100, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🥤', desc: 'Infusion lente à froid pendant 12 heures, douce et énergisante.' },
-      { id: 9, name: 'Espresso Chaud', price: 800, cat: 'Coffee', sub: 'Hot Drinks', emoji: '☕', desc: 'Café intense fraîchement moulu.' },
-      { id: 10, name: 'Cappuccino Chaud', price: 1200, cat: 'Coffee', sub: 'Hot Drinks', emoji: '🫖', desc: 'Espresso équilibré et mousse de lait chaude.' },
-      { id: 11, name: 'Croissant au Beurre', price: 750, cat: 'Breakfast', sub: 'Specials', emoji: '🥐', desc: 'Viennoiserie dorée et croustillante du matin.' },
-      { id: 12, name: 'Cookie Chocolat', price: 650, cat: 'Snacks', sub: 'Specials', emoji: '🍪', desc: 'Cookie moelleux aux pépites de chocolat noir.' }
+    const CATALOG = [
+      {
+        id: 1,
+        name: 'Iced Latte',
+        price: 1200,
+        cat: 'Coffee',
+        sub: 'Iced Drinks',
+        prep: '4 min',
+        img: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=85',
+        desc: 'Espresso with cold milk and ice. A refreshing classic prepared on demand.'
+      },
+      {
+        id: 2,
+        name: 'Chicken Sandwich',
+        price: 2200,
+        cat: 'Lunch',
+        sub: 'Lunch',
+        prep: '6 min',
+        img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=600&q=85',
+        desc: 'Artisanal sourdough bread, grilled chicken breast, crisp greens, and herb aioli.'
+      },
+      {
+        id: 3,
+        name: 'Caesar Salad',
+        price: 2500,
+        cat: 'Lunch',
+        sub: 'Lunch',
+        prep: '5 min',
+        img: 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=600&q=85',
+        desc: 'Crisp romaine lettuce, grilled chicken, aged parmesan shavings, croutons, and Caesar dressing.'
+      },
+      {
+        id: 4,
+        name: 'Pesto Pasta Bowl',
+        price: 2400,
+        cat: 'Lunch',
+        sub: 'Lunch',
+        prep: '7 min',
+        img: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=600&q=85',
+        desc: 'Al dente penne tossed in fresh basil pesto, cherry tomatoes, and parmesan.'
+      },
+      {
+        id: 5,
+        name: 'Iced Americano',
+        price: 900,
+        cat: 'Coffee',
+        sub: 'Iced Drinks',
+        prep: '3 min',
+        img: 'https://images.unsplash.com/photo-1517959105821-eaf2591984ca?auto=format&fit=crop&w=600&q=85',
+        desc: 'Rich double espresso poured over filtered cold water and crystal ice.'
+      },
+      {
+        id: 6,
+        name: 'Iced Cappuccino',
+        price: 1300,
+        cat: 'Coffee',
+        sub: 'Iced Drinks',
+        prep: '4 min',
+        img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=85',
+        desc: 'Chilled espresso topped with velvety cold milk foam.'
+      },
+      {
+        id: 7,
+        name: 'Iced Mocha',
+        price: 1400,
+        cat: 'Coffee',
+        sub: 'Iced Drinks',
+        prep: '4 min',
+        img: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=600&q=85',
+        desc: 'Dark Belgian chocolate blended with double espresso and chilled milk.'
+      },
+      {
+        id: 8,
+        name: 'Cold Brew',
+        price: 1100,
+        cat: 'Coffee',
+        sub: 'Iced Drinks',
+        prep: '2 min',
+        img: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=85',
+        desc: '14-hour slow-steeped specialty Arabica coffee served over ice.'
+      },
+      {
+        id: 9,
+        name: 'Flat White',
+        price: 1100,
+        cat: 'Coffee',
+        sub: 'Hot Drinks',
+        prep: '4 min',
+        img: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=85',
+        desc: 'Double ristretto with silky steamed microfoam.'
+      },
+      {
+        id: 10,
+        name: 'Butter Croissant',
+        price: 750,
+        cat: 'Breakfast',
+        sub: 'Specials',
+        prep: '2 min',
+        img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=85',
+        desc: 'Flaky French-style laminated pastry baked fresh every morning.'
+      },
+      {
+        id: 11,
+        name: 'Dark Chocolate Cookie',
+        price: 650,
+        cat: 'Snacks',
+        sub: 'Specials',
+        prep: '2 min',
+        img: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=600&q=85',
+        desc: 'Soft-baked cookie with 70% dark chocolate chunks and sea salt.'
+      }
     ];
 
-    const TEAM = [
-      { first: 'Shushan', full: 'Shushan Dallaqyan', role: 'Identité visuelle • Étudiante UFAR' },
-      { first: 'Milena', full: 'Milena Arakelyan', role: 'Esprit analytique • Étudiante UFAR' },
-      { first: 'Mane', full: 'Mane Arakelyan', role: 'Stratégie marketing • Étudiante UFAR' },
-      { first: 'Yana', full: 'Yana Aleksandryan', role: 'Communication & Partenaires • UFAR' },
-      { first: 'Anna', full: 'Anna Avagimyan', role: 'Organisation & Commandes • UFAR' },
-      { first: 'Maria', full: 'Maria Anapisoyan', role: 'Budget & Finance • Étudiante UFAR' }
+    const TEAM_PROFILES = [
+      { first: 'Shushan', full: 'Shushan Dallaqyan', initials: 'SD', role: 'Visual Identity • Student UFAR' },
+      { first: 'Milena', full: 'Milena Arakelyan', initials: 'MA', role: 'Market Analytics • Student UFAR' },
+      { first: 'Mane', full: 'Mane Arakelyan', initials: 'MA', role: 'Marketing Strategy • Student UFAR' },
+      { first: 'Yana', full: 'Yana Aleksandryan', initials: 'YA', role: 'Partnerships • Student UFAR' },
+      { first: 'Anna', full: 'Anna Avagimyan', initials: 'AA', role: 'Operations • Student UFAR' },
+      { first: 'Maria', full: 'Maria Anapisoyan', initials: 'MA', role: 'Finance & Budget • Student UFAR' }
     ];
 
-    let lang = 'fr';
-    let teamIdx = 0;
-    let currentCategory = 'All';
-    let currentCoffeeTab = 'Iced Drinks';
-    let selectedProduct = PRODUCTS[0];
-    let selectedSizeExtra = 0;
+    let currentLang = 'fr';
+    let teamIndex = 0;
+    let activeCat = 'All';
+    let activeCoffeeSub = 'Iced Drinks';
+    let currentProduct = CATALOG[0];
+    let sizeUpcharge = 0;
 
-    let cart = [
-      { id: 1, name: 'Iced Latte', price: 1200, emoji: '🧋', qty: 1 },
-      { id: 2, name: 'Chicken Sandwich', price: 2200, emoji: '🥪', qty: 1 },
-      { id: 3, name: 'Caesar Salad', price: 2500, emoji: '🥗', qty: 1 }
+    let cartItems = [
+      { id: 1, name: 'Iced Latte', price: 1200, img: CATALOG[0].img, qty: 1 },
+      { id: 2, name: 'Chicken Sandwich', price: 2200, img: CATALOG[1].img, qty: 1 },
+      { id: 3, name: 'Caesar Salad', price: 2500, img: CATALOG[2].img, qty: 1 }
     ];
 
-    function formatAMD(num) {
-      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AMD';
+    function formatPrice(val) {
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AMD';
     }
 
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.style.display = 'block';
-      clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => { t.style.display = 'none'; }, 1700);
+    function notify(text) {
+      const bar = document.getElementById('snackbar');
+      bar.textContent = text;
+      bar.style.display = 'block';
+      clearTimeout(window._snackTimer);
+      window._snackTimer = setTimeout(() => { bar.style.display = 'none'; }, 1800);
     }
 
     function toggleLang() {
-      lang = lang === 'fr' ? 'en' : 'fr';
-      document.querySelectorAll('[data-fr]').forEach(el => {
-        el.innerHTML = el.getAttribute('data-' + lang);
+      currentLang = currentLang === 'fr' ? 'en' : 'fr';
+      document.querySelectorAll('[data-fr]').forEach(node => {
+        node.innerHTML = node.getAttribute('data-' + currentLang);
       });
-      showToast(lang === 'fr' ? 'Langue : Français 🇫🇷' : 'Language: English 🇬🇧');
+      notify(currentLang === 'fr' ? 'Langue : Français' : 'Language: English');
     }
 
-    function goTo(screenName) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const target = document.getElementById('screen-' + screenName);
-      if (target) {
-        target.classList.add('active');
-        target.scrollTop = 0;
+    function navigate(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      const el = document.getElementById('view-' + viewId);
+      if (el) {
+        el.classList.add('active');
+        el.scrollTop = 0;
       }
 
-      const navScreens = ['home', 'order', 'cart', 'profile'];
-      const nav = document.getElementById('bottom-nav');
-      if (navScreens.includes(screenName)) {
-        nav.classList.add('visible');
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.target === screenName);
+      const mainTabs = ['home', 'order', 'cart', 'profile'];
+      const tabBar = document.getElementById('tab-bar');
+      if (mainTabs.includes(viewId)) {
+        tabBar.classList.add('visible');
+        document.querySelectorAll('.tab-item').forEach(t => {
+          t.classList.toggle('active', t.dataset.view === viewId);
         });
       } else {
-        nav.classList.remove('visible');
+        tabBar.classList.remove('visible');
       }
 
-      if (screenName === 'home') renderHome();
-      if (screenName === 'coffee') renderCoffee();
-      if (screenName === 'cart') renderCart();
-      if (screenName === 'order') renderOrderSummary();
+      if (viewId === 'home') renderHome();
+      if (viewId === 'coffee') renderCoffee();
+      if (viewId === 'cart') renderCart();
+      if (viewId === 'order') renderOrder();
     }
 
-    function completeSignup() {
-      const fullName = document.getElementById('reg-name').value.trim() || 'Shushan Dallaqyan';
-      const firstName = fullName.split(' ')[0];
-      document.getElementById('user-first-name').textContent = firstName;
-      document.getElementById('profile-full-name').textContent = fullName;
-      showToast('Compte UFAR vérifié ✓');
-      goTo('home');
+    function submitRegistration() {
+      const full = document.getElementById('input-fullname').value.trim() || 'Shushan Dallaqyan';
+      const parts = full.split(' ');
+      document.getElementById('display-firstname').textContent = parts[0];
+      document.getElementById('profile-name').textContent = full;
+      document.getElementById('avatar-initials').textContent = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+      notify('Compte UFAR vérifié');
+      navigate('home');
     }
 
-    function selectCategory(cat, el) {
-      currentCategory = cat;
-      if (el) {
-        document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
-        el.classList.add('active');
+    function filterHomeCat(cat, btn) {
+      activeCat = cat;
+      if (btn) {
+        document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
       }
       renderHome();
     }
 
     function renderHome() {
-      const q = (document.getElementById('search-input').value || '').toLowerCase();
-      const filtered = PRODUCTS.filter(p => {
-        const matchCat = currentCategory === 'All' || p.cat === currentCategory;
-        const matchQ = p.name.toLowerCase().includes(q);
-        return matchCat && matchQ;
+      const query = (document.getElementById('menu-search').value || '').toLowerCase();
+      const matched = CATALOG.filter(item => {
+        const okCat = activeCat === 'All' || item.cat === activeCat;
+        const okQuery = item.name.toLowerCase().includes(query);
+        return okCat && okQuery;
       });
 
-      const popList = filtered.slice(0, 2);
-      document.getElementById('popular-grid').innerHTML = popList.length
-        ? popList.map(cardHTML).join('')
-        : '<p style="grid-column:1/-1; font-size:13px; color:var(--text-muted);">Aucun produit trouvé.</p>';
+      const popSlice = matched.slice(0, 2);
+      document.getElementById('grid-popular').innerHTML = popSlice.length
+        ? popSlice.map(buildProductCard).join('')
+        : '<p style="grid-column:1/-1; font-size:13px; color:var(--text-secondary);">Aucun résultat trouvé.</p>';
 
-      const lunchList = PRODUCTS.filter(p => p.cat === 'Lunch').slice(1, 3);
-      document.getElementById('lunch-grid').innerHTML = lunchList.map(cardHTML).join('');
+      const lunchSlice = CATALOG.filter(i => i.cat === 'Lunch').slice(1, 3);
+      document.getElementById('grid-lunch').innerHTML = lunchSlice.map(buildProductCard).join('');
     }
 
-    function cardHTML(p) {
+    function buildProductCard(item) {
       return `
-        <div class="food-card" onclick="openDetail(${p.id})">
-          <div class="food-thumb">${p.emoji}</div>
-          <div class="food-name">${p.name}</div>
-          <div class="food-footer">
-            <span class="food-price">${formatAMD(p.price)}</span>
-            <button class="add-circle" onclick="event.stopPropagation(); quickAdd(${p.id})">+</button>
+        <div class="product-card" onclick="openProductDetail(${item.id})">
+          <div class="product-img-wrap">
+            <img src="${item.img}" alt="${item.name}" loading="lazy" />
+          </div>
+          <div class="product-title">${item.name}</div>
+          <div class="product-prep">Prep • ${item.prep}</div>
+          <div class="product-bottom">
+            <span class="product-price">${formatPrice(item.price)}</span>
+            <button class="icon-add-btn" onclick="event.stopPropagation(); quickAddItem(${item.id})" aria-label="Add">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
           </div>
         </div>
       `;
     }
 
-    function filterCoffee(tab, el) {
-      currentCoffeeTab = tab;
-      document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
+    function switchCoffeeTab(sub, btn) {
+      activeCoffeeSub = sub;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
       renderCoffee();
     }
 
     function renderCoffee() {
-      const items = PRODUCTS.filter(p => p.sub === currentCoffeeTab);
-      document.getElementById('coffee-list').innerHTML = items.map(p => `
-        <div class="list-item" onclick="openDetail(${p.id})">
-          <div class="list-thumb">${p.emoji}</div>
-          <div class="list-info">
-            <div class="list-title">${p.name}</div>
-            <div class="list-sub">${formatAMD(p.price)}</div>
+      const items = CATALOG.filter(i => i.sub === activeCoffeeSub);
+      document.getElementById('list-coffee').innerHTML = items.map(item => `
+        <div class="row-card" onclick="openProductDetail(${item.id})">
+          <div class="row-thumb">
+            <img src="${item.img}" alt="${item.name}" />
           </div>
-          <button class="add-circle" onclick="event.stopPropagation(); quickAdd(${p.id})">+</button>
+          <div class="row-meta">
+            <div class="row-title">${item.name}</div>
+            <div class="row-sub">${formatPrice(item.price)}</div>
+          </div>
+          <button class="icon-add-btn" onclick="event.stopPropagation(); quickAddItem(${item.id})">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
         </div>
       `).join('');
     }
 
-    function openDetail(id) {
-      selectedProduct = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
-      selectedSizeExtra = 0;
-      document.getElementById('detail-emoji').textContent = selectedProduct.emoji;
-      document.getElementById('detail-name').textContent = selectedProduct.name;
-      document.getElementById('detail-desc').textContent = selectedProduct.desc;
-      document.getElementById('detail-base-price').textContent = formatAMD(selectedProduct.price);
-      document.getElementById('detail-btn-price').textContent = formatAMD(selectedProduct.price);
-      document.getElementById('size-regular').classList.add('active');
-      document.getElementById('size-large').classList.remove('active');
-      goTo('detail');
+    function openProductDetail(id) {
+      currentProduct = CATALOG.find(i => i.id === id) || CATALOG[0];
+      sizeUpcharge = 0;
+      document.getElementById('detail-img').src = currentProduct.img;
+      document.getElementById('detail-title').textContent = currentProduct.name;
+      document.getElementById('detail-description').textContent = currentProduct.desc;
+      document.getElementById('detail-price-tag').textContent = formatPrice(currentProduct.price);
+      document.getElementById('detail-cta-price').textContent = formatPrice(currentProduct.price);
+      document.getElementById('opt-regular').classList.add('active');
+      document.getElementById('opt-large').classList.remove('active');
+      navigate('detail');
     }
 
-    function selectSize(size, extra) {
-      selectedSizeExtra = extra;
-      document.getElementById('size-regular').classList.toggle('active', size === 'Regular');
-      document.getElementById('size-large').classList.toggle('active', size === 'Large');
-      document.getElementById('detail-btn-price').textContent = formatAMD(selectedProduct.price + extra);
+    function pickSize(label, extra) {
+      sizeUpcharge = extra;
+      document.getElementById('opt-regular').classList.toggle('active', label === 'Regular');
+      document.getElementById('opt-large').classList.toggle('active', label === 'Large');
+      document.getElementById('detail-cta-price').textContent = formatPrice(currentProduct.price + extra);
     }
 
-    function addDetailToCart() {
-      const finalPrice = selectedProduct.price + selectedSizeExtra;
-      const label = selectedSizeExtra > 0 ? selectedProduct.name + ' (Large)' : selectedProduct.name;
-      addToCartObj({ id: Date.now(), name: label, price: finalPrice, emoji: selectedProduct.emoji, qty: 1 });
-      goTo('cart');
+    function commitDetailToCart() {
+      const unitPrice = currentProduct.price + sizeUpcharge;
+      const title = sizeUpcharge > 0 ? currentProduct.name + ' (Large)' : currentProduct.name;
+      pushCartItem({ id: Date.now(), name: title, price: unitPrice, img: currentProduct.img, qty: 1 });
+      navigate('cart');
     }
 
-    function quickAdd(id) {
-      const p = PRODUCTS.find(x => x.id === id);
-      if (p) addToCartObj({ id: p.id, name: p.name, price: p.price, emoji: p.emoji, qty: 1 });
+    function quickAddItem(id) {
+      const found = CATALOG.find(i => i.id === id);
+      if (found) pushCartItem({ id: found.id, name: found.name, price: found.price, img: found.img, qty: 1 });
     }
 
-    function addToCartObj(item) {
-      const existing = cart.find(c => c.name === item.name);
-      if (existing) existing.qty += 1;
-      else cart.push(item);
-      updateBadge();
-      showToast(item.name + ' ajouté !');
+    function pushCartItem(entry) {
+      const match = cartItems.find(c => c.name === entry.name);
+      if (match) match.qty += 1;
+      else cartItems.push(entry);
+      refreshCartCounter();
+      notify(entry.name + ' added to cart');
     }
 
-    function updateBadge() {
-      const count = cart.reduce((sum, i) => sum + i.qty, 0);
-      document.getElementById('nav-cart-badge').textContent = count;
+    function refreshCartCounter() {
+      const totalQty = cartItems.reduce((acc, item) => acc + item.qty, 0);
+      document.getElementById('cart-counter').textContent = totalQty;
     }
 
-    function getCartTotal() {
-      return cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+    function computeTotal() {
+      return cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
     }
 
     function renderCart() {
-      const container = document.getElementById('cart-items-container');
-      container.innerHTML = cart.length === 0
-        ? '<p style="text-align:center; color:var(--text-muted); margin-top:40px;">Votre panier est vide.</p>'
-        : cart.map((item, idx) => `
-          <div class="list-item" style="cursor:default;">
-            <div class="list-thumb">${item.emoji}</div>
-            <div class="list-info">
-              <div class="list-title">${item.name}</div>
-              <div class="list-sub">${formatAMD(item.price)}</div>
+      const list = document.getElementById('cart-list');
+      list.innerHTML = cartItems.length === 0
+        ? '<p style="text-align:center; color:var(--text-secondary); margin-top:44px; font-size:14px;">Your cart is empty.</p>'
+        : cartItems.map((item, idx) => `
+          <div class="row-card" style="cursor:default;">
+            <div class="row-thumb">
+              <img src="${item.img}" alt="${item.name}" />
             </div>
-            <div class="qty-controls">
-              <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
-              <span style="font-weight:700; font-size:14px;">${item.qty}</span>
-              <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+            <div class="row-meta">
+              <div class="row-title">${item.name}</div>
+              <div class="row-sub">${formatPrice(item.price)}</div>
+            </div>
+            <div class="stepper-qty">
+              <button class="qty-circle" onclick="updateQty(${idx}, -1)">−</button>
+              <span style="font-weight:700; font-size:13.5px; min-width:14px; text-align:center;">${item.qty}</span>
+              <button class="qty-circle" onclick="updateQty(${idx}, 1)">+</button>
             </div>
           </div>
         `).join('');
-      const totalStr = formatAMD(getCartTotal());
-      document.getElementById('cart-total-amount').textContent = totalStr;
-      document.getElementById('checkout-total').textContent = totalStr;
+
+      const formatted = formatPrice(computeTotal());
+      document.getElementById('cart-sum').textContent = formatted;
+      document.getElementById('checkout-sum').textContent = formatted;
     }
 
-    function changeQty(idx, delta) {
-      cart[idx].qty += delta;
-      if (cart[idx].qty <= 0) cart.splice(idx, 1);
-      updateBadge();
+    function updateQty(index, delta) {
+      cartItems[index].qty += delta;
+      if (cartItems[index].qty <= 0) cartItems.splice(index, 1);
+      refreshCartCounter();
       renderCart();
     }
 
-    function selectPickup(mode) {
-      document.getElementById('time-asap').classList.toggle('active', mode === 'asap');
-      document.getElementById('time-sched').classList.toggle('active', mode === 'sched');
+    function chooseSlot(type) {
+      document.getElementById('slot-asap').classList.toggle('active', type === 'asap');
+      document.getElementById('slot-sched').classList.toggle('active', type === 'sched');
     }
 
-    function selectPayment(method) {
-      document.getElementById('pay-radio-card').textContent = method === 'card' ? '◉' : '○';
-      document.getElementById('pay-radio-card').style.color = method === 'card' ? 'var(--brand-dark)' : 'var(--text-muted)';
-      document.getElementById('pay-radio-cash').textContent = method === 'cash' ? '◉' : '○';
-      document.getElementById('pay-radio-cash').style.color = method === 'cash' ? 'var(--brand-dark)' : 'var(--text-muted)';
+    function choosePayment(method) {
+      document.getElementById('radio-card').classList.toggle('checked', method === 'card');
+      document.getElementById('radio-cash').classList.toggle('checked', method === 'cash');
     }
 
-    function renderOrderSummary() {
-      document.getElementById('order-summary-list').innerHTML = cart.map(item => `
-        <div class="list-item" style="cursor:default;">
-          <div class="list-thumb" style="width:44px; height:44px; font-size:22px;">${item.emoji}</div>
-          <div class="list-info">
-            <div class="list-title">${item.name}</div>
-            <div class="list-sub">${formatAMD(item.price)} ×${item.qty}</div>
+    function renderOrder() {
+      document.getElementById('order-items-list').innerHTML = cartItems.map(item => `
+        <div class="row-card" style="cursor:default; padding:8px 12px 8px 8px;">
+          <div class="row-thumb" style="width:48px; height:48px;">
+            <img src="${item.img}" alt="${item.name}" />
+          </div>
+          <div class="row-meta">
+            <div class="row-title">${item.name}</div>
+            <div class="row-sub">${formatPrice(item.price)} ×${item.qty}</div>
           </div>
         </div>
       `).join('');
-      document.getElementById('order-paid-total').textContent = formatAMD(getCartTotal());
+      document.getElementById('order-final-sum').textContent = formatPrice(computeTotal());
     }
 
-    function rateOrder() {
-      document.getElementById('feedback-thanks').textContent = 'Merci pour votre avis (5/5) ! ⭐';
-      showToast('Feedback enregistré !');
+    function setRating(stars) {
+      document.querySelectorAll('.star-btn').forEach((btn, i) => {
+        btn.classList.toggle('lit', i < stars);
+      });
+      document.getElementById('rating-caption').textContent = `Note enregistrée : ${stars}/5 • Merci !`;
+      notify(`Évaluation ${stars}/5 enregistrée`);
     }
 
-    function openQR() { document.getElementById('qr-modal').classList.add('open'); }
-    function closeQR() { document.getElementById('qr-modal').classList.remove('open'); }
+    function openQrSheet() { document.getElementById('qr-backdrop').classList.add('open'); }
+    function closeQrSheet() { document.getElementById('qr-backdrop').classList.remove('open'); }
 
-    function switchTeamMember() {
-      teamIdx = (teamIdx + 1) % TEAM.length;
-      const m = TEAM[teamIdx];
-      document.getElementById('user-first-name').textContent = m.first;
-      document.getElementById('profile-full-name').textContent = m.full;
-      document.getElementById('profile-role').textContent = m.role;
-      showToast('Profil : ' + m.full);
+    function cycleTeamMember() {
+      teamIndex = (teamIndex + 1) % TEAM_PROFILES.length;
+      const member = TEAM_PROFILES[teamIndex];
+      document.getElementById('display-firstname').textContent = member.first;
+      document.getElementById('profile-name').textContent = member.full;
+      document.getElementById('avatar-initials').textContent = member.initials;
+      document.getElementById('profile-subtitle').textContent = member.role;
+      notify('Profil actif : ' + member.full);
     }
 
-    // Boot
+    // Initialize
     renderHome();
-    updateBadge();
+    refreshCartCounter();
   </script>
 </body>
 </html>

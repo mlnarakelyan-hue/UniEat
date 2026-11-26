@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>UniEat UFAR — Pre-order App</title>
+  <title>UniEat UFAR — Application de Précommande</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-outer: #E5E3DC;
@@ -14,13 +14,13 @@
       --bg-card: #FFFFFF;
       --bg-pill: #EFECE4;
       --brand-dark: #2C3824;
-      --brand-dark-hover: #212A1B;
+      --brand-dark-hover: #1F2819;
       --brand-sage: #8C967E;
       --brand-sage-light: #DCE1D5;
       --text-main: #222B1C;
-      --text-muted: #70776A;
-      --border-soft: #E6E3DA;
-      --accent-green: #4C6E3B;
+      --text-muted: #6E7668;
+      --border-soft: #E5E2D9;
+      --danger: #B84A39;
     }
 
     * {
@@ -31,33 +31,33 @@
     }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: radial-gradient(circle at top left, #EAE7DF, #DCD9D0);
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 20% 20%, #ECEAE2, #D8D5CB);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 14px;
       color: var(--text-main);
     }
 
-    /* Phone Shell */
+    /* Mobile Frame */
     .phone-frame {
       width: 100%;
-      max-width: 393px;
-      height: 820px;
-      max-height: 94vh;
+      max-width: 396px;
+      height: 830px;
+      max-height: 95vh;
       background: var(--bg-phone);
       border-radius: 46px;
       border: 9px solid #1C1E1A;
-      box-shadow: 0 28px 65px rgba(28, 30, 26, 0.22), 0 0 0 2px #4A4D46;
+      box-shadow: 0 28px 65px rgba(28, 30, 26, 0.25), 0 0 0 2px #4A4D46;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    /* Status Bar */
+    /* Top Status Bar */
     .status-bar {
       height: 44px;
       padding: 12px 24px 0;
@@ -66,15 +66,15 @@
       justify-content: space-between;
       font-size: 13px;
       font-weight: 700;
-      color: var(--text-main);
       position: relative;
       z-index: 20;
       flex-shrink: 0;
+      background: var(--bg-phone);
     }
 
     .dynamic-island {
       width: 112px;
-      height: 28px;
+      height: 27px;
       background: #141513;
       border-radius: 20px;
       position: absolute;
@@ -83,14 +83,7 @@
       transform: translateX(-50%);
     }
 
-    .status-icons {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 12px;
-    }
-
-    /* Screens Container */
+    /* Screen Container */
     .screens-wrapper {
       flex: 1;
       position: relative;
@@ -104,33 +97,21 @@
       flex-direction: column;
       height: 100%;
       overflow-y: auto;
-      padding: 12px 20px 92px;
+      padding: 14px 20px 94px;
+      position: relative;
+      z-index: 5;
       scrollbar-width: none;
-      animation: fadeIn 0.25s ease;
     }
 
-    .screen::-webkit-scrollbar {
-      display: none;
-    }
-
-    .screen.active {
-      display: flex;
-    }
-
-    .screen.no-nav {
-      padding-bottom: 28px;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .screen::-webkit-scrollbar { display: none; }
+    .screen.active { display: flex; }
+    .screen.no-nav { padding-bottom: 28px; }
 
     h1, h2, h3 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Buttons */
+    /* Primary & Secondary Buttons */
     .btn-primary {
       width: 100%;
       background: var(--brand-dark);
@@ -140,31 +121,29 @@
       padding: 16px 22px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: transform 0.15s ease, background 0.15s ease;
       box-shadow: 0 8px 20px rgba(44, 56, 36, 0.2);
+      transition: transform 0.12s ease, background 0.15s ease;
     }
 
-    .btn-primary:active {
-      transform: scale(0.98);
-      background: var(--brand-dark-hover);
-    }
+    .btn-primary:hover { background: var(--brand-dark-hover); }
+    .btn-primary:active { transform: scale(0.98); }
 
-    .btn-outline {
+    .btn-secondary {
       width: 100%;
-      background: transparent;
+      background: var(--bg-pill);
       color: var(--brand-dark);
-      border: 1.5px solid var(--brand-dark);
+      border: 1.5px solid var(--border-soft);
       border-radius: 999px;
-      padding: 13px 20px;
+      padding: 14px 20px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -172,49 +151,54 @@
       gap: 8px;
     }
 
-    /* SCREEN 1: SPLASH */
+    /* 1. SPLASH SCREEN */
     .splash-screen {
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       text-align: center;
-      position: relative;
-      cursor: pointer;
+      padding-top: 48px;
+      padding-bottom: 34px;
     }
 
-    .blob-top {
+    .deco-circle-1 {
       position: absolute;
-      top: -60px;
-      right: -50px;
-      width: 210px;
-      height: 210px;
+      top: -45px;
+      right: -45px;
+      width: 185px;
+      height: 185px;
       background: var(--brand-sage);
-      border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;
-      opacity: 0.75;
+      border-radius: 50%;
+      opacity: 0.6;
+      pointer-events: none;
     }
 
-    .blob-bottom {
+    .deco-circle-2 {
       position: absolute;
-      bottom: -55px;
-      left: -45px;
-      width: 220px;
-      height: 200px;
+      bottom: 85px;
+      left: -55px;
+      width: 175px;
+      height: 175px;
       background: var(--brand-sage);
-      border-radius: 60% 40% 45% 55% / 45% 60% 40% 55%;
-      opacity: 0.75;
+      border-radius: 50%;
+      opacity: 0.55;
+      pointer-events: none;
     }
 
-    .logo-mark {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 14px;
+    .splash-logo-box {
+      width: 74px;
+      height: 74px;
+      border-radius: 24px;
+      background: var(--brand-dark);
+      color: #FFF;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--brand-dark);
+      margin: 0 auto 16px;
+      box-shadow: 0 12px 26px rgba(44, 56, 36, 0.22);
     }
 
     .splash-title {
-      font-size: 40px;
+      font-size: 42px;
       font-weight: 800;
       letter-spacing: -0.03em;
       color: var(--brand-dark);
@@ -223,25 +207,36 @@
 
     .splash-sub {
       font-size: 13px;
-      letter-spacing: 0.35em;
-      font-weight: 700;
+      letter-spacing: 0.36em;
+      font-weight: 800;
       color: var(--brand-dark);
       margin-top: 6px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .splash-tagline {
       font-size: 16px;
       color: var(--text-muted);
-      line-height: 1.5;
-      max-width: 220px;
+      line-height: 1.55;
     }
 
-    /* SCREEN 2: ONBOARDING */
-    .skip-row {
+    /* 2. WELCOME / ONBOARDING */
+    .top-actions-row {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 12px;
+    }
+
+    .lang-pill {
+      background: var(--bg-pill);
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand-dark);
+      cursor: pointer;
     }
 
     .skip-btn {
@@ -249,12 +244,13 @@
       border: none;
       color: var(--text-muted);
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
+      padding: 6px 10px;
     }
 
     .welcome-title {
-      font-size: 32px;
+      font-size: 31px;
       font-weight: 800;
       line-height: 1.15;
       color: var(--brand-dark);
@@ -265,25 +261,24 @@
       font-size: 15px;
       line-height: 1.5;
       color: var(--text-muted);
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
-    .hero-illustration {
+    .hero-card {
       flex: 1;
-      background: linear-gradient(145deg, #EFECE4, #E3DFD3);
+      background: linear-gradient(155deg, #EFECE4, #E1DDD0);
       border-radius: 28px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
-      margin-bottom: 22px;
-      position: relative;
-      overflow: hidden;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-soft);
     }
 
-    .hero-badge {
-      background: rgba(255, 255, 255, 0.85);
+    .hero-pill {
+      background: #FFFFFF;
       padding: 8px 16px;
       border-radius: 999px;
       font-size: 12px;
@@ -293,33 +288,45 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
-    .dots {
+    /* 3. INSCRIPTION (UFAR Account) */
+    .input-group {
+      margin-bottom: 14px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brand-dark);
+      margin-bottom: 6px;
+    }
+
+    .text-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 13px 15px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .text-input:focus {
+      border-color: var(--brand-dark);
+    }
+
+    /* 4. HOME SCREEN */
+    .header-flex {
       display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-bottom: 18px;
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #CFCBC0;
-    }
-
-    .dot.active {
-      width: 18px;
-      border-radius: 6px;
-      background: var(--brand-dark);
-    }
-
-    /* SCREEN 3: HOME */
-    .greeting-header {
-      margin-bottom: 16px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
     }
 
     .greeting-title {
-      font-size: 24px;
+      font-size: 23px;
       font-weight: 800;
       color: var(--brand-dark);
     }
@@ -332,13 +339,13 @@
 
     .search-box {
       background: var(--bg-card);
-      border: 1px solid var(--border-soft);
+      border: 1.5px solid var(--border-soft);
       border-radius: 16px;
-      padding: 12px 14px;
+      padding: 11px 14px;
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .search-box input {
@@ -354,15 +361,15 @@
     .categories-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      margin-bottom: 20px;
+      gap: 6px;
+      margin-bottom: 18px;
     }
 
     .cat-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       cursor: pointer;
       background: none;
       border: none;
@@ -377,7 +384,7 @@
       align-items: center;
       justify-content: center;
       font-size: 20px;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }
 
     .cat-item.active .cat-icon {
@@ -401,18 +408,18 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .section-title {
       font-size: 17px;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--brand-dark);
     }
 
     .see-all {
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-muted);
       background: none;
       border: none;
@@ -423,7 +430,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .food-card {
@@ -434,29 +441,27 @@
       display: flex;
       flex-direction: column;
       cursor: pointer;
-      transition: transform 0.15s ease;
+      transition: transform 0.12s ease;
     }
 
-    .food-card:active {
-      transform: scale(0.98);
-    }
+    .food-card:active { transform: scale(0.98); }
 
     .food-thumb {
-      height: 105px;
+      height: 98px;
       border-radius: 14px;
       background: var(--bg-pill);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 46px;
-      margin-bottom: 10px;
+      font-size: 44px;
+      margin-bottom: 8px;
     }
 
     .food-name {
       font-size: 14px;
       font-weight: 700;
-      color: var(--text-main);
       margin-bottom: 6px;
+      color: var(--text-main);
     }
 
     .food-footer {
@@ -480,14 +485,14 @@
       color: #FFF;
       border: none;
       font-size: 18px;
-      line-height: 1;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
     }
 
-    /* List style cards (Menu / Coffee screen) */
+    /* Navigation Headers & Lists */
     .top-bar {
       display: flex;
       align-items: center;
@@ -504,29 +509,30 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 18px;
+      font-weight: 700;
       cursor: pointer;
       color: var(--brand-dark);
     }
 
     .top-title {
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--brand-dark);
     }
 
     .sub-tabs {
       display: flex;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       overflow-x: auto;
     }
 
     .sub-tab {
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       border: 1px solid var(--border-soft);
       background: var(--bg-card);
       color: var(--text-muted);
@@ -553,51 +559,38 @@
     }
 
     .list-thumb {
-      width: 60px;
-      height: 60px;
+      width: 56px;
+      height: 56px;
       border-radius: 14px;
       background: var(--bg-pill);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
+      font-size: 28px;
       flex-shrink: 0;
     }
 
-    .list-info {
-      flex: 1;
-    }
-
-    .list-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .list-sub {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
+    .list-info { flex: 1; }
+    .list-title { font-size: 15px; font-weight: 700; }
+    .list-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
 
     /* Product Detail */
     .detail-hero {
-      height: 220px;
+      height: 195px;
       background: linear-gradient(145deg, #EFECE4, #E2DDD0);
       border-radius: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 96px;
-      margin-bottom: 18px;
-      position: relative;
+      font-size: 88px;
+      margin-bottom: 16px;
     }
 
     .size-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin: 12px 0 24px;
+      margin: 10px 0 20px;
     }
 
     .size-btn {
@@ -605,15 +598,10 @@
       border-radius: 16px;
       border: 1.5px solid var(--border-soft);
       background: var(--bg-card);
-      font-family: inherit;
       font-weight: 700;
       font-size: 14px;
-      color: var(--text-main);
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
+      color: var(--text-main);
     }
 
     .size-btn.active {
@@ -622,16 +610,11 @@
       border-color: var(--brand-dark);
     }
 
-    /* Cart */
-    .qty-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
+    /* Cart & Checkout */
+    .qty-controls { display: flex; align-items: center; gap: 8px; }
     .qty-btn {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       border: 1px solid var(--border-soft);
       background: var(--bg-phone);
@@ -649,23 +632,22 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
-    /* Checkout */
     .checkout-card {
       background: var(--bg-card);
       border-radius: 18px;
       padding: 14px;
       border: 1px solid var(--border-soft);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .pickup-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .pickup-opt {
@@ -675,6 +657,7 @@
       background: var(--bg-card);
       text-align: left;
       cursor: pointer;
+      color: var(--text-main);
     }
 
     .pickup-opt.active {
@@ -683,7 +666,7 @@
       border-color: var(--brand-dark);
     }
 
-    /* Confirmed & Ready */
+    /* Order Confirmed & Ready */
     .center-box {
       flex: 1;
       display: flex;
@@ -694,48 +677,33 @@
     }
 
     .bag-illustration {
-      width: 130px;
-      height: 130px;
-      border-radius: 32px;
+      width: 120px;
+      height: 120px;
+      border-radius: 30px;
       background: var(--bg-pill);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       border: 2px solid var(--brand-sage-light);
     }
 
     .stepper {
       display: flex;
-      align-items: center;
       justify-content: space-between;
       width: 100%;
-      max-width: 280px;
-      margin: 24px 0 32px;
-      position: relative;
-    }
-
-    .stepper::before {
-      content: '';
-      position: absolute;
-      top: 16px;
-      left: 24px;
-      right: 24px;
-      height: 2px;
-      background: var(--border-soft);
-      z-index: 0;
+      max-width: 260px;
+      margin: 22px 0 28px;
     }
 
     .step-node {
-      position: relative;
-      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-muted);
     }
 
@@ -748,11 +716,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
     }
 
-    .step-node.done .step-circle,
-    .step-node.current .step-circle {
+    .step-node.done .step-circle {
       background: var(--brand-dark);
       color: #FFF;
       border-color: var(--brand-dark);
@@ -761,31 +727,31 @@
     .ready-banner {
       background: var(--brand-sage-light);
       border-radius: 20px;
-      padding: 16px;
+      padding: 14px;
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
     .ready-check {
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: var(--brand-dark);
       color: #FFF;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
       flex-shrink: 0;
+      font-weight: 800;
     }
 
     /* QR Modal */
     .modal-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(28, 30, 26, 0.55);
+      background: rgba(28, 30, 26, 0.65);
       display: none;
       align-items: center;
       justify-content: center;
@@ -793,9 +759,7 @@
       z-index: 50;
     }
 
-    .modal-overlay.open {
-      display: flex;
-    }
+    .modal-overlay.open { display: flex; }
 
     .modal-card {
       background: var(--bg-phone);
@@ -803,7 +767,7 @@
       padding: 24px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.28);
     }
 
     /* Bottom Navigation */
@@ -817,13 +781,11 @@
       border-top: 1px solid var(--border-soft);
       display: none;
       grid-template-columns: repeat(4, 1fr);
-      padding: 8px 12px 16px;
+      padding: 8px 12px 14px;
       z-index: 30;
     }
 
-    .bottom-nav.visible {
-      display: grid;
-    }
+    .bottom-nav.visible { display: grid; }
 
     .nav-btn {
       background: none;
@@ -832,19 +794,15 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: 3px;
       color: var(--text-muted);
-      font-family: inherit;
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       position: relative;
     }
 
-    .nav-btn.active {
-      color: var(--brand-dark);
-      font-weight: 700;
-    }
+    .nav-btn.active { color: var(--brand-dark); font-weight: 800; }
 
     .cart-badge {
       position: absolute;
@@ -854,8 +812,8 @@
       color: #FFF;
       font-size: 10px;
       font-weight: 700;
-      min-width: 17px;
-      height: 17px;
+      min-width: 18px;
+      height: 18px;
       border-radius: 999px;
       display: flex;
       align-items: center;
@@ -865,25 +823,19 @@
 
     .toast {
       position: absolute;
-      top: 54px;
+      top: 52px;
       left: 50%;
-      transform: translateX(-50%) translateY(-20px);
+      transform: translateX(-50%);
       background: var(--brand-dark);
       color: #FFF;
       padding: 8px 16px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 600;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.25s ease;
+      font-weight: 700;
+      display: none;
       z-index: 60;
       white-space: nowrap;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.18);
     }
   </style>
 </head>
@@ -894,85 +846,123 @@
     <div class="status-bar">
       <span>9:41</span>
       <div class="dynamic-island"></div>
-      <div class="status-icons">
-        <span>•••</span>
-        <span>WiFi</span>
-        <span>🔋</span>
-      </div>
+      <span>5G 🔋</span>
     </div>
 
-    <div id="toast" class="toast">Added to cart</div>
+    <div id="toast" class="toast">Ajouté au panier</div>
 
     <div class="screens-wrapper">
 
       <!-- 1. SPLASH SCREEN -->
-      <section id="screen-splash" class="screen no-nav splash-screen active" onclick="goTo('welcome')">
-        <div class="blob-top"></div>
-        <div class="blob-bottom"></div>
-        <div class="logo-mark">
-          <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
-            <path d="M22 12V28C22 31.3 24.7 34 28 34V52" stroke="#2C3824" stroke-width="4" stroke-linecap="round"/>
-            <path d="M17 12V24M27 12V24" stroke="#2C3824" stroke-width="4" stroke-linecap="round"/>
-            <ellipse cx="43" cy="22" rx="7" ry="10" fill="#2C3824"/>
-            <path d="M43 32V52" stroke="#2C3824" stroke-width="4" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <h1 class="splash-title">UniEat</h1>
-        <div class="splash-sub">UFAR</div>
-        <p class="splash-tagline">Good food.<br>More time for what matters.</p>
-        <p style="font-size:12px; color:var(--brand-sage); margin-top:28px; font-weight:600;">Tap anywhere to enter →</p>
-      </section>
-
-      <!-- 2. WELCOME / ONBOARDING SCREEN -->
-      <section id="screen-welcome" class="screen no-nav">
-        <div class="skip-row">
-          <button class="skip-btn" onclick="goTo('home')">Skip</button>
-        </div>
-        <h1 class="welcome-title">Welcome to<br>UniEat UFAR</h1>
-        <p class="welcome-desc">Order your favorite food and drink in advance and skip the line.</p>
+      <section id="screen-splash" class="screen no-nav splash-screen active">
+        <div class="deco-circle-1"></div>
+        <div class="deco-circle-2"></div>
         
-        <div class="hero-illustration">
-          <div style="font-size: 84px; line-height: 1;">☕🥐</div>
-          <div class="hero-badge">⚡ Fast Express Pickup • UFAR Cafeteria</div>
+        <div style="margin: auto 0; position: relative; z-index: 3;">
+          <div class="splash-logo-box">
+            <svg width="38" height="38" viewBox="0 0 64 64" fill="none">
+              <path d="M22 12V28C22 31.3 24.7 34 28 34V52" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="M16 12V24M28 12V24" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+              <ellipse cx="44" cy="22" rx="7" ry="10" fill="#FFFFFF"/>
+              <path d="M44 32V52" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h1 class="splash-title">UniEat</h1>
+          <div class="splash-sub">UFAR</div>
+          <p class="splash-tagline" data-fr="Bien manger.<br>Plus de temps pour l'essentiel." data-en="Good food.<br>More time for what matters.">
+            Bien manger.<br>Plus de temps pour l'essentiel.
+          </p>
         </div>
 
-        <div class="dots">
-          <span class="dot active"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 4;">
+          <button class="btn-primary" onclick="goTo('welcome')" data-fr="Commencer →" data-en="Enter UniEat UFAR →">Commencer →</button>
         </div>
-
-        <button class="btn-primary" onclick="goTo('home')">Get started</button>
       </section>
 
-      <!-- 3. HOME SCREEN -->
+      <!-- 2. ONBOARDING / WELCOME -->
+      <section id="screen-welcome" class="screen no-nav">
+        <div class="top-actions-row">
+          <button class="lang-pill" onclick="toggleLang()" id="lang-btn">FR / EN</button>
+          <button class="skip-btn" onclick="goTo('home')" data-fr="Passer" data-en="Skip">Passer</button>
+        </div>
+
+        <h1 class="welcome-title" data-fr="Bienvenue sur<br>UniEat UFAR" data-en="Welcome to<br>UniEat UFAR">Bienvenue sur<br>UniEat UFAR</h1>
+        <p class="welcome-desc" data-fr="Commandez votre repas à l'avance et récupérez-le sans faire la queue à la cafétéria." data-en="Order your favorite food and drink in advance and skip the line.">
+          Commandez votre repas à l'avance et récupérez-le sans faire la queue à la cafétéria.
+        </p>
+        
+        <div class="hero-card">
+          <div style="font-size: 82px; line-height: 1;">☕🥐</div>
+          <div class="hero-pill">⚡ Guichet « Fast Express » • UFAR</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button class="btn-primary" onclick="goTo('inscription')" data-fr="1. Créer un compte UFAR" data-en="1. Create UFAR Account">1. Créer un compte UFAR</button>
+          <button class="btn-secondary" onclick="goTo('home')" data-fr="Accès direct au menu" data-en="Browse Menu Directly">Accès direct au menu</button>
+        </div>
+      </section>
+
+      <!-- 3. INSCRIPTION (Step 1 from Slide 03) -->
+      <section id="screen-inscription" class="screen no-nav">
+        <div class="top-bar">
+          <button class="back-btn" onclick="goTo('welcome')">‹</button>
+          <h2 class="top-title" data-fr="1. Inscription" data-en="1. Sign Up">1. Inscription</h2>
+          <div style="width:36px;"></div>
+        </div>
+
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5;" data-fr="Connectez-vous avec votre adresse universitaire de l'UFAR." data-en="Create your account with your UFAR university email address.">
+          Connectez-vous avec votre adresse universitaire de l'UFAR.
+        </p>
+
+        <div class="input-group">
+          <label class="input-label" data-fr="Nom complet" data-en="Full Name">Nom complet</label>
+          <input type="text" id="reg-name" class="text-input" value="Shushan Dallaqyan" />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" data-fr="Adresse universitaire" data-en="University Email">Adresse universitaire</label>
+          <input type="email" id="reg-email" class="text-input" value="shushan.dallaqyan@ufar.am" />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" data-fr="Faculté / Rôle" data-en="Faculty / Role">Faculté / Rôle</label>
+          <input type="text" class="text-input" value="Étudiante • Marketing & Gestion (UFAR)" readonly />
+        </div>
+
+        <button class="btn-primary" style="margin-top: auto;" onclick="completeSignup()" data-fr="Valider mon compte UFAR" data-en="Confirm UFAR Account">Valider mon compte UFAR</button>
+      </section>
+
+      <!-- 4. HOME / MENU NUMÉRIQUE (Step 2) -->
       <section id="screen-home" class="screen">
-        <div class="greeting-header">
-          <h2 class="greeting-title">Bonjour, <span id="user-first-name">Shushan</span>! 👋</h2>
-          <p class="greeting-sub">Good food. More time for what matters.</p>
+        <div class="header-flex">
+          <div>
+            <h2 class="greeting-title">Bonjour, <span id="user-first-name">Shushan</span> ! 👋</h2>
+            <p class="greeting-sub" data-fr="2. Choisissez votre repas dans le menu." data-en="Good food. More time for what matters.">2. Choisissez votre repas dans le menu.</p>
+          </div>
+          <button class="lang-pill" onclick="toggleLang()">FR/EN</button>
         </div>
 
         <div class="search-box">
           <span>🔍</span>
-          <input type="text" id="search-input" placeholder="Search for food, drinks..." oninput="renderHome()" />
+          <input type="text" id="search-input" placeholder="Rechercher un repas, un café..." oninput="renderHome()" />
         </div>
 
         <div class="categories-grid">
           <button class="cat-item active" onclick="selectCategory('All', this)">
             <div class="cat-icon">🍽️</div>
-            <span class="cat-label">All</span>
+            <span class="cat-label">Tout</span>
           </button>
           <button class="cat-item" onclick="goTo('coffee')">
             <div class="cat-icon">☕</div>
-            <span class="cat-label">Coffee</span>
+            <span class="cat-label">Café</span>
           </button>
           <button class="cat-item" onclick="selectCategory('Breakfast', this)">
             <div class="cat-icon">🥐</div>
-            <span class="cat-label">Breakfast</span>
+            <span class="cat-label">Matin</span>
           </button>
           <button class="cat-item" onclick="selectCategory('Lunch', this)">
             <div class="cat-icon">🥗</div>
-            <span class="cat-label">Lunch</span>
+            <span class="cat-label">Déjeuner</span>
           </button>
           <button class="cat-item" onclick="selectCategory('Snacks', this)">
             <div class="cat-icon">🍪</div>
@@ -981,73 +971,67 @@
         </div>
 
         <div class="section-row">
-          <h3 class="section-title">Popular</h3>
-          <button class="see-all" onclick="goTo('coffee')">See all</button>
+          <h3 class="section-title" data-fr="Populaires à l'UFAR" data-en="Popular">Populaires à l'UFAR</h3>
+          <button class="see-all" onclick="goTo('coffee')" data-fr="Voir tout" data-en="See all">Voir tout</button>
         </div>
         <div id="popular-grid" class="popular-grid"></div>
 
         <div class="section-row">
-          <h3 class="section-title">Lunch</h3>
-          <button class="see-all" onclick="selectCategory('Lunch')">See all</button>
+          <h3 class="section-title" data-fr="Formules Déjeuner" data-en="Lunch">Formules Déjeuner</h3>
+          <button class="see-all" onclick="selectCategory('Lunch')" data-fr="Voir tout" data-en="See all">Voir tout</button>
         </div>
         <div id="lunch-grid" class="popular-grid"></div>
       </section>
 
-      <!-- 4. COFFEE & MENU SCREEN -->
+      <!-- 5. COFFEE & DRINKS SCREEN -->
       <section id="screen-coffee" class="screen">
         <div class="top-bar">
           <button class="back-btn" onclick="goTo('home')">‹</button>
-          <h2 class="top-title">Coffee</h2>
+          <h2 class="top-title">Coffee & Drinks</h2>
           <div style="width:36px;"></div>
         </div>
 
         <div class="sub-tabs">
           <button class="sub-tab" onclick="filterCoffee('Hot Drinks', this)">Hot Drinks</button>
           <button class="sub-tab active" onclick="filterCoffee('Iced Drinks', this)">Iced Drinks</button>
-          <button class="sub-tab" onclick="filterCoffee('Specials', this)">Specials</button>
+          <button class="sub-tab" onclick="filterCoffee('Specials', this)">Breakfast & Snacks</button>
         </div>
 
         <div id="coffee-list"></div>
       </section>
 
-      <!-- 5. PRODUCT DETAIL SCREEN -->
+      <!-- 6. PRODUCT DETAIL SCREEN -->
       <section id="screen-detail" class="screen no-nav">
         <div class="top-bar">
           <button class="back-btn" onclick="goTo('home')">‹</button>
-          <h2 class="top-title">Details</h2>
-          <button class="back-btn" onclick="showToast('Saved to favorites ♥')">♡</button>
+          <h2 class="top-title">Détails</h2>
+          <button class="back-btn" onclick="showToast('Ajouté aux favoris ♥')">♡</button>
         </div>
 
         <div id="detail-emoji" class="detail-hero">🧋</div>
         <h2 id="detail-name" style="font-size:24px; font-weight:800;">Iced Latte</h2>
         <p id="detail-base-price" style="font-size:16px; font-weight:700; color:var(--text-muted); margin:4px 0 10px;">1,200 AMD</p>
-        <p id="detail-desc" style="font-size:14px; color:var(--text-muted); line-height:1.5; margin-bottom:18px;">
-          Espresso with cold milk and ice. A refreshing classic prepared right before your break.
+        <p id="detail-desc" style="font-size:14px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">
+          Espresso avec lait froid et glaçons. Préparé à la minute pour votre pause à l'UFAR.
         </p>
 
-        <h3 style="font-size:14px; font-weight:700;">Size</h3>
+        <h3 style="font-size:14px; font-weight:700;">Taille / Size</h3>
         <div class="size-grid">
-          <button id="size-regular" class="size-btn active" onclick="selectSize('Regular', 0)">
-            <span>Regular</span>
-            <span style="font-size:11px; opacity:0.8;">Standard</span>
-          </button>
-          <button id="size-large" class="size-btn" onclick="selectSize('Large', 300)">
-            <span>Large</span>
-            <span style="font-size:11px; opacity:0.8;">+300 AMD</span>
-          </button>
+          <button id="size-regular" class="size-btn active" onclick="selectSize('Regular', 0)">Regular</button>
+          <button id="size-large" class="size-btn" onclick="selectSize('Large', 300)">Large (+300 AMD)</button>
         </div>
 
         <button class="btn-primary" style="margin-top:auto;" onclick="addDetailToCart()">
-          <span>Add to cart</span>
+          <span>Ajouter au panier</span>
           <span id="detail-btn-price">1,200 AMD</span>
         </button>
       </section>
 
-      <!-- 6. YOUR CART SCREEN -->
+      <!-- 7. CART SCREEN -->
       <section id="screen-cart" class="screen">
         <div class="top-bar">
           <button class="back-btn" onclick="goTo('home')">‹</button>
-          <h2 class="top-title">Your Cart</h2>
+          <h2 class="top-title">Votre Panier</h2>
           <div style="width:36px;"></div>
         </div>
 
@@ -1058,46 +1042,45 @@
             <span style="font-size:16px; font-weight:700;">Total</span>
             <span id="cart-total-amount" style="font-size:20px; font-weight:800;">5,900 AMD</span>
           </div>
-          <button class="btn-primary" onclick="goTo('checkout')">Proceed to Order</button>
+          <button class="btn-primary" onclick="goTo('checkout')">Commander →</button>
         </div>
       </section>
 
-      <!-- 7. CHECKOUT SCREEN -->
+      <!-- 8. CHECKOUT / PAIEMENT (Step 3) -->
       <section id="screen-checkout" class="screen no-nav">
         <div class="top-bar">
           <button class="back-btn" onclick="goTo('cart')">‹</button>
-          <h2 class="top-title">Checkout</h2>
+          <h2 class="top-title">3. Paiement</h2>
           <div style="width:36px;"></div>
         </div>
 
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Pickup time</h3>
+        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Heure de retrait</h3>
         <div class="pickup-grid">
           <button id="time-asap" class="pickup-opt active" onclick="selectPickup('asap')">
-            <div style="font-weight:700; font-size:14px;">ASAP</div>
-            <div style="font-size:11px; opacity:0.8;">~ 5 min</div>
+            <div style="font-weight:800; font-size:14px;">ASAP</div>
+            <div style="font-size:11px; opacity:0.85;">Prêt en ~ 5 min</div>
           </button>
           <button id="time-sched" class="pickup-opt" onclick="selectPickup('sched')">
-            <div style="font-weight:700; font-size:14px;">Schedule</div>
-            <div style="font-size:11px; opacity:0.8;">Pause 12:15</div>
+            <div style="font-weight:800; font-size:14px;">Pause 12:15</div>
+            <div style="font-size:11px; opacity:0.85;">Planifier</div>
           </button>
         </div>
 
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Pickup location</h3>
+        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Point de retrait</h3>
         <div class="checkout-card" style="display:flex; align-items:center; gap:12px;">
           <span style="font-size:22px;">📍</span>
           <div>
-            <div style="font-weight:700; font-size:14px;">UFAR Cafeteria</div>
+            <div style="font-weight:800; font-size:14px;">Cafétéria UFAR (Erevan)</div>
             <div style="font-size:12px; color:var(--text-muted);">Guichet « Fast Express »</div>
           </div>
         </div>
 
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Payment method</h3>
+        <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Mode de paiement</h3>
         <div class="checkout-card" onclick="selectPayment('card')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="font-size:20px;">💳</span>
             <div>
-              <div style="font-weight:700; font-size:14px;">Card</div>
-              <div style="font-size:12px; color:var(--text-muted);">•••• 4242</div>
+              <div style="font-weight:700; font-size:14px;">Carte en ligne •••• 4242</div>
             </div>
           </div>
           <span id="pay-radio-card" style="font-size:18px; color:var(--brand-dark);">◉</span>
@@ -1106,7 +1089,7 @@
         <div class="checkout-card" onclick="selectPayment('cash')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="font-size:20px;">💵</span>
-            <div style="font-weight:700; font-size:14px;">Cash at pickup</div>
+            <div style="font-weight:700; font-size:14px;">Au moment du retrait</div>
           </div>
           <span id="pay-radio-cash" style="font-size:18px; color:var(--text-muted);">○</span>
         </div>
@@ -1116,142 +1099,135 @@
             <span style="font-size:16px; font-weight:700;">Total</span>
             <span id="checkout-total" style="font-size:20px; font-weight:800;">5,900 AMD</span>
           </div>
-          <button class="btn-primary" onclick="confirmOrder()">Confirm Order</button>
+          <button class="btn-primary" onclick="goTo('confirmed')">Confirmer la commande</button>
         </div>
       </section>
 
-      <!-- 8. ORDER CONFIRMED SCREEN -->
+      <!-- 9. PRÉPARATION (Step 4) -->
       <section id="screen-confirmed" class="screen no-nav">
         <div class="top-bar">
           <button class="back-btn" onclick="goTo('home')">‹</button>
+          <h2 class="top-title">4. Préparation</h2>
           <div style="width:36px;"></div>
         </div>
 
         <div class="center-box">
           <div class="bag-illustration">
             <span style="font-size:48px;">🛍️</span>
-            <span style="font-size:12px; font-weight:800; color:var(--brand-dark); margin-top:4px;">UniEat</span>
+            <span style="font-size:12px; font-weight:800; color:var(--brand-dark);">UniEat UFAR</span>
           </div>
-          <h2 style="font-size:26px; font-weight:800; margin-bottom:8px;">Order Confirmed!</h2>
-          <p style="font-size:14px; color:var(--text-muted); max-width:250px; line-height:1.5;">
-            Your order is being prepared. You'll receive a notification when it's ready.
+          <h2 style="font-size:25px; font-weight:800; margin-bottom:8px;">Commande confirmée !</h2>
+          <p style="font-size:14px; color:var(--text-muted); max-width:260px; line-height:1.5;">
+            La cafétéria prépare vos produits à l'avance. Vous recevrez une notification dès qu'elle est prête.
           </p>
 
           <div class="stepper">
             <div class="step-node done">
               <div class="step-circle">✓</div>
-              <span>Confirmed</span>
+              <span>Confirmée</span>
             </div>
-            <div class="step-node current">
+            <div class="step-node done">
               <div class="step-circle">👨‍🍳</div>
-              <span>Preparing</span>
+              <span>Préparation</span>
             </div>
             <div class="step-node">
               <div class="step-circle">🥡</div>
-              <span>Ready</span>
+              <span>Prête</span>
             </div>
           </div>
 
-          <button class="btn-primary" onclick="goTo('order')">View Order Details</button>
+          <button class="btn-primary" onclick="goTo('order')">Passer au retrait QR →</button>
         </div>
       </section>
 
-      <!-- 9. MY ORDER / READY + QR SCREEN -->
+      <!-- 10. RETRAIT QR & FEEDBACK (Steps 5 & 6) -->
       <section id="screen-order" class="screen">
         <div class="top-bar">
           <button class="back-btn" onclick="goTo('home')">‹</button>
-          <h2 class="top-title">My Order</h2>
+          <h2 class="top-title">5. Retrait & 6. Avis</h2>
           <div style="width:36px;"></div>
         </div>
 
         <div class="ready-banner">
           <div class="ready-check">✓</div>
           <div>
-            <div style="font-weight:800; font-size:15px; color:var(--brand-dark);">Your order is ready!</div>
-            <div style="font-size:12px; color:var(--text-main); margin-top:2px;">You can now pick it up at the UniEat Fast Express counter.</div>
+            <div style="font-weight:800; font-size:15px;">Votre commande est prête !</div>
+            <div style="font-size:12px;">Présentez le QR code au guichet « Fast Express ».</div>
           </div>
         </div>
 
-        <button class="btn-primary" style="margin-bottom:16px;" onclick="openQR()">
-          <span>Show Fast Express QR Code</span>
-        </button>
+        <button class="btn-primary" style="margin-bottom:14px;" onclick="openQR()">Afficher le QR Code Fast Express</button>
 
         <div class="section-row">
-          <h3 class="section-title">Order #1043</h3>
-          <span style="font-size:12px; color:var(--text-muted);">Today, 12:15</span>
+          <h3 class="section-title">Commande #1043</h3>
+          <span style="font-size:12px; color:var(--text-muted);">UFAR • 12:15</span>
         </div>
 
         <div id="order-summary-list"></div>
 
-        <div class="total-row" style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border-soft);">
-          <span style="font-weight:700;">Total Paid</span>
+        <div class="total-row" style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border-soft);">
+          <span style="font-weight:700;">Total réglé</span>
           <span id="order-paid-total" style="font-weight:800; font-size:18px;">5,900 AMD</span>
         </div>
 
-        <!-- Step 6: Feedback from presentation -->
-        <div class="checkout-card" style="margin-top:10px; text-align:center;">
-          <div style="font-size:13px; font-weight:700; margin-bottom:6px;">6. Feedback — Rate your pause experience</div>
-          <div style="font-size:22px; letter-spacing:6px; cursor:pointer;" onclick="showToast('Merci pour votre avis ! ⭐')">⭐⭐⭐⭐⭐</div>
+        <!-- Step 6: Feedback -->
+        <div class="checkout-card" style="margin-top:8px; text-align:center;">
+          <div style="font-size:13px; font-weight:800; margin-bottom:6px;">6. Feedback — Votre avis sur le service</div>
+          <div id="stars-row" style="font-size:24px; letter-spacing:6px; cursor:pointer;" onclick="rateOrder()">⭐⭐⭐⭐⭐</div>
+          <div id="feedback-thanks" style="font-size:12px; color:var(--brand-sage); font-weight:700; margin-top:4px;">Touchez les étoiles pour noter</div>
         </div>
       </section>
 
-      <!-- 10. PROFILE SCREEN -->
+      <!-- 11. PROFILE SCREEN -->
       <section id="screen-profile" class="screen">
         <div class="top-bar">
           <div style="width:36px;"></div>
-          <h2 class="top-title">Profile</h2>
-          <button class="back-btn" onclick="switchTeamMember()">↻</button>
+          <h2 class="top-title">Profil UFAR</h2>
+          <button class="back-btn" onclick="switchTeamMember()" title="Changer d'étudiante">↻</button>
         </div>
 
-        <div class="checkout-card" style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
-          <div style="width:54px; height:54px; border-radius:50%; background:var(--brand-sage-light); display:flex; align-items:center; justify-content:center; font-size:24px;">👩‍🎓</div>
+        <div class="checkout-card" style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
+          <div style="width:54px; height:54px; border-radius:50%; background:var(--brand-sage-light); display:flex; align-items:center; justify-content:center; font-size:26px;">👩‍🎓</div>
           <div>
             <div id="profile-full-name" style="font-weight:800; font-size:16px;">Shushan Dallaqyan</div>
-            <div style="font-size:13px; color:var(--text-muted);">Student • UFAR (Erevan)</div>
+            <div id="profile-role" style="font-size:12px; color:var(--text-muted);">Identité visuelle • Étudiante UFAR</div>
           </div>
         </div>
 
         <div class="list-item" onclick="goTo('order')">
-          <span style="font-size:20px;">🧾</span>
-          <div class="list-info"><div class="list-title">My Orders</div></div>
-          <span>›</span>
-        </div>
-        <div class="list-item" onclick="showToast('Visa •••• 4242 active')">
-          <span style="font-size:20px;">💳</span>
-          <div class="list-info"><div class="list-title">Payment Methods</div></div>
-          <span>›</span>
-        </div>
-        <div class="list-item" onclick="showToast('Pickup alerts enabled 🔔')">
-          <span style="font-size:20px;">🔔</span>
-          <div class="list-info"><div class="list-title">Notifications</div></div>
+          <span>🧾</span>
+          <div class="list-info"><div class="list-title">Mes commandes (#1043)</div></div>
           <span>›</span>
         </div>
         <div class="list-item" onclick="switchTeamMember()">
-          <span style="font-size:20px;">👥</span>
+          <span>👥</span>
           <div class="list-info">
-            <div class="list-title">Switch UFAR Team Member</div>
-            <div class="list-sub">Tap to preview team accounts</div>
+            <div class="list-title">Équipe du projet (6 étudiantes)</div>
+            <div class="list-sub">Shushan, Milena, Mane, Yana, Anna, Maria</div>
           </div>
           <span>›</span>
         </div>
+        <div class="list-item" onclick="goTo('inscription')">
+          <span>🎓</span>
+          <div class="list-info"><div class="list-title">Compte universitaire (@ufar.am)</div></div>
+          <span>›</span>
+        </div>
         <div class="list-item" onclick="goTo('splash')">
-          <span style="font-size:20px;">🚪</span>
-          <div class="list-info"><div class="list-title">Log Out</div></div>
+          <span>🚪</span>
+          <div class="list-info"><div class="list-title">Déconnexion</div></div>
           <span>›</span>
         </div>
       </section>
 
     </div>
 
-    <!-- QR CODE MODAL (Step 5: Retrait Fast Express) -->
+    <!-- QR MODAL (Step 5: Retrait Fast Express) -->
     <div id="qr-modal" class="modal-overlay" onclick="closeQR()">
       <div class="modal-card" onclick="event.stopPropagation()">
-        <div style="font-size:12px; font-weight:700; color:var(--brand-sage); letter-spacing:0.1em;">GUICHET « FAST EXPRESS »</div>
-        <h3 style="font-size:22px; font-weight:800; margin:4px 0 14px;">Order #1043</h3>
-        
-        <!-- Crisp SVG QR Code -->
+        <div style="font-size:11px; font-weight:800; color:var(--brand-sage); letter-spacing:0.12em;">GUICHET « FAST EXPRESS »</div>
+        <h3 style="font-size:22px; font-weight:800; margin:4px 0 14px;">Commande #1043</h3>
         <div style="background:#FFF; padding:16px; border-radius:20px; display:inline-block; border:1px solid var(--border-soft); margin-bottom:14px;">
-          <svg width="150" height="150" viewBox="0 0 100 100" fill="#2C3824">
+          <svg width="146" height="146" viewBox="0 0 100 100" fill="#2C3824">
             <rect x="5" y="5" width="25" height="25" rx="3" fill="none" stroke="#2C3824" stroke-width="5"/>
             <rect x="12" y="12" width="11" height="11"/>
             <rect x="70" y="5" width="25" height="25" rx="3" fill="none" stroke="#2C3824" stroke-width="5"/>
@@ -1266,11 +1242,10 @@
             <rect x="42" y="84" width="24" height="8"/>
           </svg>
         </div>
-
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
-          Present this QR code at the UFAR Cafeteria counter to pick up your order without waiting.
+          Présentez ce QR code au comptoir UniEat de l'UFAR pour récupérer votre repas sans attendre.
         </p>
-        <button class="btn-primary" onclick="closeQR()">Done</button>
+        <button class="btn-primary" onclick="closeQR()">Fermer</button>
       </div>
     </div>
 
@@ -1278,55 +1253,56 @@
     <nav id="bottom-nav" class="bottom-nav">
       <button class="nav-btn active" data-target="home" onclick="goTo('home')">
         <span style="font-size:18px;">🏠</span>
-        <span>Home</span>
+        <span>Menu</span>
       </button>
       <button class="nav-btn" data-target="order" onclick="goTo('order')">
         <span style="font-size:18px;">🧾</span>
-        <span>Order</span>
+        <span>Suivi</span>
       </button>
       <button class="nav-btn" data-target="cart" onclick="goTo('cart')">
         <span style="font-size:18px;">🛒</span>
         <span id="nav-cart-badge" class="cart-badge">3</span>
-        <span>Cart</span>
+        <span>Panier</span>
       </button>
       <button class="nav-btn" data-target="profile" onclick="goTo('profile')">
         <span style="font-size:18px;">👤</span>
-        <span>Profile</span>
+        <span>Profil</span>
       </button>
     </nav>
   </div>
 
   <script>
     const PRODUCTS = [
-      { id: 1, name: 'Iced Latte', price: 1200, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🧋', popular: true },
-      { id: 2, name: 'Chicken Sandwich', price: 2200, cat: 'Lunch', sub: 'Lunch', emoji: '🥪', popular: true },
-      { id: 3, name: 'Caesar Salad', price: 2500, cat: 'Lunch', sub: 'Lunch', emoji: '🥗', popular: false },
-      { id: 4, name: 'Pasta Bowl', price: 2400, cat: 'Lunch', sub: 'Lunch', emoji: '🍝', popular: false },
-      { id: 5, name: 'Iced Americano', price: 900, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🧊', popular: false },
-      { id: 6, name: 'Iced Cappuccino', price: 1300, cat: 'Coffee', sub: 'Iced Drinks', emoji: '☕', popular: false },
-      { id: 7, name: 'Iced Mocha', price: 1400, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🍫', popular: false },
-      { id: 8, name: 'Cold Brew', price: 1100, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🥤', popular: false },
-      { id: 9, name: 'Hot Espresso', price: 800, cat: 'Coffee', sub: 'Hot Drinks', emoji: '☕', popular: false },
-      { id: 10, name: 'Croissant Beurre', price: 750, cat: 'Breakfast', sub: 'Specials', emoji: '🥐', popular: false },
-      { id: 11, name: 'Choco Cookie', price: 650, cat: 'Snacks', sub: 'Specials', emoji: '🍪', popular: false }
+      { id: 1, name: 'Iced Latte', price: 1200, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🧋', desc: 'Espresso avec lait froid et glaçons. Un classique rafraîchissant.' },
+      { id: 2, name: 'Chicken Sandwich', price: 2200, cat: 'Lunch', sub: 'Lunch', emoji: '🥪', desc: 'Pain croustillant, filet de poulet grillé, salade fraîche et sauce maison.' },
+      { id: 3, name: 'Caesar Salad', price: 2500, cat: 'Lunch', sub: 'Lunch', emoji: '🥗', desc: 'Laitue romaine, poulet grillé, croûtons dorés, parmesan et sauce César.' },
+      { id: 4, name: 'Pasta Bowl', price: 2400, cat: 'Lunch', sub: 'Lunch', emoji: '🍝', desc: 'Pâtes chaudes préparées à la minute pour votre pause déjeuner.' },
+      { id: 5, name: 'Iced Americano', price: 900, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🧊', desc: 'Double espresso allongé sur glace.' },
+      { id: 6, name: 'Iced Cappuccino', price: 1300, cat: 'Coffee', sub: 'Iced Drinks', emoji: '☕', desc: 'Espresso glacé coiffé d’une mousse de lait onctueuse.' },
+      { id: 7, name: 'Iced Mocha', price: 1400, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🍫', desc: 'Alliance gourmande de chocolat, espresso et lait glacé.' },
+      { id: 8, name: 'Cold Brew', price: 1100, cat: 'Coffee', sub: 'Iced Drinks', emoji: '🥤', desc: 'Infusion lente à froid pendant 12 heures, douce et énergisante.' },
+      { id: 9, name: 'Espresso Chaud', price: 800, cat: 'Coffee', sub: 'Hot Drinks', emoji: '☕', desc: 'Café intense fraîchement moulu.' },
+      { id: 10, name: 'Cappuccino Chaud', price: 1200, cat: 'Coffee', sub: 'Hot Drinks', emoji: '🫖', desc: 'Espresso équilibré et mousse de lait chaude.' },
+      { id: 11, name: 'Croissant au Beurre', price: 750, cat: 'Breakfast', sub: 'Specials', emoji: '🥐', desc: 'Viennoiserie dorée et croustillante du matin.' },
+      { id: 12, name: 'Cookie Chocolat', price: 650, cat: 'Snacks', sub: 'Specials', emoji: '🍪', desc: 'Cookie moelleux aux pépites de chocolat noir.' }
     ];
 
-    const TEAM_MEMBERS = [
-      { first: 'Shushan', full: 'Shushan Dallaqyan' },
-      { first: 'Milena', full: 'Milena Arakelyan' },
-      { first: 'Mane', full: 'Mane Arakelyan' },
-      { first: 'Yana', full: 'Yana Aleksandryan' },
-      { first: 'Anna', full: 'Anna Avagimyan' },
-      { first: 'Maria', full: 'Maria Anapisoyan' }
+    const TEAM = [
+      { first: 'Shushan', full: 'Shushan Dallaqyan', role: 'Identité visuelle • Étudiante UFAR' },
+      { first: 'Milena', full: 'Milena Arakelyan', role: 'Esprit analytique • Étudiante UFAR' },
+      { first: 'Mane', full: 'Mane Arakelyan', role: 'Stratégie marketing • Étudiante UFAR' },
+      { first: 'Yana', full: 'Yana Aleksandryan', role: 'Communication & Partenaires • UFAR' },
+      { first: 'Anna', full: 'Anna Avagimyan', role: 'Organisation & Commandes • UFAR' },
+      { first: 'Maria', full: 'Maria Anapisoyan', role: 'Budget & Finance • Étudiante UFAR' }
     ];
 
+    let lang = 'fr';
     let teamIdx = 0;
     let currentCategory = 'All';
     let currentCoffeeTab = 'Iced Drinks';
     let selectedProduct = PRODUCTS[0];
     let selectedSizeExtra = 0;
 
-    // Pre-filled cart matching your mockup (1,200 + 2,200 + 2,500 = 5,900 AMD)
     let cart = [
       { id: 1, name: 'Iced Latte', price: 1200, emoji: '🧋', qty: 1 },
       { id: 2, name: 'Chicken Sandwich', price: 2200, emoji: '🥪', qty: 1 },
@@ -1334,20 +1310,32 @@
     ];
 
     function formatAMD(num) {
-      return num.toLocaleString('en-US') + ' AMD';
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AMD';
     }
 
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 1800);
+      t.style.display = 'block';
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => { t.style.display = 'none'; }, 1700);
+    }
+
+    function toggleLang() {
+      lang = lang === 'fr' ? 'en' : 'fr';
+      document.querySelectorAll('[data-fr]').forEach(el => {
+        el.innerHTML = el.getAttribute('data-' + lang);
+      });
+      showToast(lang === 'fr' ? 'Langue : Français 🇫🇷' : 'Language: English 🇬🇧');
     }
 
     function goTo(screenName) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       const target = document.getElementById('screen-' + screenName);
-      if (target) target.classList.add('active');
+      if (target) {
+        target.classList.add('active');
+        target.scrollTop = 0;
+      }
 
       const navScreens = ['home', 'order', 'cart', 'profile'];
       const nav = document.getElementById('bottom-nav');
@@ -1366,6 +1354,15 @@
       if (screenName === 'order') renderOrderSummary();
     }
 
+    function completeSignup() {
+      const fullName = document.getElementById('reg-name').value.trim() || 'Shushan Dallaqyan';
+      const firstName = fullName.split(' ')[0];
+      document.getElementById('user-first-name').textContent = firstName;
+      document.getElementById('profile-full-name').textContent = fullName;
+      showToast('Compte UFAR vérifié ✓');
+      goTo('home');
+    }
+
     function selectCategory(cat, el) {
       currentCategory = cat;
       if (el) {
@@ -1377,20 +1374,19 @@
 
     function renderHome() {
       const q = (document.getElementById('search-input').value || '').toLowerCase();
-      const popGrid = document.getElementById('popular-grid');
-      const lunchGrid = document.getElementById('lunch-grid');
-
       const filtered = PRODUCTS.filter(p => {
         const matchCat = currentCategory === 'All' || p.cat === currentCategory;
         const matchQ = p.name.toLowerCase().includes(q);
         return matchCat && matchQ;
       });
 
-      const popularItems = filtered.slice(0, 2);
-      const lunchItems = PRODUCTS.filter(p => p.cat === 'Lunch').slice(1, 3);
+      const popList = filtered.slice(0, 2);
+      document.getElementById('popular-grid').innerHTML = popList.length
+        ? popList.map(cardHTML).join('')
+        : '<p style="grid-column:1/-1; font-size:13px; color:var(--text-muted);">Aucun produit trouvé.</p>';
 
-      popGrid.innerHTML = popularItems.map(p => cardHTML(p)).join('');
-      lunchGrid.innerHTML = lunchItems.map(p => cardHTML(p)).join('');
+      const lunchList = PRODUCTS.filter(p => p.cat === 'Lunch').slice(1, 3);
+      document.getElementById('lunch-grid').innerHTML = lunchList.map(cardHTML).join('');
     }
 
     function cardHTML(p) {
@@ -1414,9 +1410,8 @@
     }
 
     function renderCoffee() {
-      const list = document.getElementById('coffee-list');
       const items = PRODUCTS.filter(p => p.sub === currentCoffeeTab);
-      list.innerHTML = items.map(p => `
+      document.getElementById('coffee-list').innerHTML = items.map(p => `
         <div class="list-item" onclick="openDetail(${p.id})">
           <div class="list-thumb">${p.emoji}</div>
           <div class="list-info">
@@ -1433,6 +1428,7 @@
       selectedSizeExtra = 0;
       document.getElementById('detail-emoji').textContent = selectedProduct.emoji;
       document.getElementById('detail-name').textContent = selectedProduct.name;
+      document.getElementById('detail-desc').textContent = selectedProduct.desc;
       document.getElementById('detail-base-price').textContent = formatAMD(selectedProduct.price);
       document.getElementById('detail-btn-price').textContent = formatAMD(selectedProduct.price);
       document.getElementById('size-regular').classList.add('active');
@@ -1449,7 +1445,22 @@
 
     function addDetailToCart() {
       const finalPrice = selectedProduct.price + selectedSizeExtra;
-      const label = selectedSizeExtra > 0 ? `${selectedProduct.name} (L)` : selectedProduct.name; addToCartObj({ id: Date.now(), name: label, price: finalPrice, emoji: selectedProduct.emoji, qty: 1 }); goTo('cart'); }  function quickAdd(id) { const p = PRODUCTS.find(x => x.id === id); if (!p) return; addToCartObj({ id: p.id, name: p.name, price: p.price, emoji: p.emoji, qty: 1 }); }  function addToCartObj(item) { const existing = cart.find(c => c.name === item.name); if (existing) { existing.qty += 1; } else { cart.push(item); } updateBadge(); showToast(`${item.name} added!`);
+      const label = selectedSizeExtra > 0 ? selectedProduct.name + ' (Large)' : selectedProduct.name;
+      addToCartObj({ id: Date.now(), name: label, price: finalPrice, emoji: selectedProduct.emoji, qty: 1 });
+      goTo('cart');
+    }
+
+    function quickAdd(id) {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (p) addToCartObj({ id: p.id, name: p.name, price: p.price, emoji: p.emoji, qty: 1 });
+    }
+
+    function addToCartObj(item) {
+      const existing = cart.find(c => c.name === item.name);
+      if (existing) existing.qty += 1;
+      else cart.push(item);
+      updateBadge();
+      showToast(item.name + ' ajouté !');
     }
 
     function updateBadge() {
@@ -1463,10 +1474,9 @@
 
     function renderCart() {
       const container = document.getElementById('cart-items-container');
-      if (cart.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); margin-top:40px;">Your cart is empty.</p>`;
-      } else {
-        container.innerHTML = cart.map((item, idx) => `
+      container.innerHTML = cart.length === 0
+        ? '<p style="text-align:center; color:var(--text-muted); margin-top:40px;">Votre panier est vide.</p>'
+        : cart.map((item, idx) => `
           <div class="list-item" style="cursor:default;">
             <div class="list-thumb">${item.emoji}</div>
             <div class="list-info">
@@ -1480,7 +1490,6 @@
             </div>
           </div>
         `).join('');
-      }
       const totalStr = formatAMD(getCartTotal());
       document.getElementById('cart-total-amount').textContent = totalStr;
       document.getElementById('checkout-total').textContent = totalStr;
@@ -1505,12 +1514,39 @@
       document.getElementById('pay-radio-cash').style.color = method === 'cash' ? 'var(--brand-dark)' : 'var(--text-muted)';
     }
 
-    function confirmOrder() {
-      goTo('confirmed');
+    function renderOrderSummary() {
+      document.getElementById('order-summary-list').innerHTML = cart.map(item => `
+        <div class="list-item" style="cursor:default;">
+          <div class="list-thumb" style="width:44px; height:44px; font-size:22px;">${item.emoji}</div>
+          <div class="list-info">
+            <div class="list-title">${item.name}</div>
+            <div class="list-sub">${formatAMD(item.price)} ×${item.qty}</div>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('order-paid-total').textContent = formatAMD(getCartTotal());
     }
 
-    function renderOrderSummary() {
-      const list = document.getElementById('order-summary-list');
-      list.innerHTML = cart.map(item => `
-        <div class="list-item" style="cursor:default;">
-          <div class="list-thumb" style="width:46px; height:46px; font-
+    function rateOrder() {
+      document.getElementById('feedback-thanks').textContent = 'Merci pour votre avis (5/5) ! ⭐';
+      showToast('Feedback enregistré !');
+    }
+
+    function openQR() { document.getElementById('qr-modal').classList.add('open'); }
+    function closeQR() { document.getElementById('qr-modal').classList.remove('open'); }
+
+    function switchTeamMember() {
+      teamIdx = (teamIdx + 1) % TEAM.length;
+      const m = TEAM[teamIdx];
+      document.getElementById('user-first-name').textContent = m.first;
+      document.getElementById('profile-full-name').textContent = m.full;
+      document.getElementById('profile-role').textContent = m.role;
+      showToast('Profil : ' + m.full);
+    }
+
+    // Boot
+    renderHome();
+    updateBadge();
+  </script>
+</body>
+</html>
